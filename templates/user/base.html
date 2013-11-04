@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+        <title>WEB DB</title>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
+	{% block script %} {% endblock %}
+	 <link rel = "stylesheet" type = "text/css" href = "{{ STATIC_URL }}css/login.css">
+        <meta charset = "UTF-8">
+</head>
+<body>
+	<div id="wrapper">
+		{% block wrapper %}
+		{% endblock %}
+	</div>
+		{% block main %}
+		{% endblock %}
+	<div id="footer">
+	 <span id = "madeby">
+                        Made by Bacchus
+                </span>
+                <span id = "contact">
+                        <a href = "contact@bacchus.snucse.org">Contact Us</a>
+                </span>
+        </div>
+
+</body>
+</html>
+
+

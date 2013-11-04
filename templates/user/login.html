@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block css %}
+login
+{% endblock %}
+{% block script %}
+		<script type="text/javascript">
+		$(document).ready(function(){
+					$('#loginbigform').submit(function(e){
+						$.ajax({
+							type: "POST",
+							url: "/login",
+							data: $(this).serialize(),
+							success: function(data){
+								if ("success" in data)
+									window.location = "/";
+								else{
+									alert("Wrong ID or Password");
+									$('#pw').val("")
+								}
+							},
+							error: function(xhr, ajaxOptions, errorThrown){
+								console.log(xhr.responseText);		
+							}
+						});
+						return false;
+					});
+				});
+		</script>
+{% endblock %}
+{% block wrapper %}
+		<div id = "logoimage">
+			<img id = "logo" src = "http://img.cgv.co.kr/Movie/Thumbnail/StillCut/000077/77113/77113106976_727.jpg" alt = "logo">
+		</div>
+		<div id = "login">
+			<form id = "loginbigform" method = "post" action = "/login">
+				<fieldset id = "logonsmallform">
+					<div id = "loginfield">
+						<div id = "account">
+							<div>
+								<label id = "idletter" for = "id">ID</label>
+								<input type = "text" id = "id" class = "inputval" name = "id">
+							</div>
+
+							<div>
+						        	<label id = "pwletter" for = "pw">PW</label>
+						        	<input type = "password" id = "pw" class = "inputval" name = "pw">
+							</div>
+						</div>
+
+						<div id = "loginbutton">
+							<input id = "button" type = "submit" value = "login">
+						</div>
+					</div>
+						<div id = "join">
+							<span id = "joinin">
+								<a href ="/join">Join in</a>
+							</span>
+
+							<span id = "findidpw">
+								<a href ="/find_password">Find PW</a>
+							</span>
+						</div>
+				</fieldset>
+			</form>
+		</div>
+{% endblock %}

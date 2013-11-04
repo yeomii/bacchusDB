@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block script %}
+		<script type="text/javascript">
+		$(document).ready(function(){
+				$('#myform').submit(function(e){
+					$.ajax({
+						type: "POST",
+						url: "/my_info",
+						data: $(this).serialize(),
+						success: function(data){
+							if ("success" in data){
+								alert("Successfully Changed Your Information");
+							}
+							else if (data.password == "password"){
+								alert("Password is Different");
+							}
+							else if (data.password == "same"){
+								alert("You're new password is identical to you old password");
+							}
+							else if (data.npassword == "restriction"){
+								alert("Password does not satisfy Restriction");
+							}
+							else if (data.npassword == "not same"){
+								alert("Your new password is different from Confirmation Password");
+							}
+							else {
+								alert(data.error);
+							}
+							$("#pw").val("");
+							$("#newpw").val("");
+							$("#pwconfirm").val("");
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+
+						}
+					});
+					return false;
+				});
+		});
+		</script>
+{% endblock %}
+{% block wrapper %}
+                <form id = "myform" method = "post">
+                        <fieldset id = "myfield">
+                                <div id = "myaccount">
+					<div>
+					회원정보 수정
+					</div>
+
+                                        <div>
+						<label id = "userid" for "user" class = "inputletter">ID</label>
+						<input type = "text" id = "user" class = "inputval" value = "{{ u.username }}">
+					</div>
+
+					<div>
+						<label id = "emailletter" for = "email" class = "inputletter">Email</label>
+                        <input type = "text" name = "email" id = "email" value = "{{ u.email }}" class = "inputval">
+					</div>
+
+					<div>
+						<label id = "pwletter" for = "pw" class = "inputletter">Password</label>
+						<input type = "password" name = "pw" id = "pw" class = "inputval">
+					</div>
+
+					<div>
+						<span id = "pwinput">
+							<label id = "pwletter" for = "newpw" class = "inputletter">New Password</label>
+                            <input type = "password" name = "new_pw" id = "newpw" class = "inputval">
+						</span>
+
+						<span id = "pwconfirminput">
+							<label id = "pwletter" for = "pwconfirm" class = "inputletter">Password Confirm</label>
+                            <input type = "password" name = "pw_confirm" id = "pwconfirm" class = "inputval">
+						</span>
+					</div>	
+
+	                <div id = "submitbutton">
+        	        	<input id = "makebutton" type = "submit" value = "Submit">
+                    </div>
+				</div>
+                         </fieldset>
+                </form>
+{% endblock %}
+

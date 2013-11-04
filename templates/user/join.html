@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block css %}
+join
+{% endblock %}
+{% block script %}
+		<script type="text/javascript">
+		$(document).ready(function(){
+
+					$('#join_button').click(function(e){
+						$.ajax({
+							type: "POST",
+							url: "/join",
+							data: $('#joinbigform').serialize(),
+							success: function(data){
+								if ("success" in data){
+									alert("Successfully Joined. WelCome!");
+									window.location = "/";
+								}
+								else if (data.error = "password"){
+									alert("Password is different")
+									$('#pw').val("");
+									$('#pwconfirm').val("");
+								}
+								else{
+									alert(data);
+									console.log("error?");
+								}
+							},
+							error: function(xhr, ajaxOptions, errorThrown){
+								//alert(xhr);
+								//alert(errorThrown);
+								//console.log("error");
+							}
+						});
+						return false;
+					});
+				
+					$('#id_check').click(function(e){
+							$.ajax({
+								type: "POST",
+								url: "/join",
+								data: {'id_check': '', 'id': $('#id').val()},
+								success: function(data){
+									if ("success" in data){
+										alert("You can Use this ID");
+									}
+									else {
+										alert("Sorry! Already taken By Someone");
+									}
+								},
+								error: function(xhr, ajaxOptions, errorThrown){
+								}
+							});
+							return false;
+					});
+				});
+		</script>
+{% endblock %}
+{% block wrapper %}
+                <div id = "logoimage">
+                        <img id = "logo" src = "http://img.cgv.co.kr/Movie/Thumbnail/StillCut/000077/77113/77113106976_727.jpg" alt = "logo">
+                </div>
+
+                <div id = "join">
+                        <form id = "joinbigform" method = "post" action = "/join">
+                                <fieldset id = "joinsmallform">
+                                        <div id = "joinfield">
+                                                <div id = "account">
+                                                        <div>
+                                                                <label id = "idletter" for = "id">ID</label>
+                                                                <input type = "text" id = "id" class = "inputval" name = "id">
+																<input type = "submit" id = "id_check" name = "id_check" value = "ID 확인"> <!-- class ? -->
+                                                        </div>
+
+                                                        <div>
+                                                                <label id = "pwletter" for = "pw">PW</label>
+                                                                <input type = "password" id = "pw" class = "inputval" name = "pw">
+                                                        </div>
+
+                                                        <div>
+                                                                <label id = "pwconfirmletter" for = "pwconfirm">PW Confirm</label>
+                                                                <input type = "password" id = "pwconfirm" class = "inputval" name = "pwconfirm">
+                                                        </div>
+
+							<div>
+								<label id = "emailletter" for = "email">Email</label>
+								<input type = "email" id = "email" class = "inputval" name = "email">
+							</div>
+                                                </div>
+
+                                                <div id = "joinbutton">
+                                                        <input id = "join_button" type = "submit" value = "join">
+                                                </div>
+                                        </div>
+                                </fieldset>
+                        </form>
+                </div>
+{% endblock %}
+

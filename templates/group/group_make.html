@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block script %}
+		<script>
+		$(document).ready(function(){
+				$('#gp_name_check').click(function(e){
+					$.ajax({
+						type: "POST",
+						url: "/group_make",
+						data: {'name_check': '', 'group_name': $('#group_name').val()},
+						success: function(data){
+							if ("fail" in data){
+								alert("Sorry! Someone has aleready made a group in that name");
+							}
+							else {
+								alert("You can Use this name");
+							}
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+						}
+					});
+					return false;
+				});
+
+				$('#makebutton').click(function(e){
+					$.ajax({
+						type: "POST",
+						url: "/group_make",
+						data: $('#gpmake').serialize(),
+						success: function(data){
+							if ("success" in data){
+								alert("You Made a group");
+								window.location = "/";
+							}
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+							alert("Error");
+						}
+					});
+					return false;
+				});
+		});
+		</script>
+{% endblock %}
+{% block wrapper %}
+		<form id = "gpmake" method = "post">
+			<fieldset id = "gpfield">
+                		<div id = "gpaccount">
+                        	      	<div>
+						<span id = "gpnametry">
+                              	        		<label id = "gpnameletter" for = "gpname">Group name</label>
+                                			<input type = "text" name = "group_name" id = "group_name" class = "inputval">
+						</span>
+
+						<span id = "gpnamecheck">
+							<input id = "gp_name_check" type = "submit" value = "Double check" name = "check">
+						</span>
+                                	</div>
+
+	                                <div>
+        	                                <label id = "gpinfoletter" for = "gpinfo">Group info</label>
+                	                        <input type = "text" name = "group_info" id = "group_info" class = "inputval">
+                        	        </div>
+                        	 </div>
+
+                     		 <div id = "gpmakebutton">
+                                	<input id = "makebutton" type = "submit" value = "Submit">
+                        	 </div>
+                	 </fieldset>
+		</form>
+{% endblock %}
+	
+

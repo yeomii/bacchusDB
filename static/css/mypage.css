@@ -1,0 +1,41 @@
+#infobar {
+        width: 100%;
+        overflow: auto;
+}
+#userid {
+        margin-left: 10px;
+}
+#userwelcome {
+        float: left;
+}
+#logout {
+        margin-right: 10px;
+}
+#mypage {
+        margin-right: 20px;
+}
+#myinfo {
+        float: right;
+}
+#wrapper {
+        margin: 0 auto;
+        width: 800px;
+}
+#myform {
+        margin: 300px 0px 0px 0px;
+        width: 800px;
+}
+.inputletter {
+	display: inline-block;
+	width: 150px;
+}
+.inputval {
+	width: 200px;
+}
+#footer {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+}
+

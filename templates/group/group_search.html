@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block wrapper %}
+	<div id = "rletterfield">
+		<span id = "resultletter">그룹 검색 결과</span>
+	</div>
+
+	<div id = "resultfield">
+		<table border = "1" id = "searchresult">
+			<tr>
+				<th>번호</th>
+				<th>그룹명</th>
+				<th>가입신청</th>
+			</tr>
+					
+			<tr>
+				<td>1</td>
+				<td>BACCHUS</td>
+				<td><button class = "joinreqest">가입신청</button></td>
+			</tr>
+					
+			<tr>
+					
+				<td>2</td>
+				<td>GUARDIAN</td>
+				<td><button class = "joinreqest">가입신청</button></td>
+			</tr>
+					
+			<tr>
+				<td>3</td>
+				<td>HIS</td>
+				<td><button class = "joinreqest">가입신청</button></td>
+			</tr>
+		</table>
+	</div>
+	<span id = "complete"><button onclick = "window.location.href='/'">완료</button></span>
+{% endblock %}
+

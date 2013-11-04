@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block wrapper %}
+		<div id = "dbfield">	
+			<table border = "1" id = "mydb">
+				<tr>
+					<th>DB명</th>
+					<th>DB유형</th>
+					<th>선택</th>
+				</tr>
+				<tr>
+					<td>비상연락망</td>
+					<td>주소록</td>
+					<td>
+						<input type = "checkbox">
+					</td>
+				</tr>
+				
+			</table>
+	
+			<span id = "adddb"><button>새 DB 추가</button></span>
+			<span id = "editdb"><button>수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
+		</div>
+	
+	
+		<div id = "memfield">
+			<aside>
+				<span id = "gpmember">그룹 멤버:</span>
+				<span id = "numofmem">26명</span>
+				<ol>
+					<li id = "administrator" class = "memclass">
+						<strong>관리자</strong>
+						<ul>
+							<li>김진명</li>
+							<li>안용주</li>
+							<li>박성준</li>
+						</ul>	
+					</li>
+					<li id = "user" class = "memclass">
+						<strong>일반 사용자</strong>
+						<ul>
+							<li>이현민</li>
+							<li>김도연</li>
+							<li>최준혁</li>
+							<li>이선호</li>
+						</ul>
+					</li>
+				</ol>
+			</aside>
+		</div>
+{% endblock %}
+
+

@@ -1,0 +1,60 @@
+#infobar {
+	width: 100%;
+	overflow: auto;
+}
+#userid {
+	margin-left: 10px;
+}
+#userwelcome {
+	float: left;
+}
+#logout {
+	margin-right: 10px;
+}	
+#mypage {
+	margin-right: 20px;
+}
+#myinfo {
+	float: right;
+}
+#navbar {
+    	float: left;
+ 	width: 100%;
+ 	margin: 0;
+ 	padding: 10px 0 0 0;
+	list-style: none;
+}
+#navbar li {
+    	float: left;
+    	margin: 0 1px 0 0;
+    	padding: 0;
+}
+#navbar a {
+    	float: left;
+    	display: block;
+    	margin: 0;
+    	padding: 4px 8px;
+    	text-decoration: none;
+    	border-bottom: none;
+}
+#wrapper {
+	width: 100%;
+	margin: 50px auto;
+	overflow: auto;
+}
+#dbfield {
+	float: left;
+}
+#memfield {
+	float: right;
+}
+aside {
+	border: 1px solid black;
+}
+#footer {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+}
+

@@ -1,0 +1,62 @@
+@charset "utf-8";
+
+#wrapper {
+	width: 500px;
+	margin: 0 auto;
+}
+
+#logoimage {
+	margin: 100px 0px 0px 0px;
+}
+
+#logo {
+	width: 500px;
+}
+
+#join {
+	width: 500px; 
+}
+#joinfield {
+	overflow: hidden;
+	zoom: 1;
+}
+#account {
+	float: left;
+}
+#idletter {
+	display: inline-block;
+	width: 100px;
+}
+#pwletter {
+	display: inline-block;
+	width: 100px;
+}
+#pwconfirmletter {
+	display: inline-block;
+	width: 100px;
+}
+#emailletter {
+	display: inline-block;
+	width: 100px;
+}
+.inputval {
+        width: 200px;
+}
+#joinbutton {
+	float: right;
+}
+#button {
+	display: block;
+	width: 50px;
+	height: 50px;
+}
+#madeby {
+	margin-right: 10px;
+}
+#footer {
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	text-align: center;
+}
+
