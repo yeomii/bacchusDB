@@ -16,14 +16,18 @@ join
 									alert("Successfully Joined. WelCome!");
 									window.location = "/";
 								}
-								else if (data.error = "password"){
+								else if (data.error == "password"){
 									alert("Password is different")
 									$('#pw').val("");
 									$('#pwconfirm').val("");
 								}
+								else if (data.error == "validation"){
+									alert("Password does not satisfy our restriction");
+									$('#pw').val("");
+									$('#pwconfirm').val("");
+								}
 								else{
-									alert(data);
-									console.log("error?");
+									alert("Error?");
 								}
 							},
 							error: function(xhr, ajaxOptions, errorThrown){
