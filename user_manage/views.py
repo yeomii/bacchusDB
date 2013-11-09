@@ -86,6 +86,7 @@ def join_page(request):
 				username = request.POST['id']
 				password = request.POST['pw']
 				password_confirm = request.POST['pwconfirm']
+				name = request.POST['uname']
 				email = request.POST['email']
 
 				if (pw_validation(password)):
@@ -94,7 +95,7 @@ def join_page(request):
 				if (password != password_confirm):
 					data['error'] = "password_failure"
 				else:
-					user = User.objects.create_user(username=username, password=password, email=email)
+					user = User.objects.create_user(username=username, password=password, first_name=name, email=email)
 					user.save()
 					data['success'] = 'success'
 
