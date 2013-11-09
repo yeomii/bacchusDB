@@ -55,8 +55,10 @@ def group_page(request, title):
 		return redirect('user_manage.views.home')
 
 	g = Group.objects.get(title=title)
+	admin = Membership.objects.filter(group=g, status=0)
+	normal = Membership.objects.filter(group=g, status=1)
 
-	var = RequestContext(request, {'u': request.user, 'g': g, 'css':'group'})
+	var = RequestContext(request, {'u': request.user, 'g': g, 'admin': admin, 'normal': normal, 'css':'group'})
 
 	return render_to_response('group/group_page.html', var)
 
