@@ -1,4 +1,13 @@
 {% extends "base.html" %}
+{% block script %}
+<script type="text/javascript">
+	$(document).ready(function(){
+			$('#db_add').click(function(e){
+				window.location.href = document.URL + "/db_make";
+			});
+		});
+</script>
+{% endblock %}
 {% block wrapper %}
 		<div id = "dbfield">	
 			<table border = "1" id = "mydb">
@@ -7,6 +16,13 @@
 					<th>DB유형</th>
 					<th>선택</th>
 				</tr>
+				{% for d in db %}
+				<tr>
+					<td>{{ d.title }}</td>
+					<td>{{ d.type }}</td>
+					<td><input type="checkbox"></td>
+				</tr>
+				{% endfor %}
 				<!--
 				<tr>
 					<td>비상연락망</td>
@@ -18,7 +34,7 @@
 				-->
 			</table>
 	
-			<span id = "adddb"><button>새 DB 추가</button></span>
+			<span id = "adddb"><button id="db_add">새 DB 추가</button></span>
 			<span id = "editdb"><button>수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
 		</div>
 	

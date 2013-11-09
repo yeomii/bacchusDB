@@ -27,7 +27,7 @@
 
 		{% for g in groups %}
 		<tr>
-			<td><a href="/group_{{ g.group.title }}">{{ g.group.title }}</a></th>
+			<td><a href="/group/{{ g.group.title }}">{{ g.group.title }}</a></th>
 			<td>
 				{% if g.status == 0 %}
 					관리자

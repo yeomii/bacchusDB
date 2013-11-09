@@ -14,8 +14,5 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
-	url(r'^group_make$', 'group.views.group_make'),
-	url(r'^group_name_check$', 'group.views.group_name_check'),
-	url(r'^group_search$', 'group.views.group_search'),
-	url(r'^group/(\D+)$', 'group.views.group_page'),
+	url(r'^group/(\D+)/db_make$', 'db.views.db_make'),
 )
