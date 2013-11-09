@@ -36,22 +36,27 @@ join
 					});
 				
 					$('#id_check').click(function(e){
-							$.ajax({
-								type: "POST",
-								url: "/join",
-								data: {'id_check': '', 'id': $('#id').val()},
-								success: function(data){
-									if ("success" in data){
-										alert("You can Use this ID");
+							if ($('#id').val() == ""){
+								alert("Empty!");
+							}
+							else {
+								$.ajax({
+									type: "POST",
+									url: "/join",
+									data: {'id_check': '', 'id': $('#id').val()},
+									success: function(data){
+										if ("success" in data){
+											alert("You can Use this ID");
+										}
+										else {
+											alert("Sorry! Already taken By Someone");
+										}
+									},
+									error: function(xhr, ajaxOptions, errorThrown){
 									}
-									else {
-										alert("Sorry! Already taken By Someone");
-									}
-								},
-								error: function(xhr, ajaxOptions, errorThrown){
-								}
-							});
+								});
 							return false;
+							}
 					});
 				});
 		</script>

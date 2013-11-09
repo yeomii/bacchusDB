@@ -59,6 +59,11 @@ def group_page(request, title):
 	var = RequestContext(request, {'u': request.user, 'g': g, 'css':'group'})
 
 	return render_to_response('group/group_page.html', var)
+
+@csrf_exempt
 @login_required
 def group_search(request):
-	return render_to_response('group/group_search.html', RequestContext(request, {'u':request.user,'css':'searchr'}))
+	group_name = request.POST['group_name']
+
+	g = Group.objects.filter(title__contains=group_name)
+	return render_to_response('group/group_search.html', RequestContext(request, {'u':request.user, 'groups': g, 'css':'searchr'}))

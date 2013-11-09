@@ -1,9 +1,18 @@
 {% extends "base.html" %}
-
+{% block script %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#groupsearch').submit(function(e){
+				if ($('#keyword').val() == "")
+					return false;
+				}
+			});
+	</script>
+{% endblock %}
 {% block wrapper %} 	
-	<form id = groupsearch action = "/group_search">
+	<form id = groupsearch action = "/group_search" method = "post">
 		<div>
-			<input type = "text" value = "그룹을 검색하세요" id = "keyword">
+			<input type = "text" placeholder = "그룹을 검색하세요" id = "keyword" name ="group_name">
 			<input type = "submit" value = "search" id = "searchbut">
 		</div>
 	</form>

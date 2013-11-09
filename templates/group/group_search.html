@@ -12,7 +12,7 @@
 				<th>그룹명</th>
 				<th>가입신청</th>
 			</tr>
-					
+			<!--
 			<tr>
 				<td>1</td>
 				<td>BACCHUS</td>
@@ -31,6 +31,14 @@
 				<td>HIS</td>
 				<td><button class = "joinreqest">가입신청</button></td>
 			</tr>
+			-->
+			{% for g in groups %}
+				<tr>
+					<td>{{ forloop.counter }}</td>
+					<td>{{ g.title }}</td>
+					<td><button class = "joinreqest">가입신청</button></td>
+				</tr>
+			{% endfor %}
 		</table>
 	</div>
 	<span id = "complete"><button onclick = "window.location.href='/'">완료</button></span>
