@@ -5,6 +5,35 @@
 			$('#db_add').click(function(e){
 				window.location.href = document.URL + "/db_make";
 			});
+
+			$('.approval').click(function(e){
+				row = $(this).parent().parent();	
+				$.ajax({
+					type: "GET",
+					url: document.URL + "/" + $(this).parent().parent().children('td:nth-child(2)').html() + "/s",
+					success: function(data){
+						row.remove();
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			});
+
+			$('.denial').click(function(e){
+				row = $(this).parent().parent();	
+				$.ajax({
+					type: "GET",
+					url: document.URL + "/" + $(this).parent().parent().children('td:nth-child(2)').html() + "/f",
+					success: function(data){
+						row.remove();
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			});
+
 		});
 </script>
 {% endblock %}
@@ -17,7 +46,22 @@
 					<th>ID</th>
 					<th>메세지</th>
 					<th>승인</th>
+					<th>거부</th>
 				</tr>
+				{% for r in join_req %}
+				<tr>
+					<td>{{ r.user.first_name }}</td>
+					<td>{{ r.user.username }}</td>
+					<td>{{ r.message }}</td>
+					<td>
+						<button class="approval">승인</button>
+					</td>
+					<td>
+						<button class="denial">거부</button>
+					</td>
+				</tr>
+				{% endfor %}
+				<!--
 				<tr>
 					<td>김도연</td>
 					<td>mkim</td>
@@ -26,6 +70,7 @@
 						<button>승인</buton>
 					</td>
 				</tr>
+				-->
 			</table>
 		</div>
 		{% endif %}
