@@ -9,6 +9,26 @@
 </script>
 {% endblock %}
 {% block wrapper %}
+		{% if m.status == 0 %}
+		<div id = "permission">
+			<table border = "1" id = "permitdb">
+				<tr>
+					<th>이름</th>
+					<th>ID</th>
+					<th>메세지</th>
+					<th>승인</th>
+				</tr>
+				<tr>
+					<td>김도연</td>
+					<td>mkim</td>
+					<td>가입시켜주세요</td>
+					<td>
+						<button>승인</buton>
+					</td>
+				</tr>
+			</table>
+		</div>
+		{% endif %}
 		<div id = "dbfield">	
 			<table border = "1" id = "mydb">
 				<tr>
@@ -48,7 +68,7 @@
 						<strong>관리자</strong>
 						<ul>
 							{% for member in admin %}
-							<li>{{ member.user.username }}</li>	<!-- 임시적으로 id를 표시하도록 한다. -->
+							<li>{{ member.user.first_name }}</li>	<!-- 임시적으로 id를 표시하도록 한다. -->
 							{% endfor %}
 							<!--
 							<li>김진명</li>
@@ -61,7 +81,7 @@
 						<strong>일반 사용자</strong>
 						<ul>
 							{% for member in normal %}
-							<li>{{ member.user.username }}</li>
+							<li>{{ member.user.first_name }}</li>
 							{% endfor %}
 							<!--
 							<li>이현민</li>

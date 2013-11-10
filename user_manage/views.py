@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from bacchusdb import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -52,20 +53,13 @@ def logout_process(request):
 	else:
 		return redirect('user_manage.views.login_page') 
 
-"""
-def user_page(request):
-	user = request.user
-	if user is None:
-		return HttpResponse('Not Logged in')
+
+def pw_validation(password):		#비밀번호 제한 체크하는 함수 제한에 걸리면 True 반환
+	if (len(password) < 6):
+		return True
 	else:
-		var = RequestContext(request, {
-			'u': user
-		})
-		return render_to_response(
-			'user/user_page.html',
-			var
-		)
-"""
+	 	return False
+
 
 @csrf_exempt
 def join_page(request):
@@ -92,17 +86,24 @@ def join_page(request):
 				username = request.POST['id']
 				password = request.POST['pw']
 				password_confirm = request.POST['pwconfirm']
+				name = request.POST['uname']
 				email = request.POST['email']
+
+				if (pw_validation(password)):
+					raise ValidationError("Too Short")
 
 				if (password != password_confirm):
 					data['error'] = "password_failure"
 				else:
-					user = User.objects.create_user(username=username, password=password, email=email)
+					user = User.objects.create_user(username=username, password=password, first_name=name, email=email)
 					user.save()
 					data['success'] = 'success'
 
 			except IntegrityError as e:
 				data['error'] = e.messages[0]
+
+			except ValidationError as e:
+				data['error'] = "validation"
 
 			return HttpResponse(json.dumps(data), content_type="application/json")
 
@@ -146,10 +147,8 @@ def info_page(request):
 			if request.user.check_password(new_password):
 				data['password'] = "same"
 
-			if (new_password == "" and pw_confirm == ""):
-				pass
-			elif (new_password == ""):
-				data['npassword'] = "restriction"
+			if (pw_validation(new_password)):
+				raise ValidationError('error')
 			elif (new_password != pw_confirm):
 				data['npassword'] = "not same"
 			else:
@@ -161,6 +160,9 @@ def info_page(request):
 						
 		except ObjectDoesNotExist:
 			data['error'] = "User Does Not Exist"	
+
+		except ValidationError:
+			data['npassword'] = "validation"
 
 		return HttpResponse(json.dumps(data), content_type="application/json")
 	else:

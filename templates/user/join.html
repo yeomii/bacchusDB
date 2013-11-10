@@ -16,14 +16,18 @@ join
 									alert("Successfully Joined. WelCome!");
 									window.location = "/";
 								}
-								else if (data.error = "password"){
+								else if (data.error == "password"){
 									alert("Password is different")
 									$('#pw').val("");
 									$('#pwconfirm').val("");
 								}
+								else if (data.error == "validation"){
+									alert("Password does not satisfy our restriction");
+									$('#pw').val("");
+									$('#pwconfirm').val("");
+								}
 								else{
-									alert(data);
-									console.log("error?");
+									alert("Error?");
 								}
 							},
 							error: function(xhr, ajaxOptions, errorThrown){
@@ -71,6 +75,7 @@ join
                                 <fieldset id = "joinsmallform">
                                         <div id = "joinfield">
                                                 <div id = "account">
+                                                	
                                                         <div>
                                                                 <label id = "idletter" for = "id">ID</label>
                                                                 <input type = "text" id = "id" class = "inputval" name = "id">
@@ -83,9 +88,14 @@ join
                                                         </div>
 
                                                         <div>
-                                                                <label id = "pwconfirmletter" for = "pwconfirm">PW Confirm</label>
-                                                                <input type = "password" id = "pwconfirm" class = "inputval" name = "pwconfirm">
+																<label id = "pwconfirmletter" for = "pwconfirm">PW Confirm</label>
+																<input type = "password" id = "pwconfirm" class = "inputval" name = "pwconfirm">
                                                         </div>
+                                                        
+                                                        <div>
+																<label id = "unameletter" for = "uname">Name</label>
+		                                                		<input type = "text" id = "uname" class = "inputval" name = "uname">
+	                                                	</div>
 
 							<div>
 								<label id = "emailletter" for = "email">Email</label>
