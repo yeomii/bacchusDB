@@ -1,3 +1,8 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
 #infobar {
         width: 100%;
         overflow: auto;
@@ -18,8 +23,13 @@
         float: right;
 }
 #wrapper {
+	min-height: 100%
         margin: 0 auto;
         width: 800px;
+}
+#main {
+	overflow: auto;
+	padding-bottom: 20px;
 }
 #myform {
         margin: 300px 0px 0px 0px;
@@ -33,8 +43,10 @@
 	width: 200px;
 }
 #footer {
-        position: absolute;
-        bottom: 10px;
+        position: relative;
+	margin-top: -20px;
+	height: 20px;
+	clear: both;
         width: 100%;
         text-align: center;
 }

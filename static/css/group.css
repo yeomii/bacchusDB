@@ -1,3 +1,8 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
 #infobar {
 	width: 100%;
 	overflow: auto;
@@ -38,9 +43,13 @@
     	border-bottom: none;
 }
 #wrapper {
+	min-height: 100%;
 	width: 100%;
 	margin: 50px auto;
+}
+#main {
 	overflow: auto;
+	padding-bottom: 20px;
 }
 #permission {
 	padding: 10px;
@@ -55,8 +64,10 @@ aside {
 	border: 1px solid black;
 }
 #footer {
-        position: absolute;
-        bottom: 10px;
+        position: relative;
+	margin-top: -20px;
+	height: 20px;
+	clear: both;
         width: 100%;
         text-align: center;
 }
