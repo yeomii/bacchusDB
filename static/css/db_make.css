@@ -1,3 +1,7 @@
+#wrapper {
+	width: 500px;
+	margin: 0 auto;
+}
 #infobar {
 	width: 100%;
 	overflow: auto;
@@ -37,22 +41,42 @@
     	text-decoration: none;
     	border-bottom: none;
 }
-#wrapper {
-	width: 100%;
-	margin: 50px auto;
-	overflow: auto;
-}
-#permission {
-	padding: 10px;
+#dbmake {
+	margin: 300px 0px 0px 0px;
+        width: 500px;
 }
 #dbfield {
-	float: left;
+        /*overflow: hidden;
+        zoom: 1;*/
 }
-#memfield {
-	float: right;
+#dbaccount {
+        /*float: left;*/
 }
-aside {
-	border: 1px solid black;
+#dbnameletter {
+        display: inline-block;
+        width: 100px;
+}
+#dbtypeletter {
+		display: inline-block;
+		width: 100px;
+}
+#dbinfoletter {
+        display: inline-block;
+        width: 100px;
+}
+.inputval {
+        width: 200px;
+}
+#checkbutton {
+	display: inline-block;
+	width: 100px;
+}
+#dbmakebutton {
+	text-align: center;
+}
+#makebutton {
+        width: 80px;
+        height: 30px;
 }
 #footer {
         position: absolute;
@@ -60,4 +84,3 @@ aside {
         width: 100%;
         text-align: center;
 }
-

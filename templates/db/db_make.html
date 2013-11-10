@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block script %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+				$('#dbmake').submit(function(e){
+					url = document.URL.split("/");
+					new_url = "http:/";
+					for (var i=2; i<url.length-1; i++){
+						new_url += ("/" + url[i]);
+					}
+					$.ajax({
+						type: "POST",
+						url: document.URL,
+						data: $(this).serialize(),
+						success: function(data){
+							alert("You made a DB");
+							window.location = new_url;
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+							alert("You have DB in that name already");
+						}
+					});
+					return false;
+				});
+			});
+	</script>
+{% endblock %}
+{% block wrapper %}
+	<form id="dbmake" method="post">
+		<fieldset id="dbfield">
+			<div id="dbaccount">
+				<div>
+					<span id="dbnametry">
+						<label id="dbnameletter" for="dbname">DB Name</label>
+						<input type="text" name="db_name" id="db_name" class="inputval">
+					</span>
+
+				</div>
+				
+				<div>
+					<label id="dbtypeletter" for="dbtype">DB Type</label>
+					<input type="text" name="db_type" id="db_type" class="inputval">
+				</div>
+
+				<div>
+					<label id="dbinfoletter" for="dbinfo">DB Info</label>
+					<input type="text" name="db_info" id="db_info" class="inputval">
+				</div>
+			</div>
+
+			<div id="dbmakebutton">
+				<input id="makebutton" type="submit" value="Submit">
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}
