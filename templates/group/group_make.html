@@ -7,9 +7,14 @@
 						type: "POST",
 						url: "/group_make",
 						data: {'name_check': '', 'group_name': $('#group_name').val()},
-						success: function(data){
+						success: function(data){						
 							if ("fail" in data){
-								alert("Sorry! Someone has aleready made a group in that name");
+								if (data.fail == "Empty"){
+									alert("Empty!");
+								}
+								else{
+									alert("Sorry! Someone has aleready made a group in that name");
+								}
 							}
 							else {
 								alert("You can Use this name");
@@ -27,13 +32,20 @@
 						url: "/group_make",
 						data: $('#gpmake').serialize(),
 						success: function(data){
-							if ("success" in data){
+							if ("fail" in data){
+								if (data.fail == "Empty"){
+									alert("Empty Group Name");
+								}
+								else{
+									alert("Sorry! Someone has aleready made a group in that name");
+								}
+							}	
+							else if ("success" in data){
 								alert("You Made a group");
 								window.location = "/";
 							}
 						},
 						error: function(xhr, ajaxOptions, errorThrown){
-							alert("Error");
 						}
 					});
 					return false;

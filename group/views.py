@@ -27,22 +27,31 @@ def group_make(request):
 	data = {}
 	if request.method == "POST" and request.is_ajax() and 'name_check' in request.POST:
 		name = request.POST['group_name']
-		if group_name_check(name):
+
+		if name == "":
+			data['fail'] = "Empty"
+		elif group_name_check(name):
 			data['fail'] = ""
 		else:
 		 	data['success'] = ""
 
 		return HttpResponse(json.dumps(data), content_type="application/json")
+
 	elif request.method == "POST" and request.is_ajax():
 		group_name = request.POST['group_name']
 		group_info = request.POST['group_info']
+		
 		if group_name == "":
-			return HttpResponse('Group_name cannot be empty') 
-		g = Group(title=group_name, info=group_info, num_member=1)
-		g.save()
-		m = Membership(user=request.user, group=g, status=0)
-		m.save()
-		data['success'] = ""
+			data['fail'] = "Empty"
+		elif group_name_check(group_name):
+			data['fail'] = ""
+		else:
+			g = Group(title=group_name, info=group_info, num_member=1)
+			g.save()
+			m = Membership(user=request.user, group=g, status=0)
+			m.save()
+			data['success'] = ""
+
 		return HttpResponse(json.dumps(data), content_type="application/json")
 	else:
 		return render_to_response('group/group_make.html', RequestContext(request, {'u': request.user, 'css':'group_make'}))
