@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block script %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+	});	
+</script>
+{% endblock %}
+{% block wrapper %}
+		<div id = "dbnamefield">
+			<span id = "dbname">DB명: {{ db.name }}</span>
+		</div>
+
+		<div id = "dbfield">	
+			<table border = "1" id = "mydb">
+				{% for r in cells %}
+				<tr>
+					{% for c in r %}
+					<td width="200" height="30">
+						<div id= "{{ c.cellrow.rownum }}::{{ c.cellnum }}"contenteditable="true">
+						{% if c.contents == NONE %}
+						{% else %} 
+						{{ c.contents }}
+						{% endif %}
+						</div>
+					</td>
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+{% endblock %} 

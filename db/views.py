@@ -14,7 +14,7 @@ import json
 @csrf_exempt
 @login_required
 def db_make(request, group_title):
-	if request.method="POST":
+	if request.method=="POST":
 		title = request.POST['db_name']
 		dbtype = request.POST['db_type']
 		info = request.POST['db_info']
@@ -25,3 +25,17 @@ def db_make(request, group_title):
 	else:
 		return render_to_response('db/db_make.html', RequestContext(request, {'u': request.user, 'css': 'db_make'}))
 
+@login_required
+def db_page(request, dbname):
+	db = DataBase.objects.get(name=dbname)
+	dbrow = db.rownum
+	dbcolumn = db.columnnum
+	user = request.user
+	group = db.group
+	rows = Row.objects.filter(rowdb=db)
+	rows.order_by('rownum')
+	cells = []
+	for i in range(dbcolumn):
+		cell = Cell.objects.filter(cellrow=rows[i])
+		cells.append(cell.order_by('cellnum'))
+	return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'css':'db_page', 'db':db, 'cells':cells}))

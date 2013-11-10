@@ -40,6 +40,7 @@ class CellManager(models.Manager):
 	def create_cell(self, row, num):
 		cell = self.create(cellnum=num, cellrow=row)
 		return cell
+'''
 	def isNumber(s):
   		try:
     			float(s)
@@ -52,12 +53,30 @@ class CellManager(models.Manager):
 			self.ctype = False
 		else:
 			self.ctype = True
-
+'''
 class Cell(models.Model):
-	contents = models.CharField(max_length=100, null=True, blank=True)
+	contents = models.CharField(max_length=100, blank=True)
 	ctype = models.BooleanField(default=True) # true indicates string content
 	cellnum = models.IntegerField() # nth cell in row
 	cellrow = models.ForeignKey(Row)
 	objects = CellManager()
 	def __unicode__(self):
 		return str(self.cellnum)
+        def modify_cell(self, content):
+		def isNumber(s):
+               	 	try:
+                 	       	float(s)
+                 	       	return True
+                	except ValueError:
+                        	return False
+                self.contents = content
+                if isNumber(content):
+                        self.ctype = False
+                else:
+                        self.ctype = True
+		self.save()
+	
+
+
+
+
