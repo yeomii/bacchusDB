@@ -1,5 +1,25 @@
 {% extends "base.html" %}
 {% block wrapper %}
+		{% if m.status == 0 %}
+		<div id = "permission">
+			<table border = "1" id = "permitdb">
+				<tr>
+					<th>이름</th>
+					<th>ID</th>
+					<th>메세지</th>
+					<th>승인</th>
+				</tr>
+				<tr>
+					<td>김도연</td>
+					<td>mkim</td>
+					<td>가입시켜주세요</td>
+					<td>
+						<button>승인</buton>
+					</td>
+				</tr>
+			</table>
+		</div>
+		{% endif %}
 		<div id = "dbfield">	
 			<table border = "1" id = "mydb">
 				<tr>
