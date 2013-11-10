@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
 
 # Uncomment the next two lines to enable the admin:
@@ -14,6 +15,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+	url(r'', include('db.urls')),	#현재 group/'group_title'/db_make가 user_manage.urls에서 catch되서 순서 변경해놓음
 	url(r'', include('user_manage.urls')),
 	url(r'', include('group.urls')),
-)
+	)

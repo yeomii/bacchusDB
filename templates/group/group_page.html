@@ -1,5 +1,79 @@
 {% extends "base.html" %}
+{% block script %}
+<script type="text/javascript">
+	$(document).ready(function(){
+			$('#db_add').click(function(e){
+				window.location.href = document.URL + "/db_make";
+			});
+
+			$('.approval').click(function(e){
+				row = $(this).parent().parent();	
+				$.ajax({
+					type: "GET",
+					url: document.URL + "/" + $(this).parent().parent().children('td:nth-child(2)').html() + "/s",
+					success: function(data){
+						row.remove();
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			});
+
+			$('.denial').click(function(e){
+				row = $(this).parent().parent();	
+				$.ajax({
+					type: "GET",
+					url: document.URL + "/" + $(this).parent().parent().children('td:nth-child(2)').html() + "/f",
+					success: function(data){
+						row.remove();
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			});
+
+		});
+</script>
+{% endblock %}
 {% block wrapper %}
+		{% if m.status == 0 %}
+		<div id = "permission">
+			<table border = "1" id = "permitdb">
+				<tr>
+					<th>이름</th>
+					<th>ID</th>
+					<th>메세지</th>
+					<th>승인</th>
+					<th>거부</th>
+				</tr>
+				{% for r in join_req %}
+				<tr>
+					<td>{{ r.user.first_name }}</td>
+					<td>{{ r.user.username }}</td>
+					<td>{{ r.message }}</td>
+					<td>
+						<button class="approval">승인</button>
+					</td>
+					<td>
+						<button class="denial">거부</button>
+					</td>
+				</tr>
+				{% endfor %}
+				<!--
+				<tr>
+					<td>김도연</td>
+					<td>mkim</td>
+					<td>가입시켜주세요</td>
+					<td>
+						<button>승인</buton>
+					</td>
+				</tr>
+				-->
+			</table>
+		</div>
+		{% endif %}
 		<div id = "dbfield">	
 			<table border = "1" id = "mydb">
 				<tr>
@@ -7,6 +81,14 @@
 					<th>DB유형</th>
 					<th>선택</th>
 				</tr>
+				{% for d in db %}
+				<tr>
+					<td>{{ d.title }}</td>
+					<td>{{ d.type }}</td>
+					<td><input type="checkbox"></td>
+				</tr>
+				{% endfor %}
+				<!--
 				<tr>
 					<td>비상연락망</td>
 					<td>주소록</td>
@@ -14,10 +96,10 @@
 						<input type = "checkbox">
 					</td>
 				</tr>
-				
+				-->
 			</table>
 	
-			<span id = "adddb"><button>새 DB 추가</button></span>
+			<span id = "adddb"><button id="db_add">새 DB 추가</button></span>
 			<span id = "editdb"><button>수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
 		</div>
 	
@@ -25,23 +107,33 @@
 		<div id = "memfield">
 			<aside>
 				<span id = "gpmember">그룹 멤버:</span>
-				<span id = "numofmem">26명</span>
+				<span id = "numofmem">{{ g.num_member }} </span>
 				<ol>
 					<li id = "administrator" class = "memclass">
 						<strong>관리자</strong>
 						<ul>
+							{% for member in admin %}
+							<li>{{ member.user.first_name }}</li>	<!-- 임시적으로 id를 표시하도록 한다. -->
+							{% endfor %}
+							<!--
 							<li>김진명</li>
 							<li>안용주</li>
 							<li>박성준</li>
+							-->
 						</ul>	
 					</li>
 					<li id = "user" class = "memclass">
 						<strong>일반 사용자</strong>
 						<ul>
+							{% for member in normal %}
+							<li>{{ member.user.first_name }}</li>
+							{% endfor %}
+							<!--
 							<li>이현민</li>
 							<li>김도연</li>
 							<li>최준혁</li>
 							<li>이선호</li>
+							-->
 						</ul>
 					</li>
 				</ol>

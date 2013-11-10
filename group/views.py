@@ -1,5 +1,6 @@
 from bacchusdb import settings
-from group.models import Group, Membership
+from group.models import Group, Membership, Admission
+from db.models import Group_db
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -55,10 +56,71 @@ def group_page(request, title):
 		return redirect('user_manage.views.home')
 
 	g = Group.objects.get(title=title)
+	admin = Membership.objects.filter(group=g, status=0)
+	normal = Membership.objects.filter(group=g, status=1)
+	db = Group_db.objects.filter(group=g)
 
-	var = RequestContext(request, {'u': request.user, 'g': g, 'css':'group'})
-
+	if (m.status == 1):
+		var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
+	else:
+		admission = Admission.objects.filter(group=g, status=0)
+		var = RequestContext(request, {'u': request.user, 'join_req': admission, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
 	return render_to_response('group/group_page.html', var)
+
+@csrf_exempt
 @login_required
 def group_search(request):
-	return render_to_response('group/group_search.html', RequestContext(request, {'u':request.user,'css':'searchr'}))
+	group_name = request.POST['group_name']
+
+	g = Group.objects.filter(title__contains=group_name)
+	return render_to_response('group/group_search.html', RequestContext(request, {'u':request.user, 'groups': g, 'css':'searchr'}))
+
+@csrf_exempt
+@login_required
+def group_join_request(request, g_title):
+	data = {}
+	g = Group.objects.get(title=g_title)
+	u = request.user
+	
+	try:
+		admission = Admission.objects.get(user=u, group=g)
+		
+		if (admission.status == 0):
+			data['error'] = "Already"
+		elif (admission.status == 1):
+			data['error'] = "Member"
+		else:
+			data['error'] = "Denied"
+
+	except ObjectDoesNotExist:
+		try:
+			m = Membership.objects.get(user=u, group=g)
+			data['error'] = "Member"
+
+		except ObjectDoesNotExist:
+			admission = Admission(user=u, group=g, status=0)
+			admission.save()
+			data['success'] = "success"
+	
+	return HttpResponse(json.dumps(data), content_type="application/json")
+
+@csrf_exempt
+@login_required
+def group_join_request_process(request, g_title, username, success):
+	u = User.objects.get(username=username)
+	g = Group.objects.get(title=g_title)
+
+	admission = Admission.objects.get(user=u, group=g)
+
+	if (success == "s"):
+		m = Membership(user=u, group=g, status=1)
+		m.save()
+
+		admission.status=1	
+		
+	else:
+		admission.status = 2
+
+	admission.save()
+
+	return HttpResponse(json.dumps(""), content_type="application/json")

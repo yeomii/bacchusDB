@@ -18,3 +18,18 @@ class Membership(models.Model):
 	group = models.ForeignKey(Group)
 	date_joined = models.DateField(auto_now_add=True)
 	status = models.IntegerField(choices=USER_TYPE)
+
+class Admission(models.Model):
+	TYPE = (
+		(0, 'waiting'),
+		(1, 'accepted'),
+		(2, 'denied')
+	)
+
+	user = models.ForeignKey(User)
+	group = models.ForeignKey(Group)
+	message = models.TextField()
+	status = models.IntegerField(choices=TYPE)
+
+	class Meta:
+		unique_together = ('user', 'group')		

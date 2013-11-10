@@ -17,8 +17,8 @@
 							else if (data.password == "same"){
 								alert("You're new password is identical to you old password");
 							}
-							else if (data.npassword == "restriction"){
-								alert("Password does not satisfy Restriction");
+							else if (data.npassword == "validation"){
+								alert("Password does not satisfy our restriction");
 							}
 							else if (data.npassword == "not same"){
 								alert("Your new password is different from Confirmation Password");
@@ -44,41 +44,48 @@
                         <fieldset id = "myfield">
                                 <div id = "myaccount">
 					<div>
-					회원정보 수정
+					<strong>회원정보 수정</strong><br>
 					</div>
 
-                                        <div>
-						<label id = "userid" for "user" class = "inputletter">ID</label>
-						<input type = "text" id = "user" class = "inputval" value = "{{ u.username }}">
+                    <div>
+						<label id = "idletter" for "user" class = "inputletter">ID</label>
+						{{ u.username }}
 					</div>
 
 					<div>
+                    	<label id = "nameletter" for "name" class = "inputletter">이름</label>
+                    	{{ u.first_name }}    
+					</div>
+
+
+					<div>
 						<label id = "emailletter" for = "email" class = "inputletter">Email</label>
-                        <input type = "text" name = "email" id = "email" value = "{{ u.email }}" class = "inputval">
+                        <input type = "text" id = "email" value = "{{ u.email }}" class = "inputval">
 					</div>
 
 					<div>
 						<label id = "pwletter" for = "pw" class = "inputletter">Password</label>
-						<input type = "password" name = "pw" id = "pw" class = "inputval">
+						<input type = "password" id = "pw" class = "inputval">
 					</div>
 
 					<div>
 						<span id = "pwinput">
 							<label id = "pwletter" for = "newpw" class = "inputletter">New Password</label>
-                            <input type = "password" name = "new_pw" id = "newpw" class = "inputval">
+                        	<input type = "password" id = "newpw" class = "inputval">
 						</span>
 
 						<span id = "pwconfirminput">
 							<label id = "pwletter" for = "pwconfirm" class = "inputletter">Password Confirm</label>
-                            <input type = "password" name = "pw_confirm" id = "pwconfirm" class = "inputval">
+                            <input type = "password" id = "pwconfirm" class = "inputval">
 						</span>
 					</div>	
 
-	                <div id = "submitbutton">
+	               	<div id = "submitbutton">
         	        	<input id = "makebutton" type = "submit" value = "Submit">
                     </div>
+                    
 				</div>
-                         </fieldset>
+                </fieldset>
                 </form>
 {% endblock %}
 

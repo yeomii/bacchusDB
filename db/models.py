@@ -5,8 +5,8 @@ from group.models import Group, Membership
 # Create your models here.
 
 class DataBaseManager(models.Manager):
-	def create_database(self, dbname, dbgroup):
-		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10)
+	def create_database(self, dbname, dbgroup, dbtype, dbinfo):
+		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype)
 		for i in range(db.rownum):
 			Row.objects.create_row(cellnum=db.columnnum, rownum=i, db=db)
 		return db
@@ -14,6 +14,8 @@ class DataBaseManager(models.Manager):
 class DataBase(models.Model):
 	name = models.CharField(max_length=50, unique=True)
 	group = models.ForeignKey(Group)
+	dbtype = models.CharField(max_length=10)
+	info = models.TextField()
 	rownum = models.IntegerField()
 	columnnum = models.IntegerField()
 	objects = DataBaseManager()
