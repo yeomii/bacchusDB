@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from bacchusdb import settings
 from group.models import Group, Membership, Admission
 from db.models import Group_db
@@ -81,9 +82,10 @@ def group_join_request(request, g_title):
 	data = {}
 	g = Group.objects.get(title=g_title)
 	u = request.user
-	
+	msg = request.POST['message']
+
 	try:
-		admission = Admission.objects.get(user=u, group=g)
+		admission = Admission.objects.get(user=u, group=g) 
 		
 		if (admission.status == 0):
 			data['error'] = "Already"
@@ -98,7 +100,7 @@ def group_join_request(request, g_title):
 			data['error'] = "Member"
 
 		except ObjectDoesNotExist:
-			admission = Admission(user=u, group=g, status=0)
+			admission = Admission(user=u, group=g, status=0, message=msg)
 			admission.save()
 			data['success'] = "success"
 	

@@ -28,7 +28,7 @@ class Admission(models.Model):
 
 	user = models.ForeignKey(User)
 	group = models.ForeignKey(Group)
-	message = models.TextField()
+	message = models.CharField(max_length=50)
 	status = models.IntegerField(choices=TYPE)
 
 	class Meta:

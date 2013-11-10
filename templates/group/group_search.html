@@ -5,27 +5,32 @@
 				$('.joinrequest').click(function(){
 					num = $(this).attr('name');
 					title = $(this).parent().parent().children('td:nth-child(2)').html();
-					$.ajax({
-						type: "POST",
-						url: document.URL + "/" + title,
-						success: function(data){
-							if ("success" in data){
-								alert("You made an reqeust to that Group: " + title);
+
+					box = prompt("Your message will be delivered to Group Admin");
+					if (box != null){
+						$.ajax({
+							type: "POST",
+							url: document.URL + "/" + title,
+							data: {'message': box},
+							success: function(data){
+								if ("success" in data){
+									alert("You made an reqeust to that Group: " + title);
+								}
+								else if (data.error == "Already"){
+									alert("You have made an request Already and waiting for response");
+								}
+								else if (data.error == "Member"){
+									alert("You are already Member of that Group");
+								}
+								else if (data.error == "Denied"){
+									alert("You have been denied from that Group");
+								}
+							},
+							error: function(xhr, ajaxOptions, errorThrown){
 							}
-							else if (data.error == "Already"){
-								alert("You have made an request Already and waiting for response");
-							}
-							else if (data.error == "Member"){
-								alert("You are already Member of that Group");
-							}
-							else if (data.error == "Denied"){
-								alert("You have been denied from that Group");
-							}
-						},
-						error: function(xhr, ajaxOptions, errorThrown){
-						}
-					});
-					return false;
+						});
+						return false;
+					}
 				});
 			});
 	</script>
