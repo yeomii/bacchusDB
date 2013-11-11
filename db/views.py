@@ -26,8 +26,9 @@ def db_make(request, group_title):
 		return render_to_response('db/db_make.html', RequestContext(request, {'u': request.user, 'css': 'db_make'}))
 
 @login_required
-def db_page(request, dbname):
-	db = DataBase.objects.get(name=dbname)
+def db_page(request, g_title, dbname):
+	g = Group.objects.get(title=g_title)
+	db = DataBase.objects.get(group=g, name=dbname)
 	dbrow = db.rownum
 	dbcolumn = db.columnnum
 	user = request.user
