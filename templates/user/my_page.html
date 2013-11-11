@@ -47,7 +47,7 @@
 					회원정보 수정
 					</div>
 
-                    <div>
+			                <div>
 						<label id = "idletter" for "user" class = "inputletter">ID</label>
 						{{ u.username }}
 					</div>
@@ -57,7 +57,7 @@
 						{{ u.first_name }}
 					<div>
 						<label id = "emailletter" for = "email" class = "inputletter">Email</label>
-                        <input type = "text" name = "email" id = "email" value = "{{ u.email }}" class = "inputval">
+                       		 		<input type = "text" name = "email" id = "email" value = "{{ u.email }}" class = "inputval">
 					</div>
 
 					<div>
@@ -68,20 +68,20 @@
 					<div>
 						<span id = "pwinput">
 							<label id = "pwletter" for = "newpw" class = "inputletter">New Password</label>
-                            <input type = "password" name = "new_pw" id = "newpw" class = "inputval">
+                            				<input type = "password" name = "new_pw" id = "newpw" class = "inputval">
 						</span>
 
 						<span id = "pwconfirminput">
 							<label id = "pwletter" for = "pwconfirm" class = "inputletter">Password Confirm</label>
-                            <input type = "password" name = "pw_confirm" id = "pwconfirm" class = "inputval">
+                            				<input type = "password" name = "pw_confirm" id = "pwconfirm" class = "inputval">
 						</span>
 					</div>	
 
-	                <div id = "submitbutton">
-        	        	<input id = "makebutton" type = "submit" value = "Submit">
-                    </div>
+	                		<div id = "submitbutton">
+        	        			<input id = "makebutton" type = "submit" value = "Submit">
+                    			</div>
 				</div>
                          </fieldset>
-                </form>
+		</form>
 {% endblock %}
 

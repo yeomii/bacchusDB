@@ -1,10 +1,20 @@
 @charset "utf-8";
-
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
 #wrapper {
-	width: 500px;
+	min-height: 100%;
+	width: 100%;
 	margin: 0 auto;
 }
-
+#main {
+	overflow: auto;
+	width: 500px;
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
 #logoimage {
 	margin: 100px 0px 0px 0px;
 }
@@ -27,15 +37,11 @@
 	display: inline-block;
 	width: 100px;
 }
+#unameletter {
+	display: inline-block;
+	width: 100px;
+}
 #emailletter {
-	display: inline-block;
-	width: 100px;
-}
-#questionletter {
-	display: inline-block;
-	width: 100px;
-}
-#answerletter {
 	display: inline-block;
 	width: 100px;
 }
@@ -59,8 +65,10 @@ input, select {
 	margin-right: 10px;
 }
 #footer {
-	position: absolute;
-	bottom: 10px;
+	position: relative;
+	margin-top: -20px;
+	height: 20px;
+	clear: both;
 	width: 100%;
 	text-align: center;
 }
