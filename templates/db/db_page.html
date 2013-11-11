@@ -1,50 +1,32 @@
 {% extends "base.html" %}
-
-{% block css %}
-db
+{% block script %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+	});	
+</script>
 {% endblock %}
-
 {% block wrapper %}
+		<div id = "dbnamefield">
+			<span id = "dbname">DB명: {{ db.name }}</span>
+		</div>
 
-        <div id = "dbnamefield">
-            <span id = "dbname">DB명: bacchus 도서장부</span>
-        </div>
-
-        <div id = "dbfield">
-            <table border = "1" id = "mydb">
-                <tr>
-                    <th>도서고유번호</th>
-                    <th>도서명</th>
-                    <th>대출가능여부</th>
-                    <th>대출자</th>
-                    <th>반납예정일자</th>
-                </tr>
-
-                <tr>
-                    <td>1-1</td>
-                    <td>카네기 인간관계론</td>
-                    <td>대출중</td>
-                    <td>이현민</td>
-                    <td>2013.11.8</td>
-                </tr>
-
-                <tr>
-                                        <td>1-2</td>
-                                        <td>카네기 인간관계론</td>
-                                        <td>대출가능</td>
-                                        <td>_</td>
-                    <td>_</td>
-                                </tr>
-
-                <tr>
-                    <td>2</td>
-                    <td>지상 최대의 쇼</td>
-                    <td>대출가능</td>
-                    <td>_</td>
-                    <td>_</td>
-                </tr>
-
-            </table>
-        </div>
-{% endblock %}
-
+		<div id = "dbfield">	
+			<table border = "1" id = "mydb">
+				{% for r in cells %}
+				<tr>
+					{% for c in r %}
+					<td width="200" height="30">
+						<div id= "{{ c.cellrow.rownum }}::{{ c.cellnum }}"contenteditable="true">
+						{% if c.contents == NONE %}
+						{% else %} 
+						{{ c.contents }}
+						{% endif %}
+						</div>
+					</td>
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+{% endblock %} 

@@ -138,7 +138,7 @@ INSTALLED_APPS = (
 	# custom app
 	'user_manage',
 	'group',
-	'db'
+	'db',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

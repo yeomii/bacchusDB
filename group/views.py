@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from bacchusdb import settings
 from group.models import Group, Membership, Admission
-from db.models import Group_db
+from db.models import DataBase
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -68,7 +68,7 @@ def group_page(request, title):
 	g = Group.objects.get(title=title)
 	admin = Membership.objects.filter(group=g, status=0)
 	normal = Membership.objects.filter(group=g, status=1)
-	db = Group_db.objects.filter(group=g)
+	db = DataBase.objects.filter(group=g)
 
 	if (m.status == 1):
 		var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
