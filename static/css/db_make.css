@@ -5,12 +5,12 @@ html, body {
 }
 #wrapper {
 	min-height: 100%;
-	width: 500px;
+	width: 100%;
 	margin: 0 auto;
 }
 #main {
 	overflow: auto;
-	width: 100%;
+	width: 500px;
 	padding-bottom: 20px;
 }
 #infobar {

@@ -25,9 +25,11 @@ html, body {
 #wrapper {
 	min-height: 100%;
         margin: 0 auto;
-        width: 800px;
+        width: 100%;
 }
 #main {
+	width: 800px;
+	margin: 0 auto;
 	overflow: auto;
 	padding-bottom: 20px;
 }
@@ -35,12 +37,19 @@ html, body {
         margin: 300px 0px 0px 0px;
         width: 800px;
 }
+#pwconfirminput {
+	margin-left: 30px;
+}
 .inputletter {
 	display: inline-block;
 	width: 150px;
 }
 .inputval {
 	width: 200px;
+}
+#submitbutton {
+	text-align: center;
+	padding-top: 10px;
 }
 #footer {
         position: relative;

@@ -35,9 +35,23 @@ html, body {
 	display: inline-block;
 	width: 100px;
 }
+#idcondition {
+	display: inline-block;
+}
+#idcondition p {
+	color: red;
+	font-size: 11px;
+}
 #pwletter {
 	display: inline-block;
 	width: 100px;
+}
+#pwcondition {
+	display: inline-block;
+}
+#pwcondition p {
+	color: red;
+	font-size: 11px;
 }
 #pwconfirmletter {
 	display: inline-block;

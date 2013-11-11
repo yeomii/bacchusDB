@@ -6,12 +6,12 @@ html, body {
 }
 #wrapper {
 	min-height: 100%;
-	width: 500px;
 	margin: 0 auto;
 }
 #main {
 	overflow: auto;
-	width: 100%;
+	width: 500px;
+	margin: 0 auto;
 	padding-bottom: 20px;
 }
 #infobar {
