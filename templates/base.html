@@ -26,7 +26,7 @@
                                 <li id = "home"><a href = "/">HOME</a></li>
                         {% endif %}
                         {% if css == "db" or  css == "group" %}
-                                <li id = "group"><a href = "/group">GROUP</a></li>
+                                <li id = "group"><a href = "/group/{{ g.title}}">{{ g.title }}</a></li>
                         {% endif %}
                         {% if css == "db" %}
                                 <li id = "db"><a href = "www.snucse.org">DB</a></li>
