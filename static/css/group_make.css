@@ -10,7 +10,7 @@ html, body {
 }
 #main {
 	overflow: auto;
-	width: 500px;
+	width: 550px;
 	margin: 0 auto;
 	padding-bottom: 20px;
 }
@@ -55,14 +55,11 @@ html, body {
 }
 #gpmake {
 	margin: 300px 0px 0px 0px;
-        width: 500px;
+        width: 550px;
 }
-#gpfield {
-        /*overflow: hidden;
-        zoom: 1;*/
-}
-#gpaccount {
-        /*float: left;*/
+#privatecheck {
+	padding: 0px 10px;
+	font-size: 12px;
 }
 #gpnameletter {
         display: inline-block;
