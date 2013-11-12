@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from group.models import Group, Membership
-from db.models import DataBase, Row, Cell
+from db.models import DataBase, Row, Column, Cell
 import json
 
 @csrf_exempt
@@ -36,7 +36,7 @@ def db_page(request, g_title, dbname):
 	rows = Row.objects.filter(rowdb=db)
 	rows.order_by('rownum')
 	cells = []
-	for i in range(dbcolumn):
+	for i in range(dbrow):
 		cell = Cell.objects.filter(cellrow=rows[i])
-		cells.append(cell.order_by('cellnum'))
+		cells.append(cell.order_by('colnum'))
 	return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'css':'db_page', 'db':db, 'cells':cells}))

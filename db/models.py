@@ -7,8 +7,15 @@ from group.models import Group, Membership
 class DataBaseManager(models.Manager):
 	def create_database(self, dbname, dbgroup, dbtype, dbinfo):
 		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype)
+		rows = []
+		cols = []
 		for i in range(db.rownum):
-			Row.objects.create_row(cellnum=db.columnnum, rownum=i, db=db)
+			rows.append (Row.objects.create_row(rownum=i, db=db))
+		for i in range(db.columnnum):
+			cols.append (Column.objects.create_col(colnum=i, db=db))
+		for i in rows:
+			for j in cols:
+				Cell.objects.create_cell(col=j, row=i)
 		return db
 
 class DataBase(models.Model):
@@ -21,12 +28,32 @@ class DataBase(models.Model):
 	objects = DataBaseManager()
 	def __unicode__(self):
 		return self.name
+	def rowExpand(self, num):
+		rows = []
+		cols = Column.objects.filter(coldb=self)
+		for i in range(self.rownum, (self.rownum + num)):
+			rows.append(Row.objects.create_row(rownum=i, db=self))
+		for i in rows:
+			for j in cols:
+				Cell.objects.create_cell(col=j, row=i)
+		self.rownum += num
+		self.save()
+		return self
+	def colExpand(self, num):
+		cols = []
+		rows = Row.objects.filter(rowdb=self)
+		for i in range(self.columnnum, (self.columnnum + num)):
+                        cols.append(Column.objects.create_col(colnum=i, db=self))
+		for i in rows:
+                        for j in cols:
+                                Cell.objects.create_cell(col=j, row=i)
+                self.columnnum += num
+                self.save()
+                return self
 
 class RowManager(models.Manager):
-	def create_row(self, cellnum, rownum, db):
+	def create_row(self, rownum, db):
 		row = self.create(rownum=rownum, rowdb=db)
-		for i in range(cellnum):
-			Cell.objects.create_cell(row=row, num=i)
 		return row
 
 class Row(models.Model):
@@ -35,33 +62,47 @@ class Row(models.Model):
 	objects = RowManager()
 	def __unicode__(self):
 		return str(self.rownum)
+	def introw(self):
+		cell = Cell.objects.filter(cellrow=self)
+		t = True
+                for c in cell:
+                        t = t and (not cell.ctype)
+                return t
+	
+class ColumnManager(models.Manager):
+	def create_col(self, colnum, db):
+		col = self.create(colnum=colnum, coldb=db)
+		return col
+
+class Column(models.Model):
+	colnum = models.IntegerField()
+	coldb = models.ForeignKey(DataBase)
+	objects = ColumnManager()
+        def __unicode__(self):
+                return str(self.colnum)
+	def intcolumn(self):
+		cell = Cell.objects.filter(cellcol=self)
+		t = True
+		for c in cell:
+			t = t and (not cell.ctype)
+		return t
 
 class CellManager(models.Manager):
-	def create_cell(self, row, num):
-		cell = self.create(cellnum=num, cellrow=row)
+	def create_cell(self, row, col):
+		cell = self.create(cellcol=col, cellrow=row, colnum=col.colnum, rownum=row.rownum)
 		return cell
-'''
-	def isNumber(s):
-  		try:
-    			float(s)
-			return True
-  		except ValueError:
-    			return False
-	def modify_cell(self, content):
-		self.contents = content
-		if isNumber(content):
-			self.ctype = False
-		else:
-			self.ctype = True
-'''
+
 class Cell(models.Model):
 	contents = models.CharField(max_length=100, blank=True)
 	ctype = models.BooleanField(default=True) # true indicates string content
-	cellnum = models.IntegerField() # nth cell in row
+	editable = models.BooleanField(default=True)
+	rownum = models.IntegerField()
+	colnum = models.IntegerField()
 	cellrow = models.ForeignKey(Row)
+	cellcol = models.ForeignKey(Column)
 	objects = CellManager()
 	def __unicode__(self):
-		return str(self.cellnum)
+		return str(self.rownum) +'-'+str(self.colnum)
         def modify_cell(self, content):
 		def isNumber(s):
                	 	try:
@@ -75,7 +116,6 @@ class Cell(models.Model):
                 else:
                         self.ctype = True
 		self.save()
-	
 
 
 
