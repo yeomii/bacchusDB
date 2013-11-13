@@ -150,3 +150,24 @@ def group_join_request_process(request, g_title, username, success):
 	admission.save()
 
 	return HttpResponse(json.dumps(""), content_type="application/json")
+
+
+@csrf_exempt
+@login_required
+def group_withdraw(request):
+	title = request.POST['title']
+
+	if (request.POST['private'] == "True"):
+		g = Private_Group.objects.get(title=title, user=request.user)
+		g.delete()
+	else:
+		g = Group.objects.get(title=title)
+		m = Membership.objects.get(group=g, user=request.user)
+		
+		g.num_member -= 1
+		m.delete()
+
+		if (g.num_member == 0):
+			g.delete()
+
+	return HttpResponse("")
