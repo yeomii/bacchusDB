@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
-from group.models import Group, Membership
+from group.models import Group, Private_Group, Membership
 import json
 
 def home(request):
@@ -20,7 +20,8 @@ def home(request):
 		return redirect('user_manage.views.login_page')
 	else:
 		groups = Membership.objects.filter(user=request.user)
-		var = RequestContext(request, {'u': request.user, 'groups': groups, 'css':'user'})
+		p_groups = Private_Group.objects.filter(user=request.user)
+		var = RequestContext(request, {'u': request.user, 'groups': groups, 'p_groups': p_groups, 'css':'user'})
 		return render_to_response('user/user_page.html', var)
 
 @csrf_exempt

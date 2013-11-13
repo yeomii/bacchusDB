@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from bacchusdb import settings
-from group.models import Group, Membership, Admission
+from group.models import Group, Private_Group, Membership, Admission
 from db.models import DataBase
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -43,8 +43,15 @@ def group_make(request):
 		
 		if group_name == "":
 			data['fail'] = "Empty"
+		
+		elif 'private' in request.POST:
+		 	pg = Private_Group(title=group_name, info=group_info, user=request.user)
+		 	pg.save()
+		 	data['success'] = ""	
+
 		elif group_name_check(group_name):
 			data['fail'] = ""
+
 		else:
 			g = Group(title=group_name, info=group_info, num_member=1)
 			g.save()
@@ -58,7 +65,6 @@ def group_make(request):
 
 @login_required
 def group_page(request, title):
-#	title = resolve(request.path_info).url_name.split("_")[1]
 	try:
 		m = Membership.objects.get(user=request.user, group=Group.objects.get(title=title))	
 
@@ -75,6 +81,15 @@ def group_page(request, title):
 	else:
 		admission = Admission.objects.filter(group=g, status=0)
 		var = RequestContext(request, {'u': request.user, 'join_req': admission, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
+	return render_to_response('group/group_page.html', var)
+
+@login_required
+def private_group_page(request, title):
+	pg = Private_Group.objects.get(user=request.user, title=title)
+	db = DataBase.objects.filter(p_group=pg)
+
+	var = RequestContext(request, {'u': request.user, 'g': pg, 'db': db, 'css': 'group'})
+
 	return render_to_response('group/group_page.html', var)
 
 @csrf_exempt

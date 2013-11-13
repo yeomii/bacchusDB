@@ -19,5 +19,6 @@ urlpatterns = patterns('',
 	url(r'^group_search$', 'group.views.group_search'),
 	url(r'^group_search/(\D+)$', 'group.views.group_join_request'),
 	url(r'^group/(\D+)/(\D+)/(\D)$', 'group.views.group_join_request_process'),
+	url(r'^p_group/(\D+)$', 'group.views.private_group_page'),
 	url(r'^group/(\D+)$', 'group.views.group_page'),
 	)

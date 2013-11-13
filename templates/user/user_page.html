@@ -48,7 +48,15 @@
 			</td>
 		</tr
 		-->
-			
+
+		{% for g in p_groups %}
+		<tr>
+			<td><a href="/p_group/{{ g.title }}">{{ g.title }}</a></td>
+			<td>개인용</td>
+			<td><input type="checkbox"></td>
+		</tr>
+		{% endfor %}
+
 	</table>
 
 	<span id = "addgroup"><button onclick = "window.location.href='/group_make'">새 그룹 추가</button></span>

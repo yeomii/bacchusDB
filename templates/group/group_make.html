@@ -50,6 +50,15 @@
 					});
 					return false;
 				});
+
+				$('#private').click(function(e){
+					if ($(this).is(":checked")) {
+						$('#gp_name_check').prop('disabled', true);
+					}
+					else{
+						$('#gp_name_check').prop('disabled', false);
+					}
+				});
 		});
 		</script>
 {% endblock %}
@@ -65,7 +74,9 @@
 
 						<span id = "gpnamecheck">
 							<input id = "gp_name_check" type = "submit" value = "Double check" name = "check">
+							<input id="private" name="private" type="checkbox">
 						</span>
+
                                 	</div>
 
 	                                <div>

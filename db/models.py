@@ -1,24 +1,34 @@
 from django.db import models
-from group.models import Group, Membership
+from group.models import Group, Private_Group, Membership
 
 
 # Create your models here.
-
 class DataBaseManager(models.Manager):
 	def create_database(self, dbname, dbgroup, dbtype, dbinfo):
-		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype)
+		db = self.create(name=dbname, private=False, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype)
+		for i in range(db.rownum):
+			Row.objects.create_row(cellnum=db.columnnum, rownum=i, db=db)
+		return db
+
+	def create_pdatabase(self, dbname, dbgroup, dbtype, dbinfo):
+		db = self.create(name=dbname, p_group=dbgroup, private=True, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype)
 		for i in range(db.rownum):
 			Row.objects.create_row(cellnum=db.columnnum, rownum=i, db=db)
 		return db
 
 class DataBase(models.Model):
-	name = models.CharField(max_length=50, unique=True)
-	group = models.ForeignKey(Group)
+	name = models.CharField(max_length=50)
+	private = models.BooleanField()
+	group = models.ForeignKey(Group, null=True)
+	p_group = models.ForeignKey(Private_Group, null=True)
 	dbtype = models.CharField(max_length=10)
 	info = models.TextField()
 	rownum = models.IntegerField()
 	columnnum = models.IntegerField()
 	objects = DataBaseManager()
+
+	class Meta:
+		unique_together = ('name', 'group')
 	def __unicode__(self):
 		return self.name
 

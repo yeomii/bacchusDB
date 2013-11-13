@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
-from group.models import Group, Membership
+from group.models import Group, Private_Group, Membership
 from db.models import DataBase, Row, Cell
 import json
 
@@ -18,9 +18,19 @@ def db_make(request, group_title):
 		title = request.POST['db_name']
 		dbtype = request.POST['db_type']
 		info = request.POST['db_info']
-		group = Group.objects.get(title=group_title)
-		db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info)
+
+		url = request.path.split("/")
+		if url[1] == "group":
+			group = Group.objects.get(title=group_title)
+			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info)
+
+		elif url[1] == "p_group":
+			group = Private_Group.objects.get(title=group_title, user=request.user)
+			db = DataBase.objects.create_pdatabase(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info)
+
+	
 		db.save()
+
 		return HttpResponse("success")
 	else:
 		return render_to_response('db/db_make.html', RequestContext(request, {'u': request.user, 'css': 'db_make'}))
