@@ -140,6 +140,10 @@ def group_join_request_process(request, g_title, username, success):
 
 	if (success == "s"):
 		m = Membership(user=u, group=g, status=1)
+		
+		g.num_member += 1
+
+		g.save()
 		m.save()
 
 		admission.status=1	
@@ -163,8 +167,17 @@ def group_withdraw(request):
 	else:
 		g = Group.objects.get(title=title)
 		m = Membership.objects.get(group=g, user=request.user)
+		try:
+			ad = Admission.objects.get(group=g, user=request.user)
+			ad.delete()
 		
+		except ObjectDoesNotExist:
+			pass
+
+			
 		g.num_member -= 1
+
+		g.save()
 		m.delete()
 
 		if (g.num_member == 0):
