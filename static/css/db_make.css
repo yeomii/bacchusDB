@@ -80,7 +80,7 @@ html, body {
 /*userdefine field css*/
 #userdefine {
 	display: none;
-	margin: 10px;
+	margin: 10px auto;
 	padding: 5px;
 	border: 1px solid black;
 }
@@ -88,6 +88,9 @@ html, body {
 	display: inline-block;/* the property not necessary*/
 	width: 200px;
 	margin-bottom: 10px;
+}
+#columnnum {
+	width: 50px;
 }
 #columnnameletter {
 	display: inline-block;/* the property not necessary*/

@@ -22,17 +22,21 @@
 					});
 					return false;
 				});
-
-				//userdefine field //////////////////////////////
-				//$('#db_type').change(function() {
-                                //        if(this.checked) {
-                                //               document.getElementById('gp_name_check').style.visibility = 'hidden';
-                                //        } else {
-                                //                document.getElementById('gp_name_check').style.visibility = 'visible';
-                                //        }
-                                //});
-
-				////////////////////////////////////////////////
+				$('#db_type').change(function(){
+					if($("#db_type").val() === "사용자설정") {
+						$("#userdefine").css("display", "block");
+					} else {
+						$("#userdefine").css("display", "none");
+					}
+				});	
+				//$('#columnnum').click(function(){
+				//	var num = this.val();
+				//	if(isNaN(num)) {
+				//		alert("숫자를 입력하세요(0~10)");
+				//	} else {
+				//		for(var j = 0; j < num; j++) {
+				//			$('#eachcolnname').append("")
+					
 			});
 	</script>
 {% endblock %}
@@ -49,7 +53,7 @@
 				</div>
 				
 				<div>
-					<label id="dbtypeletter" for="dbtype">DB Type</label>
+					<label id="dbtypeletter" for="db_type">DB Type</label>
 					<!--<input type="text" name="db_type" id="db_type" class="inputval">-->
 					<select id = "db_type" name = "db_type" class = "inputval">
 						<option value = "회계장부">회계장부</option>
@@ -61,13 +65,10 @@
 				</div>
 			<!--userdefine field-->	
 				<div id = "userdefine">
-					<div id = "udefnamefield">
-						<label id = "udefnameletter" for = "udefname">DB Name</label>
-						<input type = "text" id = "udefname" class = "inputval" name = "udefname">
-					</div>
 					<div id = "colnumfield">
 						<label id = "columnnumletter" for = "columnnum">Number of Column</label>
-						<input type = "text" id = "columnnum" class = "inputval" name = "columnnum">
+						<input type = "text" id = "columnnum"  name = "columnnum">
+						<button type = "button">OK</button>
 					</div>
 			
 					<div id = "colnamefield">
