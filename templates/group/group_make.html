@@ -38,6 +38,16 @@
 					});
 					return false;
 				});
+				//double check visibility control	
+				$('#privategroup').change(function() {
+                        		if(this.checked) {
+                                		document.getElementById('gp_name_check').style.visibility = 'hidden';
+                        		} else {
+                                		document.getElementById('gp_name_check').style.visibility = 'visible';
+                        		}
+                		});
+				///////////////////////////////////
+
 		});
 		</script>
 {% endblock %}
