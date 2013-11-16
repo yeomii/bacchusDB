@@ -63,7 +63,7 @@ def pw_validation(password):		#비밀번호 제한 체크하는 함수 제한에
 	 	return False
 
 
-def	id_validation(username):
+def	id_validation(username):		#아이디에 문제가 없으면 True를 반환
 	return not bool(re.search('\W+', username))
 
 @csrf_exempt
@@ -97,7 +97,7 @@ def join_page(request):
 				name = request.POST['uname']
 				email = request.POST['email']
 
-				if (id_validation(username)):
+				if not id_validation(username):
 					raise ValidationError("Id")
 
 				if (pw_validation(password)):
@@ -114,8 +114,7 @@ def join_page(request):
 				data['error'] = e.messages[0]
 
 			except ValidationError as e:
-				print e
-				data['error'] = e
+				data['error'] = e.messages[0]
 
 			return HttpResponse(json.dumps(data), content_type="application/json")
 
