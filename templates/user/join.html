@@ -7,7 +7,8 @@ join
 		$(document).ready(function(){
 
 					$('#join_button').click(function(e){
-						$.ajax({
+						if (isEmail($('#email').val())){
+							$.ajax({
 							type: "POST",
 							url: "/join",
 							data: $('#joinbigform').serialize(),
@@ -37,6 +38,10 @@ join
 							}
 						});
 						return false;
+						}
+						else {
+							alert("You're Email is not like email");
+						}
 					});
 				
 					$('#id_check').click(function(e){
@@ -62,6 +67,11 @@ join
 							return false;
 							}
 					});
+				
+					function isEmail(email) {
+						var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+						return regex.test(email);
+					}
 				});
 		</script>
 {% endblock %}

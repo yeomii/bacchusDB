@@ -138,7 +138,7 @@ INSTALLED_APPS = (
 	# custom app
 	'user_manage',
 	'group',
-	'db'
+	'db',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
@@ -177,6 +177,9 @@ LOGGING = {
 DEFAULT_FROM_EMAIL = 'bacchusDB_admin@bacchus.snucse.org'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
-#EMAIL_HOST_USER = 
-#EMAIL_HOST_PASSWORD = 
+EMAIL_HOST_USER = 'bacchuswebdb@gmail.com' 
+EMAIL_HOST_PASSWORD = '13c93b32113f2dcff2094d8dd86c317c6c07758e574c70e484fa8eb6854c3736d48941e99c'
 EMAIL_USE_TLS = True
+
+#Login
+LOGIN_URL = '/login'

@@ -34,6 +34,9 @@
 				return false;
 			});
 
+			$('.db_redirect').click(function(e){
+				window.location.href = document.URL + "/" + $(this).html();
+			});
 		});
 </script>
 {% endblock %}
@@ -83,8 +86,8 @@
 				</tr>
 				{% for d in db %}
 				<tr>
-					<td>{{ d.title }}</td>
-					<td>{{ d.type }}</td>
+					<td class="db_redirect">{{ d.name }}</td>
+					<td>{{ d.dbtype }}</td>
 					<td><input type="checkbox"></td>
 				</tr>
 				{% endfor %}
