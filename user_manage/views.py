@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from group.models import Group, Private_Group, Membership
 import json
+import re
 
 def home(request):
 	if not request.user.is_authenticated():
@@ -62,6 +63,9 @@ def pw_validation(password):		#비밀번호 제한 체크하는 함수 제한에
 	 	return False
 
 
+def	id_validation(username):
+	return not bool(re.search('\W+', username))
+
 @csrf_exempt
 def join_page(request):
 	if request.user.is_authenticated():
@@ -71,12 +75,15 @@ def join_page(request):
 			data = {}
 
 			username = request.POST['id']
-			
-			try: 
-				user = User.objects.get(username=username)
-							
-			except ObjectDoesNotExist:
-				data['success'] = "success"
+		
+			if id_validation(username):
+				try: 
+					user = User.objects.get(username=username)
+								
+				except ObjectDoesNotExist:
+					data['success'] = "success"
+			else:
+				data['fail'] = "restriction"
 				
 			return HttpResponse(json.dumps(data), content_type="application/json")
 
@@ -90,8 +97,11 @@ def join_page(request):
 				name = request.POST['uname']
 				email = request.POST['email']
 
+				if (id_validation(username)):
+					raise ValidationError("Id")
+
 				if (pw_validation(password)):
-					raise ValidationError("Too Short")
+					raise ValidationError("Password")
 
 				if (password != password_confirm):
 					data['error'] = "password_failure"
@@ -104,7 +114,8 @@ def join_page(request):
 				data['error'] = e.messages[0]
 
 			except ValidationError as e:
-				data['error'] = "validation"
+				print e
+				data['error'] = e
 
 			return HttpResponse(json.dumps(data), content_type="application/json")
 
