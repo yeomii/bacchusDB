@@ -50,15 +50,16 @@
 					});
 					return false;
 				});
+				//double check visibility control	
+				$('#privategroup').change(function() {
+                        		if(this.checked) {
+                                		document.getElementById('gp_name_check').style.visibility = 'hidden';
+                        		} else {
+                                		document.getElementById('gp_name_check').style.visibility = 'visible';
+                        		}
+                		});
+				///////////////////////////////////
 
-				$('#private').click(function(e){
-					if ($(this).is(":checked")) {
-						$('#gp_name_check').prop('disabled', true);
-					}
-					else{
-						$('#gp_name_check').prop('disabled', false);
-					}
-				});
 		});
 		</script>
 {% endblock %}
@@ -71,13 +72,27 @@
                               	        		<label id = "gpnameletter" for = "gpname">Group name</label>
                                 			<input type = "text" name = "group_name" id = "group_name" class = "inputval">
 						</span>
-
+	
+						<span id = "privatecheck">
+                                                        <label id = "privategpletter" for = "privategroup">개인 그룹</label>
+                                                        <input id = "privategroup" type = "checkbox" name = "privategroup">
+                                                </span>
+						
 						<span id = "gpnamecheck">
-							<input id = "gp_name_check" type = "submit" value = "Double check" name = "check">
-							<input id="private" name="private" type="checkbox">
+							<input id = "gp_name_check" type = "submit" value = "중복확인" name = "check">
 						</span>
 
                                 	</div>
+					<div id = "privatecheck">
+						<span>
+                                                	<label id = "privategpletter" for = "privategroup">이 그룹을 개인용으로 사용합니다</label>
+                                                	<input id = "privategroup" type = "checkbox" name = "privategroup">
+						</span>
+
+						<span id = "gpnamecheck">
+                                                        <input id = "gp_name_check" type = "submit" value = "Double check" name = "check">
+                                                </span>
+					</div>
 
 	                                <div>
         	                                <label id = "gpinfoletter" for = "gpinfo">Group info</label>

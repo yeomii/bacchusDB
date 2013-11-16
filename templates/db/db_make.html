@@ -22,6 +22,21 @@
 					});
 					return false;
 				});
+				$('#db_type').change(function(){
+					if($("#db_type").val() === "사용자설정") {
+						$("#userdefine").css("display", "block");
+					} else {
+						$("#userdefine").css("display", "none");
+					}
+				});	
+				//$('#columnnum').click(function(){
+				//	var num = this.val();
+				//	if(isNaN(num)) {
+				//		alert("숫자를 입력하세요(0~10)");
+				//	} else {
+				//		for(var j = 0; j < num; j++) {
+				//			$('#eachcolnname').append("")
+					
 			});
 	</script>
 {% endblock %}
@@ -38,9 +53,41 @@
 				</div>
 				
 				<div>
-					<label id="dbtypeletter" for="dbtype">DB Type</label>
-					<input type="text" name="db_type" id="db_type" class="inputval">
+					<label id="dbtypeletter" for="db_type">DB Type</label>
+					<!--<input type="text" name="db_type" id="db_type" class="inputval">-->
+					<select id = "db_type" name = "db_type" class = "inputval">
+						<option value = "회계장부">회계장부</option>
+						<option value = "주소록">주소록</option>
+						<option value = "연락처">연락처</option>
+						<option value = "도서장부">도서장부</option>
+						<option value = "사용자설정">사용자 설정</option>
+					</select>
 				</div>
+			<!--userdefine field-->	
+				<div id = "userdefine">
+					<div id = "colnumfield">
+						<label id = "columnnumletter" for = "columnnum">Number of Column</label>
+						<input type = "text" id = "columnnum"  name = "columnnum">
+						<button type = "button">OK</button>
+					</div>
+			
+					<div id = "colnamefield">
+						<span id = "columnnameletter">Name of Each Column</span>
+						<div id = "eachcolname">
+						<!-- 위에서 설정한 칼럼의 개수만큼 각 칼럼의 이름설정칸을 만들어준다-->
+
+							<label id = "col1letter" for = "col1">Column 1</label>
+                                                        <input type = "text" id = "col1" class = "inputval, eachcolumn" name = "col1">
+									
+							<label id = "col2letter" for = "col2">Column 2</label>
+                                                        <input type = "text" id = "col2" class = "inputval, eachcolumn" name = "col2">
+									
+							<label id = "col2letter" for = "col3">Column 3</label>
+                                                        <input type = "text" id = "col3" class = "inputval, eachcolumn" name = "col3">
+						</div>
+					</div>
+				</div>
+			<!--///////////////////////////////////////////////////////////////////////////////-->
 
 				<div>
 					<label id="dbinfoletter" for="dbinfo">DB Info</label>
