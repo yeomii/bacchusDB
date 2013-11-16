@@ -11,6 +11,7 @@ from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 import json
+import re
 
 def group_name_check(name):
 	try:
@@ -21,6 +22,11 @@ def group_name_check(name):
 	except ObjectDoesNotExist:
 	  	return False
 
+
+def group_name_validation(title):
+	return not bool(re.search('\s*', title))
+
+
 @login_required
 @csrf_exempt
 def group_make(request):
@@ -28,8 +34,8 @@ def group_make(request):
 	if request.method == "POST" and request.is_ajax() and 'name_check' in request.POST:
 		name = request.POST['group_name']
 
-		if name == "":
-			data['fail'] = "Empty"
+		if group_name_validation(name):
+			data['fail'] = "Restriction"
 		elif group_name_check(name):
 			data['fail'] = ""
 		else:
@@ -41,10 +47,10 @@ def group_make(request):
 		group_name = request.POST['group_name']
 		group_info = request.POST['group_info']
 		
-		if group_name == "":
-			data['fail'] = "Empty"
+		if group_name_validation(group_name):
+			data['fail'] = "Restriction"
 		
-		elif 'private' in request.POST:
+		elif 'privategroup' in request.POST:
 		 	pg = Private_Group(title=group_name, info=group_info, user=request.user)
 		 	pg.save()
 		 	data['success'] = ""	
