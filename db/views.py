@@ -43,10 +43,10 @@ def db_page(request, g_title, dbname):
 	dbcolumn = db.columnnum
 	user = request.user
 	group = db.group
-	rows = Row.objects.filter(rowdb=db)
-	rows.order_by('rownum')
+	rows = Row.objects.filter(rowdb=db).order_by('rownum')
+	preset = json.loads(db.preset)
 	cells = []
 	for i in range(dbrow):
 		cell = Cell.objects.filter(cellrow=rows[i])
 		cells.append(cell.order_by('colnum'))
-	return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'css':'db_page', 'db':db, 'cells':cells}))
+	return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'preset': preset, 'col_num': range(0, dbcolumn+1), 'css':'db_page', 'db':db, 'cells':cells}))

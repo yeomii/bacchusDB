@@ -13,8 +13,20 @@
 
 		<div id = "dbfield">	
 			<table border = "1" id = "mydb">
+				<tr>
+				{% for col in preset %}
+					{% if not forloop.first %}
+						<th height="30" contenteditable="true">{{ col }}</th>
+					{% else %}
+						<th height="30"></th>
+					{% endif %}
+				{% endfor %}
+				</tr>
 				{% for r in cells %}
 				<tr>
+					<th width="30" height="30">
+						<div id="row{{ forloop.counter }}">{{ forloop.counter }}</div>
+					</th>
 					{% for c in r %}
 					<td width="200" height="30">
 						<div id= "{{ c.rownum }}::{{ c.colnum }}" {% if c.editable == True %}contenteditable="true"{% endif %}>

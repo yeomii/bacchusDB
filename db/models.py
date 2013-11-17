@@ -26,6 +26,7 @@ class DataBase(models.Model):
 	info = models.TextField()
 	rownum = models.IntegerField()
 	columnnum = models.IntegerField()
+	preset = models.TextField()
 	objects = DataBaseManager()
 
 	class Meta:
