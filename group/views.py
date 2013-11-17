@@ -86,7 +86,7 @@ def group_page(request, title):
 		var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
 	else:
 		admission = Admission.objects.filter(group=g, status=0)
-		var = RequestContext(request, {'u': request.user, 'join_req': admission, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
+		var = RequestContext(request, {'u': request.user, 'join_req': admission, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'private': 'false', 'css':'group'})
 	return render_to_response('group/group_page.html', var)
 
 @login_required
@@ -94,7 +94,7 @@ def private_group_page(request, title):
 	pg = Private_Group.objects.get(user=request.user, title=title)
 	db = DataBase.objects.filter(p_group=pg)
 
-	var = RequestContext(request, {'u': request.user, 'g': pg, 'db': db, 'css': 'group'})
+	var = RequestContext(request, {'u': request.user, 'g': pg, 'db': db, 'private': 'true', 'css': 'group'})
 
 	return render_to_response('group/group_page.html', var)
 

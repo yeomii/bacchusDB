@@ -106,7 +106,7 @@
 			<span id = "editdb"><button>수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
 		</div>
 	
-	
+		{% if private == "false" %}	
 		<div id = "memfield">
 			<aside>
 				<span id = "gpmember">그룹 멤버:</span>
@@ -142,6 +142,7 @@
 				</ol>
 			</aside>
 		</div>
+		{% endif %}
 {% endblock %}
 
 
