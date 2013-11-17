@@ -3,6 +3,8 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		content = "";
+		column = "";
+
 		$('.cell').focusin(function(e){
 			content = $(this).html();
 		});
@@ -15,7 +17,28 @@
 				$.ajax({
 					type: "POST",
 					url: document.URL,
-					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': $(this).html()},
+					data: {'cell': 'cell', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': $(this).html()},
+					success: function(data){
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			}
+		});
+
+		$('.column').focusin(function(e){
+			column = $(this).html();
+		});
+
+		$('.column').focusout(function(e){
+			if (column != $(this).html()){
+				id = $(this).attr('id').split('_');
+				num = id[1];
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'col': 'col', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'num': num, 'content': $(this).html()}, 
 					success: function(data){
 					},
 					error: function(xhr, ajaxOptions, errorThrown){
@@ -37,7 +60,7 @@
 				<tr>
 				{% for col in preset %}
 					{% if not forloop.first %}
-						<th height="30" contenteditable="true">{{ col }}</th>
+						<th><div id="col_{{ forloop.counter0 }}"class="column" height="30" contenteditable="true">{{ col }}</div></th>
 					{% else %}
 						<th height="30"></th>
 					{% endif %}

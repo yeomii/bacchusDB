@@ -38,12 +38,22 @@ def db_make(request, group_title):
 @csrf_exempt
 @login_required
 def db_page(request, g_title, dbname):
-	if request.method == "POST" and request.is_ajax():
+	if request.method == "POST" and request.is_ajax() and 'cell' in request.POST:
 		g = Group.objects.get(title=request.POST['group'])
 		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
 		row = Row.objects.get(rowdb=db, rownum=int(request.POST['row']))
 		cell = Cell.objects.get(cellrow=row, colnum=request.POST['col'])
 		cell.modify_cell(request.POST['content'])
+
+		return HttpResponse('')
+
+	elif request.method == "POST" and request.is_ajax() and 'col' in request.POST:
+		g = Group.objects.get(title=request.POST['group'])
+		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
+		preset = json.loads(db.preset)
+		preset[int(request.POST['num'])] = request.POST['content']
+		db.preset = json.dumps(preset)
+		db.save()
 
 		return HttpResponse('')
 
@@ -55,7 +65,6 @@ def db_page(request, g_title, dbname):
 		user = request.user
 		group = db.group
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
-		print db.preset
 		preset = json.loads(db.preset)
 		cells = []
 		for i in range(dbrow):
