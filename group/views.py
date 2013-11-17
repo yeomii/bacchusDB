@@ -24,7 +24,7 @@ def group_name_check(name):
 
 
 def group_name_validation(title):
-	return not bool(re.search('\s*', title))
+	return not bool(re.search('\S+', title))
 
 
 @login_required
