@@ -93,13 +93,14 @@ html, body {
 	width: 50px;
 }
 #columnnameletter {
-	display: inline-block;/* the property not necessary*/
+	display: none;
 	width: 200px;
 	font-weight: bold;
 	margin-bottom: 10px;
 }
 .eachcolumn {
-	display: block;
+	margin-left: 30px;
+	width: 200px;
 }
 
 /**********************/
