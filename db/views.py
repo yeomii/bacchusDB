@@ -35,18 +35,30 @@ def db_make(request, group_title):
 	else:
 		return render_to_response('db/db_make.html', RequestContext(request, {'u': request.user, 'css': 'db_make'}))
 
+@csrf_exempt
 @login_required
 def db_page(request, g_title, dbname):
-	g = Group.objects.get(title=g_title)
-	db = DataBase.objects.get(group=g, name=dbname)
-	dbrow = db.rownum
-	dbcolumn = db.columnnum
-	user = request.user
-	group = db.group
-	rows = Row.objects.filter(rowdb=db).order_by('rownum')
-	preset = json.loads(db.preset)
-	cells = []
-	for i in range(dbrow):
-		cell = Cell.objects.filter(cellrow=rows[i])
-		cells.append(cell.order_by('colnum'))
-	return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'preset': preset, 'col_num': range(0, dbcolumn+1), 'css':'db_page', 'db':db, 'cells':cells}))
+	if request.method == "POST" and request.is_ajax():
+		g = Group.objects.get(title=request.POST['group'])
+		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
+		row = Row.objects.get(rowdb=db, rownum=int(request.POST['row']))
+		cell = Cell.objects.get(cellrow=row, colnum=request.POST['col'])
+		cell.modify_cell(request.POST['content'])
+
+		return HttpResponse('')
+
+	else:
+		g = Group.objects.get(title=g_title)
+		db = DataBase.objects.get(group=g, name=dbname)
+		dbrow = db.rownum
+		dbcolumn = db.columnnum
+		user = request.user
+		group = db.group
+		rows = Row.objects.filter(rowdb=db).order_by('rownum')
+		print db.preset
+		preset = json.loads(db.preset)
+		cells = []
+		for i in range(dbrow):
+			cell = Cell.objects.filter(cellrow=rows[i])
+			cells.append(cell.order_by('colnum'))
+		return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'preset': preset, 'col_num': range(0, dbcolumn+1), 'css':'db_page', 'db':db, 'cells':cells}))

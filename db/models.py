@@ -1,11 +1,14 @@
 from django.db import models
 from group.models import Group, Private_Group, Membership
-
+import json
 
 # Create your models here.
 class DataBaseManager(models.Manager):
 	def create_database(self, dbname, dbgroup, dbtype, dbinfo):
-		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype)
+		preset = []
+		for i in range(11):
+			preset.append('')
+		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
 		rows = []
 		cols = []
 		for i in range(db.rownum):
