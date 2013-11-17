@@ -17,7 +17,7 @@
 				<tr>
 					{% for c in r %}
 					<td width="200" height="30">
-						<div id= "{{ c.cellrow.rownum }}::{{ c.cellnum }}"contenteditable="true">
+						<div id= "{{ c.rownum }}::{{ c.colnum }}" {% if c.editable == True %}contenteditable="true"{% endif %}>
 						{% if c.contents == NONE %}
 						{% else %} 
 						{{ c.contents }}
