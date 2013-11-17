@@ -22,13 +22,13 @@
                                 </div>
                         </div>
                         <ul id = "navbar">
-                        {% if css == "db" or  css == "group" or  css == "user"%}
+                        {% if css == "db_page" or  css == "group" or  css == "user"%}
                                 <li id = "home"><a href = "/">HOME</a></li>
                         {% endif %}
-                        {% if css == "db" or  css == "group" %}
+                        {% if css == "db_page" or  css == "group" %}
                                 <li id = "group"><a href = "/group/{{ g.title}}">{{ g.title }}</a></li>
                         {% endif %}
-                        {% if css == "db" %}
+                        {% if css == "db_page" %}
                                 <li id = "db"><a href = "www.snucse.org">DB</a></li>
                         {% endif %}
                         </ul>
