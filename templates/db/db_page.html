@@ -7,11 +7,11 @@
 		col_num = {{ db.columnnum }};
 		row_num = {{ db.rownum }};
 
-		$('.cell').focusin(function(e){
+		$('#mydb').on('focusin', '.cell', function(e){
 			content=$(this).html();
 		});
 		
-		$('.cell').focusout(function(e){
+		$('#mydb').on('focusout', '.cell', function(e){
 			if (content != $(this).html()){
 				id=$(this).attr('id').split("::");
 				row=id[0];
@@ -29,11 +29,11 @@
 			}
 		});
 
-		$('.column').focusin(function(e){
+		$('#mydb').on('focusin', '.column', function(e){
 			column=$(this).html();
 		});
 
-		$('.column').focusout(function(e){
+		$('#mydb').on('focusout', '.column', function(e){
 			if (column != $(this).html()){
 				id=$(this).attr('id').split('_');
 				num=id[1];
@@ -64,6 +64,17 @@
 			}
 			row_num += add_num;
 			table.append(row);
+
+			$.ajax({
+				type: "POST",
+				url: document.URL,
+				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_row': add_num},
+				success: function(data){
+				},
+				error: function(xhr, ajaxOptions, errorThrown){
+				}
+			});
+			return false;
 		});
 	});	
 </script>
@@ -91,7 +102,7 @@
 					</th>
 					{% for c in r %}
 					<td width="100" height="30">
-						<div id= "{{ c.rownum }}::{{ c.colnum }}" class="cell" {% if c.editable == True %}contenteditable="true"{% endif %}>
+						<div id="{{ c.rownum }}::{{ c.colnum }}" class="cell" {% if c.editable == True %}contenteditable="true"{% endif %}>
 						{% if c.contents == NONE %}
 						{% else %} 
 						{{ c.contents }}

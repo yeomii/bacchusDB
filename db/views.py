@@ -57,6 +57,13 @@ def db_page(request, g_title, dbname):
 
 		return HttpResponse('')
 
+	elif request.method == "POST" and request.is_ajax() and 'add_row' in request.POST:
+		g = Group.objects.get(title=request.POST['group'])
+		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
+		db.rowExpand(int(request.POST['add_row']))
+	
+		return HttpResponse()
+
 	else:
 		g = Group.objects.get(title=g_title)
 		db = DataBase.objects.get(group=g, name=dbname)
