@@ -1,10 +1,11 @@
+#-*- coding: utf-8 -*-
 from bacchusdb import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, render_to_response
-from django.template import RequestContext
+from django.template import loader, RequestContext
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from group.models import Group, Private_Group, Membership
@@ -63,6 +64,25 @@ def db_page(request, g_title, dbname):
 		db.rowExpand(int(request.POST['add_row']))
 	
 		return HttpResponse()
+
+	elif request.method == "POST" and request.is_ajax() and 'del_row[]' in request.POST:
+		g = Group.objects.get(title=request.POST['group'])
+		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
+		for row in request.POST.getlist('del_row[]'):
+			db.rowDelete(int(row))
+
+		rows = Row.objects.filter(rowdb=db).order_by('rownum')
+
+		preset = json.loads(db.preset)	
+		cells = [] 
+
+		for i in range(db.rownum):
+			cell = Cell.objects.filter(cellrow=rows[i])
+			cells.append(cell.order_by('colnum'))
+		
+		t = loader.get_template('db/table.html')
+		c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
+		return HttpResponse(t.render(c))
 
 	else:
 		g = Group.objects.get(title=g_title)

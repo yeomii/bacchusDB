@@ -4,8 +4,9 @@
 	$(document).ready(function(){
 		content="";
 		column="";
-		col_num = {{ db.columnnum }};
-		row_num = {{ db.rownum }};
+		col_num={{ db.columnnum }};
+		row_num={{ db.rownum }};
+		selected_row = [];
 
 		$('#mydb').on('focusin', '.cell', function(e){
 			content=$(this).html();
@@ -50,13 +51,29 @@
 			}
 		});
 
+
+		$('#mydb').on('click', '.row', function(e){
+			if($(this).parent().css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).parent().css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+				$(this).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+				selected_row.push(parseInt(($(this).children('div').attr('id').split("row")[1]-1)));
+			}
+			else{
+				$(this).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+				selected_row.splice(selected_row.indexOf($(this).children('div').attr('id')), 1);
+			}
+		});
+
 		$('#addrowbutton').click(function(e){
-			var add_num = parseInt(prompt('원하는 숫자를 입력해주세요'));
-			var table = $('#mydb');
-			var row = "";
+			var add_num=parseInt(prompt('원하는 숫자를 입력해주세요'));
+			if (isNaN(add_num)){
+				alert('숫자를 입력해주세요');
+				return false;
+			}
+			var table=$('#mydb');
+			var row="";
 			for(var i=0; i<add_num; i++){
-				var new_row = row_num + i + 1;
-				row += '<tr><th width="30" height="30"><div id="row' + new_row + '">' + new_row +  '</div></th>';
+				var new_row=row_num + i + 1;
+				row += '<tr><th class="row" width="30" height="30"><div id="row' + new_row + '">' + new_row +  '</div></th>';
 				for(var j=0; j<col_num; j++){
 					row += '<td><div id="' + (new_row-1) + '::' + j + '" class="cell" contenteditable="true"></div></td>';
 				}
@@ -76,6 +93,24 @@
 			});
 			return false;
 		});
+
+		$('#delrowbutton').click(function(e){
+			selected_row.sort(function(a,b){return a-b}).reverse();
+			$.ajax({
+				type: "POST",
+				url: document.URL,
+				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_row': selected_row},
+				success: function(data){
+					$('#mydb').html(data);
+				},
+				error: function(xhr, ajaxOptions, errorThrown){
+				}
+			});
+			row_num -= (selected_row.length);
+			selected_row = [];
+			return false;
+		});
+
 	});	
 </script>
 {% endblock %}
@@ -85,7 +120,7 @@
 		</div>
 
 		<div id="dbfield">	
-			<table border="1" id = "mydb">
+			<table border="1" id="mydb">
 				<tr>
 				{% for col in preset %}
 					{% if not forloop.first %}
@@ -97,7 +132,7 @@
 				</tr>
 				{% for r in cells %}
 				<tr>
-					<th width="30" height="30">
+					<th class="row" width="30" height="30">
 						<div id="row{{ forloop.counter }}">{{ forloop.counter }}</div>
 					</th>
 					{% for c in r %}
@@ -116,6 +151,9 @@
 		</div>
 	
 		<div id="addrowsfield">
-			<button type="button" id = "addrowbutton" name = "addrowbutton">행 추가</button>
+			<button type="button" id="addrowbutton" name="addrowbutton">행 추가</button>
+			<button type="button" id="delrowbutton" name="delrowbutton">행 삭제</button>
+			<button type="button" id="addcolbutton" name="addcolbutton">열 추가</button>
+			<button type="button" id="delcolbutton" name="delcolbutton">열 삭제</button>
 		</div>
 {% endblock %} 
