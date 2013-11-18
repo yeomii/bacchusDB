@@ -12,15 +12,17 @@ from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
-from group.models import Group, Membership
+from group.models import Group, Private_Group, Membership
 import json
+import re
 
 def home(request):
 	if not request.user.is_authenticated():
 		return redirect('user_manage.views.login_page')
 	else:
 		groups = Membership.objects.filter(user=request.user)
-		var = RequestContext(request, {'u': request.user, 'groups': groups, 'css':'user'})
+		p_groups = Private_Group.objects.filter(user=request.user)
+		var = RequestContext(request, {'u': request.user, 'groups': groups, 'p_groups': p_groups, 'css':'user'})
 		return render_to_response('user/user_page.html', var)
 
 @csrf_exempt
@@ -61,6 +63,9 @@ def pw_validation(password):		#비밀번호 제한 체크하는 함수 제한에
 	 	return False
 
 
+def	id_validation(username):		#아이디에 문제가 없으면 True를 반환
+	return not bool(re.search('\W+', username))
+
 @csrf_exempt
 def join_page(request):
 	if request.user.is_authenticated():
@@ -70,12 +75,15 @@ def join_page(request):
 			data = {}
 
 			username = request.POST['id']
-			
-			try: 
-				user = User.objects.get(username=username)
-							
-			except ObjectDoesNotExist:
-				data['success'] = "success"
+		
+			if id_validation(username):
+				try: 
+					user = User.objects.get(username=username)
+								
+				except ObjectDoesNotExist:
+					data['success'] = "success"
+			else:
+				data['fail'] = "restriction"
 				
 			return HttpResponse(json.dumps(data), content_type="application/json")
 
@@ -89,8 +97,11 @@ def join_page(request):
 				name = request.POST['uname']
 				email = request.POST['email']
 
+				if not id_validation(username):
+					raise ValidationError("Id")
+
 				if (pw_validation(password)):
-					raise ValidationError("Too Short")
+					raise ValidationError("Password")
 
 				if (password != password_confirm):
 					data['error'] = "password_failure"
@@ -103,7 +114,7 @@ def join_page(request):
 				data['error'] = e.messages[0]
 
 			except ValidationError as e:
-				data['error'] = "validation"
+				data['error'] = e.messages[0]
 
 			return HttpResponse(json.dumps(data), content_type="application/json")
 

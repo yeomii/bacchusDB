@@ -9,15 +9,15 @@
 						data: {'name_check': '', 'group_name': $('#group_name').val()},
 						success: function(data){						
 							if ("fail" in data){
-								if (data.fail == "Empty"){
-									alert("Empty!");
+								if (data.fail == "Restriction"){
+									alert("공백만으로 이루어져 있습니다.");
 								}
 								else{
-									alert("Sorry! Someone has aleready made a group in that name");
+									alert("이미 사용중인 이름입니다.");
 								}
 							}
 							else {
-								alert("You can Use this name");
+								alert("사용하실 수 있습니다.");
 							}
 						},
 						error: function(xhr, ajaxOptions, errorThrown){
@@ -33,15 +33,15 @@
 						data: $('#gpmake').serialize(),
 						success: function(data){
 							if ("fail" in data){
-								if (data.fail == "Empty"){
-									alert("Empty Group Name");
+								if (data.fail == "Restriction"){
+									alert("그룹 이름이 공백만으로 이루어져 있습니다.");
 								}
 								else{
-									alert("Sorry! Someone has aleready made a group in that name");
+									alert("이미 사용중인 이름입니다.");
 								}
 							}	
 							else if ("success" in data){
-								alert("You Made a group");
+								alert("성공적으로 그룹을 만들었습니다.");
 								window.location = "/";
 							}
 						},
@@ -81,18 +81,9 @@
 						<span id = "gpnamecheck">
 							<input id = "gp_name_check" type = "submit" value = "중복확인" name = "check">
 						</span>
+
                                 	</div>
-					<!--<div id = "privatecheck">
-						<span>
-                                                	<label id = "privategpletter" for = "privategroup">이 그룹을 개인용으로 사용합니다</label>
-                                                	<input id = "privategroup" type = "checkbox" name = "privategroup">
-						</span>
-
-						<span id = "gpnamecheck">
-                                                        <input id = "gp_name_check" type = "submit" value = "Double check" name = "check">
-                                                </span>
-					</div>-->
-
+					
 	                                <div>
         	                                <label id = "gpinfoletter" for = "gpinfo">Group info</label>
                 	                        <input type = "text" name = "group_info" id = "group_info" class = "inputval">

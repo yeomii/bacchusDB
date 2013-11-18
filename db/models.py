@@ -1,12 +1,14 @@
 from django.db import models
-from group.models import Group, Membership
-
+from group.models import Group, Private_Group, Membership
+import json
 
 # Create your models here.
-
 class DataBaseManager(models.Manager):
 	def create_database(self, dbname, dbgroup, dbtype, dbinfo):
-		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype)
+		preset = []
+		for i in range(11):
+			preset.append('')
+		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
 		rows = []
 		cols = []
 		for i in range(db.rownum):
@@ -19,13 +21,19 @@ class DataBaseManager(models.Manager):
 		return db
 
 class DataBase(models.Model):
-	name = models.CharField(max_length=50, unique=True)
-	group = models.ForeignKey(Group)
+	name = models.CharField(max_length=50)
+	private = models.BooleanField()
+	group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
+	p_group = models.ForeignKey(Private_Group, null=True, on_delete=models.CASCADE)
 	dbtype = models.CharField(max_length=10)
 	info = models.TextField()
 	rownum = models.IntegerField()
 	columnnum = models.IntegerField()
+	preset = models.TextField()
 	objects = DataBaseManager()
+
+	class Meta:
+		unique_together = ('name', 'group')
 	def __unicode__(self):
 		return self.name
 	def rowExpand(self, num):
@@ -50,7 +58,21 @@ class DataBase(models.Model):
                 self.columnnum += num
                 self.save()
                 return self
-
+	def rowDelete(self, num):
+		row = Row.objects.get(rowdb=self, rownum=num)
+		rows = Row.objects.filter(rowdb=self, rownum__gt=num)
+		for r in rows:
+			cells = Cell.objects.filter(cellrow=r)
+			r.rownum -= 1
+			for c in cells:
+				c.rownum -= 1
+				c.save()
+			r.save()
+	
+		row.delete()
+		self.rownum -= 1
+		self.save()
+		return self
 class RowManager(models.Manager):
 	def create_row(self, rownum, db):
 		row = self.create(rownum=rownum, rowdb=db)
@@ -58,7 +80,7 @@ class RowManager(models.Manager):
 
 class Row(models.Model):
 	rownum = models.IntegerField()
-	rowdb = models.ForeignKey(DataBase)
+	rowdb = models.ForeignKey(DataBase, on_delete=models.CASCADE)
 	objects = RowManager()
 	def __unicode__(self):
 		return str(self.rownum)
@@ -76,7 +98,7 @@ class ColumnManager(models.Manager):
 
 class Column(models.Model):
 	colnum = models.IntegerField()
-	coldb = models.ForeignKey(DataBase)
+	coldb = models.ForeignKey(DataBase, on_delete=models.CASCADE)
 	objects = ColumnManager()
         def __unicode__(self):
                 return str(self.colnum)
@@ -98,8 +120,8 @@ class Cell(models.Model):
 	editable = models.BooleanField(default=True)
 	rownum = models.IntegerField()
 	colnum = models.IntegerField()
-	cellrow = models.ForeignKey(Row)
-	cellcol = models.ForeignKey(Column)
+	cellrow = models.ForeignKey(Row, on_delete=models.CASCADE)
+	cellcol = models.ForeignKey(Column, on_delete=models.CASCADE)
 	objects = CellManager()
 	def __unicode__(self):
 		return str(self.rownum) +'-'+str(self.colnum)

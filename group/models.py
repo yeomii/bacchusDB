@@ -8,6 +8,14 @@ class Group(models.Model):
 	user = models.ManyToManyField(User, through='Membership')
 	num_member = models.IntegerField()
 
+class Private_Group(models.Model):
+	title = models.CharField(max_length=30)
+	info = models.TextField()
+	user = models.ForeignKey(User)
+
+	class Meta:
+		unique_together = ('user', 'title')
+
 class Membership(models.Model):
 	USER_TYPE = (
 			(0, 'admin'),

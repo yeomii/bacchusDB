@@ -7,6 +7,60 @@
 					return false;
 				}
 			});
+
+			$('.withdraw').click(function(e){
+				c = confirm("탈퇴 하시겠습니까?");
+				if (c == true){
+					title = $(this).parent().parent().children('td:nth-child(1)').children('a').html();
+					row = $(this).parent().parent();
+					$.ajax({
+						type: "POST",
+						url: document.URL + "group_withdraw",
+						data: {'private': 'False', 'title': title},
+						success: function(data){
+							alert("성공적으로 " + title + " 그룹에서 탈퇴했습니다.");
+							row.remove();
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+						}
+					});
+					return false;
+				}
+			});
+
+			$('.delete_group').click(function(e){
+				c = confirm("삭제 하시겠습니까?");
+				if (c == true){
+					title = $(this).parent().parent().children('td:nth-child(1)').children('a').html();
+					row = $(this).parent().parent();
+					$.ajax({
+						type: "POST",
+						url: document.URL + "group_withdraw",
+						data: {'private': 'True', 'title': title},
+						success: function(data){
+							alert("성공적으로 " + title + " 그룹을 삭제했습니다.");
+							row.remove();
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+						}
+					});
+					return false;
+				}
+			});
+
+
+			$('.withdraw').hide();
+			$('.delete_group').hide();
+
+			$('#withdraw_appear').click(function(e){
+				if ($(this).html() == "수정")
+					$(this).html('완료');
+				else
+					$(this).html('수정');
+				$('.withdraw').toggle();
+				$('.delete_group').toggle();
+			});
+
 		});
 	</script>
 {% endblock %}
@@ -35,7 +89,7 @@
 					일반
 				{% endif %}
 			</th>
-			<td><input type = "checkbox"></td>
+			<td><input type="button" class="withdraw" value="탈퇴"></td>
 		</tr>
 		{% endfor %}
 
@@ -48,10 +102,18 @@
 			</td>
 		</tr
 		-->
-			
+
+		{% for g in p_groups %}
+		<tr>
+			<td><a href="/p_group/{{ g.title }}">{{ g.title }}</a></td>
+			<td>개인용</td>
+			<td><input type="button" class="delete_group" value="삭제"></td>
+		</tr>
+		{% endfor %}
+
 	</table>
 
 	<span id = "addgroup"><button onclick = "window.location.href='/group_make'">새 그룹 추가</button></span>
-	<span id = "editgroup"><button>수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
+	<span id = "editgroup"><button id="withdraw_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
 
 {% endblock %}		

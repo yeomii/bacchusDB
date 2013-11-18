@@ -4,8 +4,8 @@
         <title>WEB DB</title>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
 	{% block script %} {% endblock %}
-	 <link rel = "stylesheet" type = "text/css" href = "{{ STATIC_URL }}css/{{ css }}.css">
-        <meta charset = "UTF-8">
+	 <link rel="stylesheet" type = "text/css" href = "{{ STATIC_URL }}css/{{ css }}.css">
+        <meta charset="UTF-8">
 </head>
 <body>
 	<div id="wrapper">
@@ -21,15 +21,16 @@
                                         <span id = "mypage"><a href = "/my_info">My page</a></span>
                                 </div>
                         </div>
-                        <ul id = "navbar">
-                        {% if css == "db_page" or  css == "group" or  css == "user"%}
-                                <li id = "home"><a href = "/">HOME</a></li>
+                        
+			<ul id="navbar">
+                        {% if css == "db_page" or css == "group" or  css == "user"%}
+                                <li id="home"><a href = "/">HOME</a></li>
                         {% endif %}
-                        {% if css == "db_page" or  css == "group" %}
-                                <li id = "group"><a href = "/group/{{ g.title}}">{{ g.title }}</a></li>
+                        {% if css == "db_page" or css == "group" %}
+                                <li id="group"><a href = "/group/{{ g.title }}">{{ g.title }}</a></li>
                         {% endif %}
                         {% if css == "db_page" %}
-                                <li id = "db"><a href = "www.snucse.org">DB</a></li>
+                                <li id="db"><a href = "/group/{{ g.title }}/{{ db.name }}">{{ db.name }}</a></li>
                         {% endif %}
                         </ul>
 
@@ -41,10 +42,10 @@
 		</div>
 	</div>	
 	<div id="footer">
-	 	<span id = "madeby">
+	 	<span id="madeby">
                         Made by Bacchus
                 </span>
-                <span id = "contact">
+                <span id="contact">
                         Contact: bacchusDB@bacchus.snucse.org
                 </span>
         </div>
