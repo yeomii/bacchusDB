@@ -162,10 +162,36 @@
 			</table>
 		</div>
 	
-		<aside id="addrowsfield">
-			<button type="button" id="addrowbutton" name="addrowbutton">행 추가</button>
-			<button type="button" id="delrowbutton" name="delrowbutton">행 삭제</button>
-			<button type="button" id="addcolbutton" name="addcolbutton">열 추가</button>
-			<button type="button" id="delcolbutton" name="delcolbutton">열 삭제</button>
+		<aside id="toolbox">
+			<div class="editbuttonfield">
+				<button type="button" id="addupperrow" name="addupperrow" class="editbutton" >위에 행 추가</button>
+			</div>
+			<div class="editbuttonfield">
+				<button type="button" id="addlowerrow" name="addlowerrow" class="editbutton">아래 행 추가</button>
+			</div>
+			<div class="editbuttonfield">
+				<button type="button" id="delupperrow" name="delupperrow" class="editbutton">위에 행 삭제</button>
+			</div>	
+			<div class="editbuttonfield">
+				<button type="button" id="dellowerrow" name="dellowerrow" class="editbutton">아래 행 삭제</button>
+			</div>
+			<div class="editbuttonfield">
+				<button type="button" id="adduppercol" name="adduppercol" class="editbutton">위에 열 추가</button>
+                        </div>
+			<div class="editbuttonfield">	
+				<button type="button" id="addlowercol" name="addlowercol" class="editbutton">아래 열 추가</button>
+                        </div>
+			<div class="editbuttonfield">
+				<button type="button" id="deluppercol" name="deluppercol" class="editbutton">위에 열 삭제</button>
+                       	</div>
+			<div class="editbuttonfield">
+			 	<button type="button" id="dellowercol" name="dellowercol" class="editbutton">아래 열 삭제</button>
+			</div>
+			<div class="editbuttonfield">
+				<button type="button" id="extendrow" name="extendrow" class="editbutton">맨 아래 행 추가</button>
+			</div>
+			<div class="editbuttonfield">
+				<button type="button" id="extendcol" name="extendcol" class="editbutton">맨 끝에 열 추가</button>
+			</div>
 		</aside>
 {% endblock %} 
