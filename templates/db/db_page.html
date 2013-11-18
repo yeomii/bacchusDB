@@ -2,18 +2,20 @@
 {% block script %}
 <script type="text/javascript">
 	$(document).ready(function(){
-		content = "";
-		column = "";
+		content="";
+		column="";
+		col_num = {{ db.columnnum }};
+		row_num = {{ db.rownum }};
 
 		$('.cell').focusin(function(e){
-			content = $(this).html();
+			content=$(this).html();
 		});
 		
 		$('.cell').focusout(function(e){
 			if (content != $(this).html()){
-				id = $(this).attr('id').split("::");
-				row = id[0];
-				col = id[1];
+				id=$(this).attr('id').split("::");
+				row=id[0];
+				col=id[1];
 				$.ajax({
 					type: "POST",
 					url: document.URL,
@@ -28,13 +30,13 @@
 		});
 
 		$('.column').focusin(function(e){
-			column = $(this).html();
+			column=$(this).html();
 		});
 
 		$('.column').focusout(function(e){
 			if (column != $(this).html()){
-				id = $(this).attr('id').split('_');
-				num = id[1];
+				id=$(this).attr('id').split('_');
+				num=id[1];
 				$.ajax({
 					type: "POST",
 					url: document.URL,
@@ -47,16 +49,32 @@
 				return false;
 			}
 		});
+
+		$('#addrowbutton').click(function(e){
+			var add_num = parseInt(prompt('원하는 숫자를 입력해주세요'));
+			var table = $('#mydb');
+			var row = "";
+			for(var i=0; i<add_num; i++){
+				var new_row = row_num + i + 1;
+				row += '<tr><th width="30" height="30"><div id="row' + new_row + '">' + new_row +  '</div></th>';
+				for(var j=0; j<col_num; j++){
+					row += '<td><div id="' + (new_row-1) + '::' + j + '" class="cell" contenteditable="true"></div></td>';
+				}
+				row += '</tr>';
+			}
+			row_num += add_num;
+			table.append(row);
+		});
 	});	
 </script>
 {% endblock %}
 {% block wrapper %}
-		<div id = "dbnamefield">
-			<span id = "dbname">DB명: {{ db.name }}</span>
+		<div id="dbnamefield">
+			<span id="dbname">DB명: {{ db.name }}</span>
 		</div>
 
-		<div id = "dbfield">	
-			<table border = "1" id = "mydb">
+		<div id="dbfield">	
+			<table border="1" id = "mydb">
 				<tr>
 				{% for col in preset %}
 					{% if not forloop.first %}
@@ -86,7 +104,7 @@
 			</table>
 		</div>
 	
-		<div id = "addrowsfield">
-			<button type = "button" id = "addrowbutton" name = "addrowbutton">행 추가</button>
+		<div id="addrowsfield">
+			<button type="button" id = "addrowbutton" name = "addrowbutton">행 추가</button>
 		</div>
 {% endblock %} 
