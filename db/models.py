@@ -58,6 +58,26 @@ class DataBase(models.Model):
                 self.columnnum += num
                 self.save()
                 return self
+	def addColumn(self, num):
+		cols = Column.objects.filter(coldb=self, colnum__gte=num)
+		for col in cols:
+			cells = Cell.objects.filter(cellcol=col)
+			for cell in cells:
+				cell.colnum += 1
+				cell.save()
+			col.colnum += 1
+			col.save()
+
+		c = Column.objects.create_col(colnum=num, db=self)
+		for row in Row.objects.filter(rowdb=self):
+			Cell.objects.create_cell(col=c, row=row)
+
+		preset = json.loads(self.preset)
+		preset.insert(num+1, '')
+		self.preset = json.dumps(preset)
+		self.columnnum += 1
+		self.save()
+		return self
 	def rowDelete(self, num):
 		row = Row.objects.get(rowdb=self, rownum=num)
 		rows = Row.objects.filter(rowdb=self, rownum__gt=num)
