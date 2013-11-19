@@ -122,37 +122,45 @@
 		});
 
 		$('#delrowbutton').click(function(e){
-			selected_row.sort(function(a,b){return a-b}).reverse();
-			$.ajax({
-				type: "POST",
-				url: document.URL,
-				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_row': selected_row},
-				success: function(data){
-					$('#mydb').html(data);
-				},
-				error: function(xhr, ajaxOptions, errorThrown){
-				}
-			});
-			row_num -= (selected_row.length);
-			selected_row = [];
-			return false;
+                        if (selected_col.length == 0){
+                                alert ("행을 선택해주세요");
+                        } else{
+				selected_row.sort(function(a,b){return a-b}).reverse();
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_row': selected_row},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				row_num -= (selected_row.length);
+				selected_row = [];
+				return false;
+			}
 		});
 
 		$('#delcolbutton').click(function(e){
-                        selected_col.sort(function(a,b){return a-b}).reverse();
-                        $.ajax({
-                                type: "POST",
-                                url: document.URL,
-                                data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_col': selected_col},
-                                success: function(data){
-                                        $('#mydb').html(data);
-                                },
-                                error: function(xhr, ajaxOptions, errorThrown){
-                                }
-                        });
-                        col_num -= (selected_col.length);
-                        selected_col = [];
-                        return false;
+			if (selected_col.length != 1){
+				alert ("열을 선택해주세요");
+			} else{
+                        	selected_col.sort(function(a,b){return a-b}).reverse();
+                        	$.ajax({
+                        	        type: "POST",
+                        	        url: document.URL,
+                        	        data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_col': selected_col},
+                        	        success: function(data){
+                        	                $('#mydb').html(data);
+                        	        },
+                        	        error: function(xhr, ajaxOptions, errorThrown){
+                        	        }
+                        	});
+                        	col_num -= (selected_col.length);
+                        	selected_col = [];
+                        	return false;
+			}
                 });
 
 		$('.addcolbutton').click(function(e){
