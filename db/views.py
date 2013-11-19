@@ -23,11 +23,11 @@ def db_make(request, group_title):
 		url = request.path.split("/")
 		if url[1] == "group":
 			group = Group.objects.get(title=group_title)
-			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info)
+			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=False)
 
 		elif url[1] == "p_group":
 			group = Private_Group.objects.get(title=group_title, user=request.user)
-			db = DataBase.objects.create_pdatabase(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info)
+			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=True)
 
 	
 		db.save()
@@ -132,8 +132,14 @@ def db_page(request, g_title, dbname):
 
 
 	else:
-		g = Group.objects.get(title=g_title)
-		db = DataBase.objects.get(group=g, name=dbname)
+		url = request.path.split("/")
+		if url[1] == 'p_group':
+			g = Private_Group.objects.get(title=g_title, user=request.user)
+			db = DataBase.objects.get(p_group=g, name=dbname)
+		else:
+			g = Group.objects.get(title=g_title)
+			db = DataBase.objects.get(group=g, name=dbname)
+
 		dbrow = db.rownum
 		dbcolumn = db.columnnum
 		user = request.user

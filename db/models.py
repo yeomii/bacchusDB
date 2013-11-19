@@ -4,11 +4,14 @@ import json
 
 # Create your models here.
 class DataBaseManager(models.Manager):
-	def create_database(self, dbname, dbgroup, dbtype, dbinfo):
+	def create_database(self, dbname, dbgroup, dbtype, dbinfo, private):
 		preset = []
 		for i in range(11):
 			preset.append('')
-		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
+		if not private:
+			db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
+		else:
+			db = self.create(name=dbname, p_group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
 		rows = []
 		cols = []
 		for i in range(db.rownum):
