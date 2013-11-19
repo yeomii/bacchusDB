@@ -58,6 +58,26 @@ class DataBase(models.Model):
                 self.columnnum += num
                 self.save()
                 return self
+	def addColumn(self, num):
+		cols = Column.objects.filter(coldb=self, colnum__gte=num)
+		for col in cols:
+			cells = Cell.objects.filter(cellcol=col)
+			for cell in cells:
+				cell.colnum += 1
+				cell.save()
+			col.colnum += 1
+			col.save()
+
+		c = Column.objects.create_col(colnum=num, db=self)
+		for row in Row.objects.filter(rowdb=self):
+			Cell.objects.create_cell(col=c, row=row)
+
+		preset = json.loads(self.preset)
+		preset.insert(num+1, '')
+		self.preset = json.dumps(preset)
+		self.columnnum += 1
+		self.save()
+		return self
 	def rowDelete(self, num):
 		row = Row.objects.get(rowdb=self, rownum=num)
 		rows = Row.objects.filter(rowdb=self, rownum__gt=num)
@@ -73,6 +93,37 @@ class DataBase(models.Model):
 		self.rownum -= 1
 		self.save()
 		return self
+
+	def colDelete(self, num):
+		col = Column.objects.get(coldb=self, colnum=num)
+		cols = Column.objects.filter(coldb=self, colnum__gt=num)
+		for cl in cols:
+			cells = Cell.objects.filter(cellcol=cl)
+			cl.colnum -= 1
+			for c in cells:
+				c.colnum -= 1
+				c.save()
+			cl.save()
+		col.delete()
+		self.columnnum -= 1
+		preset = json.loads(self.preset)
+		del preset[num]
+		self.preset = json.dumps(preset)
+		self.save()
+		return self
+	def colSort(self, num):
+		col = Column.objects.get(coldb=self, colnum=num)
+		cells = Cell.objects.filter(cellcol=col).exclude(contents='').order_by('contents')
+		nums = []
+		for c in cells:
+			nums.append(c.rownum)
+		nums.sort()
+		for i in range(len(nums)):
+			row = cells[i].cellrow
+			row.changeNum(nums[i])
+		self.save()
+		return self
+			
 class RowManager(models.Manager):
 	def create_row(self, rownum, db):
 		row = self.create(rownum=rownum, rowdb=db)
@@ -90,6 +141,14 @@ class Row(models.Model):
                 for c in cell:
                         t = t and (not cell.ctype)
                 return t
+	def changeNum(self, num):
+		cell = Cell.objects.filter(cellrow=self)
+		for c in cell:
+			c.rownum = num
+			c.save()
+		self.rownum = num
+		self.save()
+		return self
 	
 class ColumnManager(models.Manager):
 	def create_col(self, colnum, db):

@@ -31,13 +31,13 @@
 			}
 		});
 
-		$('#mydb').on('focusin', '.column', function(e){
+		$('#mydb').on('focusin', '.column > div', function(e){
 			column=$(this).html();
 		});
 
-		$('#mydb').on('focusout', '.column', function(e){
+		$('#mydb').on('focusout', '.column > div', function(e){
 			if (column != $(this).html()){
-				id=$(this).attr('id').split('_');
+				id=$(this).attr('id').split('col');
 				num=id[1];
 				$.ajax({
 					type: "POST",
@@ -54,13 +54,27 @@
 
 		$('#mydb').on('dblclick', '.column', function(e){
 			var className = '.' + $(this).children('div').attr('id');
-			if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+			if (selected_col.length != 1 || selected_col[0] == className){
+				if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+					$(this).css('backgroundColor', 'rgb(127, 127, 127)');
+					$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+					selected_col.push(className);
+				}
+				else{
+					$(this).css('backgroundColor', 'rgb(255, 255, 255)');
+					$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+					selected_col.pop();
+				}
+			}
+			else if (selected_col.length == 1 && selected_col[0] != className){
+				c = selected_col.pop();
+				$('.column').css('backgroundColor', 'rgb(255, 255, 255)');
+				$(c).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+
 				$(this).css('backgroundColor', 'rgb(127, 127, 127)');
 				$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
-			}
-			else{
-				$(this).css('backgroundColor', 'rgb(255, 255, 255)');
-				$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+								
+				selected_col.push(className);
 			}
 		});
 
@@ -74,6 +88,7 @@
 				selected_row.splice(selected_row.indexOf($(this).children('div').attr('id')), 1);
 			}
 		});
+
 
 		$('#addrowbutton').click(function(e){
 			var add_num=parseInt(prompt('원하는 숫자를 입력해주세요'));
@@ -107,22 +122,81 @@
 		});
 
 		$('#delrowbutton').click(function(e){
-			selected_row.sort(function(a,b){return a-b}).reverse();
+                        if (selected_row.length == 0){
+                                alert ("행을 선택해주세요");
+                        } else{
+				selected_row.sort(function(a,b){return a-b}).reverse();
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_row': selected_row},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				row_num -= (selected_row.length);
+				selected_row = [];
+				return false;
+			}
+		});
+
+		$('#delcolbutton').click(function(e){
+			if (selected_col.length != 1){
+				alert ("열을 선택해주세요");
+			} else{
+                        	selected_col.sort(function(a,b){return a-b}).reverse();
+                        	$.ajax({
+                        	        type: "POST",
+                        	        url: document.URL,
+                        	        data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_col': selected_col},
+                        	        success: function(data){
+                        	                $('#mydb').html(data);
+                        	        },
+                        	        error: function(xhr, ajaxOptions, errorThrown){
+                        	        }
+                        	});
+                        	col_num -= (selected_col.length);
+                        	selected_col = [];
+                        	return false;
+			}
+                });
+		$('#sortcolbutton').click(function(e){
+                        if (selected_col.length != 1){
+                                alert ("열을 하나만 선택해주세요");
+                        } else{
+                                $.ajax({
+                                        type: "POST",
+                                        url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'sort_col': selected_col[0]},
+					success: function(data){
+                                                $('#mydb').html(data);
+                                        },
+                                        error: function(xhr, ajaxOptions, errorThrown){
+                                        }
+                                });
+				selected_col = [];
+                                return false;
+                        }
+                });
+
+
+		$('.addcolbutton').click(function(e){
+			direction = $(this).attr('class').split(" ")[1];
 			$.ajax({
 				type: "POST",
 				url: document.URL,
-				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_row': selected_row},
+				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_col': selected_col[0], 'direction': direction},
 				success: function(data){
 					$('#mydb').html(data);
 				},
 				error: function(xhr, ajaxOptions, errorThrown){
 				}
 			});
-			row_num -= (selected_row.length);
-			selected_row = [];
+			selected_col = [];
 			return false;
 		});
-
 	});	
 </script>
 {% endblock %}
@@ -194,4 +268,12 @@
 				<button type="button" id="extendcol" name="extendcol" class="editbutton">맨 끝에 열 추가</button>
 			</div>
 		</aside>
+		<div id="addrowsfield">
+			<button type="button" id="addrowbutton" name="addrowbutton">행 추가</button>
+			<button type="button" id="delrowbutton" name="delrowbutton">행 삭제</button>
+			<button type="button" class="addcolbutton left" name="addcolbutton">좌측 열 추가</button>
+			<button type="button" class="addcolbutton right" name="addcolbutton">우측 열 추가</button>
+			<button type="button" id="delcolbutton" name="delcolbutton">열 삭제</button>
+			<button type="button" id="sortcolbutton" name="sortcolbutton">열 정렬</button>
+		</div>
 {% endblock %} 
