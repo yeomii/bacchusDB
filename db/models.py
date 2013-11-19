@@ -73,6 +73,22 @@ class DataBase(models.Model):
 		self.rownum -= 1
 		self.save()
 		return self
+
+	def colDelete(self, num):
+		col = Column.objects.get(coldb=self, colnum=num)
+		cols = Column.objects.filter(coldb=self, colnum__gt=num)
+		for cl in cols:
+			cells = Cell.objects.filter(cellcol=cl)
+			cl.colnum -= 1
+			for c in cells:
+				c.colnum -= 1
+				c.save()
+			cl.save()
+		col.delete()
+		self.columnnum -= 1
+		self.save()
+		return self 
+
 class RowManager(models.Manager):
 	def create_row(self, rownum, db):
 		row = self.create(rownum=rownum, rowdb=db)

@@ -75,6 +75,7 @@
 			}
 		});
 
+
 		$('#addrowbutton').click(function(e){
 			var add_num=parseInt(prompt('원하는 숫자를 입력해주세요'));
 			if (isNaN(add_num)){
@@ -122,6 +123,24 @@
 			selected_row = [];
 			return false;
 		});
+
+		$('#delcolbutton').click(function(e){
+                        selected_col.sort(function(a,b){return a-b}).reverse();
+                        $.ajax({
+                                type: "POST",
+                                url: document.URL,
+                                data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_col': selected_col},
+                                success: function(data){
+                                        $('#mydb').html(data);
+                                },
+                                error: function(xhr, ajaxOptions, errorThrown){
+                                }
+                        });
+                        col_num -= (selected_col.length);
+                        selected_col = [];
+                        return false;
+                });
+
 
 	});	
 </script>

@@ -84,6 +84,23 @@ def db_page(request, g_title, dbname):
 		c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
 		return HttpResponse(t.render(c))
 
+	elif request.method == "POST" and request.is_ajax() and 'del_col[]' in request.POST:
+		g = Group.objects.get(title=request.POST['group'])
+		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
+		for col in request.POST.getlist('del_col[]'):
+			db.colDelete(int(col))
+		cols = Column.objects.filter(coldb=db).order_by('colnum')
+		preset = json.loads(db.preset)
+		cells = []
+		rows = Row.objects.filter(rowdb=db).order_by('rownum')
+		for i in range(db.rownum):
+                        cell = Cell.objects.filter(cellrow=rows[i])
+                        cells.append(cell.order_by('colnum'))
+
+                t = loader.get_template('db/table.html')
+		c = RequestContext(request, {'preset' : preset, 'col_num' : range(0, db.columnnum+1), 'db': db, 'cells': cells})
+		return HttpResponse(t.render(c))
+		
 	else:
 		g = Group.objects.get(title=g_title)
 		db = DataBase.objects.get(group=g, name=dbname)
