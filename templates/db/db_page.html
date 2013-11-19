@@ -31,13 +31,13 @@
 			}
 		});
 
-		$('#mydb').on('focusin', '.column', function(e){
+		$('#mydb').on('focusin', '.column > div', function(e){
 			column=$(this).html();
 		});
 
-		$('#mydb').on('focusout', '.column', function(e){
+		$('#mydb').on('focusout', '.column > div', function(e){
 			if (column != $(this).html()){
-				id=$(this).attr('id').split('_');
+				id=$(this).attr('id').split('col');
 				num=id[1];
 				$.ajax({
 					type: "POST",
@@ -54,13 +54,27 @@
 
 		$('#mydb').on('dblclick', '.column', function(e){
 			var className = '.' + $(this).children('div').attr('id');
-			if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+			if (selected_col.length != 1 || selected_col[0] == className){
+				if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+					$(this).css('backgroundColor', 'rgb(127, 127, 127)');
+					$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+					selected_col.push(className);
+				}
+				else{
+					$(this).css('backgroundColor', 'rgb(255, 255, 255)');
+					$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+					selected_col.pop();
+				}
+			}
+			else if (selected_col.length == 1 && selected_col[0] != className){
+				c = selected_col.pop();
+				$('.column').css('backgroundColor', 'rgb(255, 255, 255)');
+				$(c).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+
 				$(this).css('backgroundColor', 'rgb(127, 127, 127)');
 				$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
-			}
-			else{
-				$(this).css('backgroundColor', 'rgb(255, 255, 255)');
-				$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+								
+				selected_col.push(className);
 			}
 		});
 
@@ -123,6 +137,20 @@
 			return false;
 		});
 
+		$('.addcolbutton').click(function(e){
+			direction = $(this).attr('class').split(" ")[1];
+			$.ajax({
+				type: "POST",
+				url: document.URL,
+				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_col': selected_col[0], 'direction': direction},
+				success: function(data){
+					$('#mydb').html(data);
+				},
+				error: function(xhr, ajaxOptions, errorThrown){
+				}
+			});
+			return false;
+		});
 	});	
 </script>
 {% endblock %}
@@ -165,7 +193,8 @@
 		<div id="addrowsfield">
 			<button type="button" id="addrowbutton" name="addrowbutton">행 추가</button>
 			<button type="button" id="delrowbutton" name="delrowbutton">행 삭제</button>
-			<button type="button" id="addcolbutton" name="addcolbutton">열 추가</button>
+			<button type="button" class="addcolbutton left" name="addcolbutton">좌측 열 추가</button>
+			<button type="button" class="addcolbutton right" name="addcolbutton">우측 열 추가</button>
 			<button type="button" id="delcolbutton" name="delcolbutton">열 삭제</button>
 		</div>
 {% endblock %} 

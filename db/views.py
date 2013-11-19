@@ -52,7 +52,7 @@ def db_page(request, g_title, dbname):
 		g = Group.objects.get(title=request.POST['group'])
 		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
 		preset = json.loads(db.preset)
-		preset[int(request.POST['num'])] = request.POST['content']
+		preset[int(request.POST['num'])+1] = request.POST['content']
 		db.preset = json.dumps(preset)
 		db.save()
 
@@ -84,6 +84,29 @@ def db_page(request, g_title, dbname):
 		c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
 		return HttpResponse(t.render(c))
 
+	elif request.method == "POST" and request.is_ajax() and 'add_col' in request.POST:
+		g = Group.objects.get(title=request.POST['group'])
+		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
+		if (request.POST['direction'] == 'left'):
+			col = request.POST['add_col']
+			db.addColumn(int(col.split("col")[1]))
+		else:
+			col = request.POST['add_col']
+			db.addColumn(int(col.split("col")[1])+1)
+
+		rows = Row.objects.filter(rowdb=db).order_by('rownum')
+
+		preset = json.loads(db.preset)	
+		cells = [] 
+
+		for i in range(db.rownum):
+			cell = Cell.objects.filter(cellrow=rows[i])
+			cells.append(cell.order_by('colnum'))
+	
+		t = loader.get_template('db/table.html')
+		c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
+		return HttpResponse(t.render(c))
+		
 	else:
 		g = Group.objects.get(title=g_title)
 		db = DataBase.objects.get(group=g, name=dbname)

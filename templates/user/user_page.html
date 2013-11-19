@@ -9,10 +9,10 @@
 			});
 
 			$('.withdraw').click(function(e){
-				c = confirm("탈퇴 하시겠습니까?");
+				c=confirm("탈퇴 하시겠습니까?");
 				if (c == true){
-					title = $(this).parent().parent().children('td:nth-child(1)').children('a').html();
-					row = $(this).parent().parent();
+					title=$(this).parent().parent().children('td:nth-child(1)').children('a').html();
+					row=$(this).parent().parent();
 					$.ajax({
 						type: "POST",
 						url: document.URL + "group_withdraw",
@@ -29,10 +29,10 @@
 			});
 
 			$('.delete_group').click(function(e){
-				c = confirm("삭제 하시겠습니까?");
+				c=confirm("삭제 하시겠습니까?");
 				if (c == true){
-					title = $(this).parent().parent().children('td:nth-child(1)').children('a').html();
-					row = $(this).parent().parent();
+					title=$(this).parent().parent().children('td:nth-child(1)').children('a').html();
+					row=$(this).parent().parent();
 					$.ajax({
 						type: "POST",
 						url: document.URL + "group_withdraw",
@@ -65,14 +65,14 @@
 	</script>
 {% endblock %}
 {% block wrapper %} 	
-	<form id = groupsearch action = "/group_search" method = "post">
+	<form id=groupsearch action="/group_search" method = "post">
 		<div>
-			<input type = "text" placeholder = "그룹을 검색하세요" id = "keyword" name ="group_name">
-			<input type = "submit" value = "search" id = "searchbut">
+			<input type="text" placeholder="그룹을 검색하세요" id = "keyword" name ="group_name">
+			<input type="submit" value="search" id = "searchbut">
 		</div>
 	</form>
 	
-	<table border = "1" id = "mygroup">
+	<table border="1" id="mygroup">
 		<tr>
 			<td>그룹명</th>
 			<td>권한</th>
@@ -98,7 +98,7 @@
 			<td>bacchus</td>
 			<td>관리자</td>
 			<td>
-				<input type = "checkbox">
+				<input type="checkbox">
 			</td>
 		</tr
 		-->
@@ -110,10 +110,9 @@
 			<td><input type="button" class="delete_group" value="삭제"></td>
 		</tr>
 		{% endfor %}
-
 	</table>
 
-	<span id = "addgroup"><button onclick = "window.location.href='/group_make'">새 그룹 추가</button></span>
-	<span id = "editgroup"><button id="withdraw_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
+	<span id="addgroup"><button onclick="window.location.href='/group_make'">새 그룹 추가</button></span>
+	<span id="editgroup"><button id="withdraw_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
 
-{% endblock %}		
+{% endblock %}	

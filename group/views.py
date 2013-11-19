@@ -69,25 +69,39 @@ def group_make(request):
 	else:
 		return render_to_response('group/group_make.html', RequestContext(request, {'u': request.user, 'css':'group_make'}))
 
+@csrf_exempt
 @login_required
 def group_page(request, title):
-	try:
-		m = Membership.objects.get(user=request.user, group=Group.objects.get(title=title))	
+	if request.method == "POST" and request.is_ajax():
+		try:
+			g = Group.objects.get(title=title)
+			db = DataBase.objects.get(group=g, name=request.POST['name'])
+			db.delete()
 
-	except ObjectDoesNotExist:
-		return redirect('user_manage.views.home')
+		except ObjectDoesNotExist:
+			pg = Private_Group.objects.get(title=request.POST['title'], user=request.user)
+			db = DataBase.objects.get(p_group=g, name=request.POST['name'])
+			db.delete()
 
-	g = Group.objects.get(title=title)
-	admin = Membership.objects.filter(group=g, status=0)
-	normal = Membership.objects.filter(group=g, status=1)
-	db = DataBase.objects.filter(group=g)
-
-	if (m.status == 1):
-		var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
+		return HttpResponse()
 	else:
-		admission = Admission.objects.filter(group=g, status=0)
-		var = RequestContext(request, {'u': request.user, 'join_req': admission, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'private': 'false', 'css':'group'})
-	return render_to_response('group/group_page.html', var)
+		try:
+			m = Membership.objects.get(user=request.user, group=Group.objects.get(title=title))	
+
+		except ObjectDoesNotExist:
+			return redirect('user_manage.views.home')
+
+		g = Group.objects.get(title=title)
+		admin = Membership.objects.filter(group=g, status=0)
+		normal = Membership.objects.filter(group=g, status=1)
+		db = DataBase.objects.filter(group=g)
+
+		if (m.status == 1):
+			var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
+		else:
+			admission = Admission.objects.filter(group=g, status=0)
+			var = RequestContext(request, {'u': request.user, 'join_req': admission, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'private': 'false', 'css':'group'})
+		return render_to_response('group/group_page.html', var)
 
 @login_required
 def private_group_page(request, title):
