@@ -143,7 +143,7 @@ def db_page(request, g_title, dbname):
 		dbrow = db.rownum
 		dbcolumn = db.columnnum
 		user = request.user
-		group = db.group
+		group = g
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
 		preset = json.loads(db.preset)
 		cells = []

@@ -26,10 +26,18 @@
                                 <li id="home"><a href = "/">HOME</a></li>
                         {% endif %}
                         {% if css == "db_page" or css == "group" %}
-                                <li id="group"><a href = "/group/{{ g.title }}">{{ g.title }}</a></li>
+							{% if g.num_member %}
+                                <li id="group"><a href="/group/{{ g.title }}">{{ g.title }}</a></li>
+							{% else %}
+								<li id="group"><a href="/p_group/{{ g.title }}">{{ g.title }}</a></li>
+							{% endif %}
                         {% endif %}
                         {% if css == "db_page" %}
+							{% if g.num_member %}
                                 <li id="db"><a href = "/group/{{ g.title }}/{{ db.name }}">{{ db.name }}</a></li>
+							{% else %}
+								<li id="db"><a href = "/p_group/{{ g.title }}/{{ db.name }}">{{ db.name }}</a></li>
+							{% endif %}
                         {% endif %}
                         </ul>
 
