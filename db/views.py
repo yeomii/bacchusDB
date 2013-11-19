@@ -19,15 +19,15 @@ def db_make(request, group_title):
 		title = request.POST['db_name']
 		dbtype = request.POST['db_type']
 		info = request.POST['db_info']
-
+		col = request.POST.getlist('col')
 		url = request.path.split("/")
 		if url[1] == "group":
 			group = Group.objects.get(title=group_title)
-			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=False)
+			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=False, col_preset=col)
 
 		elif url[1] == "p_group":
 			group = Private_Group.objects.get(title=group_title, user=request.user)
-			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=True)
+			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=True, col_preset=col)
 
 	
 		db.save()

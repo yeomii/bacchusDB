@@ -1,13 +1,27 @@
+#-*- coding: utf-8 -*-
 from django.db import models
 from group.models import Group, Private_Group, Membership
 import json
 
 # Create your models here.
 class DataBaseManager(models.Manager):
-	def create_database(self, dbname, dbgroup, dbtype, dbinfo, private):
-		preset = []
-		for i in range(11):
-			preset.append('')
+	def create_database(self, dbname, dbgroup, dbtype, dbinfo, private, col_preset):
+		print dbtype
+		if dbtype == "회계장부".decode('utf-8'):
+			preset = ['', '지출/수입', '날짜', '금액', '', '', '', '', '', '', '']
+		elif dbtype == "주소록".decode('utf-8'):
+			preset = ['', '이름', '주소', '기록 날짜', '', '', '', '', '', '', '']
+		elif dbtype == "도서장부".decode('utf-8'):
+			preset = ['', '도서명', '저자', '대여자', '반납 날짜', '', '', '', '', '', '']
+		elif dbtype == "연락처".decode('utf-8'):
+			preset = ['', '이름', '집전화', '휴대전화', '기록 날짜', '', '', '', '', '', '']
+		else:
+			preset = ['']
+			for c in col_preset:
+				preset.append(c)	
+			for i in range(11-len(preset)):
+				preset.append('')
+
 		if not private:
 			db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
 		else:
