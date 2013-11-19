@@ -58,6 +58,24 @@ class DataBase(models.Model):
                 self.columnnum += num
                 self.save()
                 return self
+	def addRow(self, num):
+		rows = Row.objects.filter(rowdb=self, rownum__gte=num)
+		for row in rows:
+			cells = Cell.objects.filter(cellrow=row)
+			for cell in cells:
+				cell.rownum += 1
+				cell.save()
+			row.rownum += 1
+			row.save()
+
+		r = Row.objects.create_row(rownum=num, db=self)
+		for col in Column.objects.filter(coldb=self):
+			Cell.objects.create_cell(col=col, row=r)
+
+		self.rownum += 1
+		self.save()
+		return self
+		
 	def addColumn(self, num):
 		cols = Column.objects.filter(coldb=self, colnum__gte=num)
 		for col in cols:
