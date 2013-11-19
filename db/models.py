@@ -106,9 +106,24 @@ class DataBase(models.Model):
 			cl.save()
 		col.delete()
 		self.columnnum -= 1
+		preset = json.loads(self.preset)
+		del preset[num]
+		self.preset = json.dumps(preset)
 		self.save()
-		return self 
-
+		return self
+	def colSort(self, num):
+		col = Column.objects.get(coldb=self, colnum=num)
+		cells = Cell.objects.filter(cellcol=col).exclude(contents='').order_by('contents')
+		nums = []
+		for c in cells:
+			nums.append(c.rownum)
+		nums.sort()
+		for i in range(len(nums)):
+			row = cells[i].cellrow
+			row.changeNum(nums[i])
+		self.save()
+		return self
+			
 class RowManager(models.Manager):
 	def create_row(self, rownum, db):
 		row = self.create(rownum=rownum, rowdb=db)
@@ -126,6 +141,14 @@ class Row(models.Model):
                 for c in cell:
                         t = t and (not cell.ctype)
                 return t
+	def changeNum(self, num):
+		cell = Cell.objects.filter(cellrow=self)
+		for c in cell:
+			c.rownum = num
+			c.save()
+		self.rownum = num
+		self.save()
+		return self
 	
 class ColumnManager(models.Manager):
 	def create_col(self, colnum, db):

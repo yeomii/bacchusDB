@@ -124,7 +124,22 @@ def db_page(request, g_title, dbname):
 		c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
 
 		return HttpResponse(t.render(c))
-		
+	
+	elif request.method == "POST" and request.is_ajax() and 'sort_col' in request.POST:
+		g = Group.objects.get(title=request.POST['group'])
+                db = DataBase.objects.get(group=g, name=request.POST['db_name'])
+		col = request.POST['sort_col']
+		db.colSort(int(col.split("col")[1]))
+		rows = Row.objects.filter(rowdb=db).order_by('rownum')
+                preset = json.loads(db.preset)
+                cells = []
+                for i in range(db.rownum):
+                        cell = Cell.objects.filter(cellrow=rows[i])
+                        cells.append(cell.order_by('colnum'))
+		t = loader.get_template('db/table.html')
+                c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
+
+                return HttpResponse(t.render(c))	
 	else:
 		g = Group.objects.get(title=g_title)
 		db = DataBase.objects.get(group=g, name=dbname)
