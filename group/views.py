@@ -117,7 +117,7 @@ def private_group_page(request, title):
 def group_search(request):
 	group_name = request.POST['group_name']
 
-	g = Group.objects.filter(title__contains=group_name)
+	g = Group.objects.filter(title=group_name)
 	return render_to_response('group/group_search.html', RequestContext(request, {'u':request.user, 'groups': g, 'css':'searchr'}))
 
 @csrf_exempt
