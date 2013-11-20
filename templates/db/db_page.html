@@ -121,6 +121,27 @@
 			return false;
 		});
 
+		$('.addrowbutton').click(function(e){
+			var direction = $(this).attr('class').split(" ")[1];
+			if (selected_row.length != 1){
+				alert("한줄만 선택해 주세요.");
+			}
+			else{
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_row_d': selected_row[0], 'direction': direction},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				selected_row = [];
+				return false;
+			}
+		});
+
 		$('#delrowbutton').click(function(e){
                         if (selected_row.length == 0){
                                 alert ("행을 선택해주세요");
@@ -238,6 +259,8 @@
 	
 		<div id="addrowsfield">
 			<button type="button" id="addrowbutton" name="addrowbutton">행 추가</button>
+			<button type="button" class="addrowbutton up" name="addrowbutton">위로 행 추가</button>
+			<button type="button" class="addrowbutton down" name="addrowbutton">아래로 행 추가</button>
 			<button type="button" id="delrowbutton" name="delrowbutton">행 삭제</button>
 			<button type="button" class="addcolbutton left" name="addcolbutton">좌측 열 추가</button>
 			<button type="button" class="addcolbutton right" name="addcolbutton">우측 열 추가</button>
