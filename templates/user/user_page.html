@@ -65,6 +65,22 @@
 	</script>
 {% endblock %}
 {% block wrapper %} 	
+	<div id="waiting">
+		<table border="1" id="waitingtable">
+			<tr>
+				<th>그룹 이름</th>
+				<th>메세지</th>
+			</tr>
+
+			{% for a in admissions %}
+			<tr>
+				<td>{{ r.group.title }}</td>
+				<td>{{ r.message }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+	
 	<form id=groupsearch action="/group_search" method = "post">
 		<div>
 			<input type="text" placeholder="그룹을 검색하세요" id = "keyword" name ="group_name">
