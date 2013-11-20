@@ -53,39 +53,43 @@
 		});
 
 		$('#mydb').on('dblclick', '.column', function(e){
-			var className = '.' + $(this).children('div').attr('id');
-			if (selected_col.length != 1 || selected_col[0] == className){
-				if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+			if (selected_row.length == 0){
+				var className = '.' + $(this).children('div').attr('id');
+				if (selected_col.length != 1 || selected_col[0] == className){
+					if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+						$(this).css('backgroundColor', 'rgb(127, 127, 127)');
+						$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+						selected_col.push(className);
+					}
+					else{
+						$(this).css('backgroundColor', 'rgb(255, 255, 255)');
+						$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+						selected_col.pop();
+					}
+				}
+				else if (selected_col.length == 1 && selected_col[0] != className){
+					c = selected_col.pop();
+					$('.column').css('backgroundColor', 'rgb(255, 255, 255)');
+					$(c).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+
 					$(this).css('backgroundColor', 'rgb(127, 127, 127)');
 					$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+									
 					selected_col.push(className);
 				}
-				else{
-					$(this).css('backgroundColor', 'rgb(255, 255, 255)');
-					$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
-					selected_col.pop();
-				}
-			}
-			else if (selected_col.length == 1 && selected_col[0] != className){
-				c = selected_col.pop();
-				$('.column').css('backgroundColor', 'rgb(255, 255, 255)');
-				$(c).parent().css('backgroundColor', 'rgb(255, 255, 255)');
-
-				$(this).css('backgroundColor', 'rgb(127, 127, 127)');
-				$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
-								
-				selected_col.push(className);
 			}
 		});
 
 		$('#mydb').on('click', '.row', function(e){
-			if($(this).parent().css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).parent().css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
-				$(this).parent().css('backgroundColor', 'rgb(127, 127, 127)');
-				selected_row.push(parseInt(($(this).children('div').attr('id').split("row")[1]-1)));
-			}
-			else{
-				$(this).parent().css('backgroundColor', 'rgb(255, 255, 255)');
-				selected_row.splice(selected_row.indexOf($(this).children('div').attr('id')), 1);
+			if (selected_col.length == 0){
+				if($(this).parent().css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).parent().css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+					$(this).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+					selected_row.push(parseInt(($(this).children('div').attr('id').split("row")[1]-1)));
+				}
+				else{
+					$(this).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+					selected_row.splice(selected_row.indexOf($(this).children('div').attr('id')), 1);
+				}
 			}
 		});
 
