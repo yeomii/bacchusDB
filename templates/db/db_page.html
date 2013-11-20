@@ -142,20 +142,25 @@
 		});
 
 		$('#delrowbutton').click(function(e){
-			selected_row.sort(function(a,b){return a-b}).reverse();
-			$.ajax({
-				type: "POST",
-				url: document.URL,
-				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_row': selected_row},
-				success: function(data){
-					$('#mydb').html(data);
-				},
-				error: function(xhr, ajaxOptions, errorThrown){
-				}
-			});
-			row_num -= (selected_row.length);
-			selected_row = [];
-			return false;
+			if(($('.row').length-selected_row.length) >= 1){
+				selected_row.sort(function(a,b){return a-b}).reverse();
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_row': selected_row},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				row_num -= (selected_row.length);
+				selected_row = [];
+				return false;
+			}
+			else{
+				alert("행이 최소한 1개는 존재해야 합니다.");
+			}
 		});
 
 		$('.addcolbutton').click(function(e){
