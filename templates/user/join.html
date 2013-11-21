@@ -15,21 +15,22 @@ join
 							success: function(data){
 								if ("success" in data){
 									alert("Successfully Joined. WelCome!");
-									window.location = "/";
+									window.location="/";
 								}
 								else if (data.error == "password"){
 									alert("Password is different")
-									$('#pw').val("");
-									$('#pwconfirm').val("");
 								}
-								else if (data.error == "validation"){
+								else if (data.error == "Id"){
+									alert("ID가 영문자 혹은 숫자만으로 이루어지지 않았습니다.");
+								}	
+								else if (data.error == "Password"){
 									alert("Password does not satisfy our restriction");
-									$('#pw').val("");
-									$('#pwconfirm').val("");
 								}
 								else{
 									alert("Error?");
 								}
+								$('#pw').val("");
+								$('#pwconfirm').val("");
 							},
 							error: function(xhr, ajaxOptions, errorThrown){
 								//alert(xhr);
@@ -57,7 +58,10 @@ join
 										if ("success" in data){
 											alert("You can Use this ID");
 										}
-										else {
+										else if("fail" in data){
+											alert("아이디가 영문자, 혹은 숫자만으로 이루어지지 않았습니다.");
+										}
+										else{
 											alert("Sorry! Already taken By Someone");
 										}
 									},
@@ -69,7 +73,7 @@ join
 					});
 				
 					function isEmail(email) {
-						var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+						var regex=/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 						return regex.test(email);
 					}
 				});
@@ -80,11 +84,11 @@ join
                         <img id = "logo" src = "https://lh3.googleusercontent.com/--wpLtuQy7Rk/UonLwOahO1I/AAAAAAAAAFU/_5GcMmr5rcU/s500/%25EA%25B3%25A0%25EB%2594%2595.gif" alt = "logo">
                 </div>
 
-                <div id = "join">
-                        <form id = "joinbigform" method = "post" action = "/join">
-                                <fieldset id = "joinsmallform">
-                                        <div id = "joinfield">
-                                                <div id = "account">
+                <div id="join">
+                        <form id="joinbigform" method = "post" action = "/join">
+                                <fieldset id="joinsmallform">
+                                        <div id="joinfield">
+                                                <div id="account">
                                                 	
                                                         <div>
                                                                 <label id = "idletter" for = "id">ID</label>
@@ -92,37 +96,37 @@ join
 								<input class="btn" type = "submit" id = "id_check" name = "id_check" value = "ID 확인"> <!-- class ? -->
                                                         </div>
 				
-							<div id = "idcondition">
-								<p>* 아이디는 영문만 사용합니다. *</p>
+							<div id="idcondition">
+								<p>* 아이디는 영문 및 숫자만 사용합니다. *</p>
 							</div>
 
                                                         <div>
-                                                                <label id = "pwletter" for = "pw">PW</label>
-                                                                <input type = "password" id = "pw" class = "inputval" name = "pw">
+                                                                <label id="pwletter" for = "pw">PW</label>
+                                                                <input type="password" id = "pw" class = "inputval" name = "pw">
                                                         </div>
 
-							<div id = "pwcondition">
+							<div id="pwcondition">
                                                                 <p>* 6자 이상의 영문 대소문자, 숫자 및 특수문자를 사용합니다. *</p>
                                                         </div>	
 						
                                                         <div>
-								<label id = "pwconfirmletter" for = "pwconfirm">PW Confirm</label>
-								<input type = "password" id = "pwconfirm" class = "inputval" name = "pwconfirm">
+								<label id="pwconfirmletter" for = "pwconfirm">PW Confirm</label>
+								<input type="password" id = "pwconfirm" class = "inputval" name = "pwconfirm">
                                                         </div>
                                                         
                                                         <div>
-								<label id = "unameletter" for = "uname">Name</label>
-		                                                <input type = "text" id = "uname" class = "inputval" name = "uname">
+								<label id="unameletter" for = "uname">Name</label>
+		                                                <input type="text" id = "uname" class = "inputval" name = "uname">
 	                                                </div>
 
 							<div>
-								<label id = "emailletter" for = "email">Email</label>
-								<input type = "email" id = "email" class = "inputval" name = "email">
+								<label id="emailletter" for = "email">Email</label>
+								<input type="email" id = "email" class = "inputval" name = "email">
 							</div>
                                                 </div>
 
                                                 <div id = "joinbutton">
-                                                        <input class="btn button" id = "joinbutton" type = "submit" value = "가입">
+                                                        <input class="btn button" id = "join_button" type = "submit" value = "가입">
                                                 </div>
                                         </div>
                                 </fieldset>

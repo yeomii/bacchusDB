@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from bacchusdb import settings
-from group.models import Group, Membership, Admission
+from group.models import Group, Private_Group, Membership, Admission
 from db.models import DataBase
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -11,6 +11,7 @@ from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 import json
+import re
 
 def group_name_check(name):
 	try:
@@ -21,6 +22,11 @@ def group_name_check(name):
 	except ObjectDoesNotExist:
 	  	return False
 
+
+def group_name_validation(title):
+	return not bool(re.search('\S+', title))
+
+
 @login_required
 @csrf_exempt
 def group_make(request):
@@ -28,8 +34,8 @@ def group_make(request):
 	if request.method == "POST" and request.is_ajax() and 'name_check' in request.POST:
 		name = request.POST['group_name']
 
-		if name == "":
-			data['fail'] = "Empty"
+		if group_name_validation(name):
+			data['fail'] = "Restriction"
 		elif group_name_check(name):
 			data['fail'] = ""
 		else:
@@ -41,10 +47,17 @@ def group_make(request):
 		group_name = request.POST['group_name']
 		group_info = request.POST['group_info']
 		
-		if group_name == "":
-			data['fail'] = "Empty"
+		if group_name_validation(group_name):
+			data['fail'] = "Restriction"
+		
+		elif 'privategroup' in request.POST:
+		 	pg = Private_Group(title=group_name, info=group_info, user=request.user)
+		 	pg.save()
+		 	data['success'] = ""	
+
 		elif group_name_check(group_name):
 			data['fail'] = ""
+
 		else:
 			g = Group(title=group_name, info=group_info, num_member=1)
 			g.save()
@@ -56,25 +69,47 @@ def group_make(request):
 	else:
 		return render_to_response('group/group_make.html', RequestContext(request, {'u': request.user, 'css':'group_make'}))
 
+@csrf_exempt
 @login_required
 def group_page(request, title):
-#	title = resolve(request.path_info).url_name.split("_")[1]
-	try:
-		m = Membership.objects.get(user=request.user, group=Group.objects.get(title=title))	
+	if request.method == "POST" and request.is_ajax():
+		try:
+			g = Group.objects.get(title=title)
+			db = DataBase.objects.get(group=g, name=request.POST['name'])
+			db.delete()
 
-	except ObjectDoesNotExist:
-		return redirect('user_manage.views.home')
+		except ObjectDoesNotExist:
+			pg = Private_Group.objects.get(title=request.POST['title'], user=request.user)
+			db = DataBase.objects.get(p_group=g, name=request.POST['name'])
+			db.delete()
 
-	g = Group.objects.get(title=title)
-	admin = Membership.objects.filter(group=g, status=0)
-	normal = Membership.objects.filter(group=g, status=1)
-	db = DataBase.objects.filter(group=g)
-
-	if (m.status == 1):
-		var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
+		return HttpResponse()
 	else:
-		admission = Admission.objects.filter(group=g, status=0)
-		var = RequestContext(request, {'u': request.user, 'join_req': admission, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
+		try:
+			m = Membership.objects.get(user=request.user, group=Group.objects.get(title=title))	
+
+		except ObjectDoesNotExist:
+			return redirect('user_manage.views.home')
+
+		g = Group.objects.get(title=title)
+		admin = Membership.objects.filter(group=g, status=0)
+		normal = Membership.objects.filter(group=g, status=1)
+		db = DataBase.objects.filter(group=g)
+
+		if (m.status == 1):
+			var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
+		else:
+			admission = Admission.objects.filter(group=g, status=0)
+			var = RequestContext(request, {'u': request.user, 'join_req': admission, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'private': 'false', 'css':'group'})
+		return render_to_response('group/group_page.html', var)
+
+@login_required
+def private_group_page(request, title):
+	pg = Private_Group.objects.get(user=request.user, title=title)
+	db = DataBase.objects.filter(p_group=pg)
+
+	var = RequestContext(request, {'u': request.user, 'g': pg, 'db': db, 'private': 'true', 'css': 'group'})
+
 	return render_to_response('group/group_page.html', var)
 
 @csrf_exempt
@@ -82,7 +117,7 @@ def group_page(request, title):
 def group_search(request):
 	group_name = request.POST['group_name']
 
-	g = Group.objects.filter(title__contains=group_name)
+	g = Group.objects.filter(title=group_name)
 	return render_to_response('group/group_search.html', RequestContext(request, {'u':request.user, 'groups': g, 'css':'searchr'}))
 
 @csrf_exempt
@@ -125,6 +160,10 @@ def group_join_request_process(request, g_title, username, success):
 
 	if (success == "s"):
 		m = Membership(user=u, group=g, status=1)
+		
+		g.num_member += 1
+
+		g.save()
 		m.save()
 
 		admission.status=1	
@@ -135,3 +174,33 @@ def group_join_request_process(request, g_title, username, success):
 	admission.save()
 
 	return HttpResponse(json.dumps(""), content_type="application/json")
+
+
+@csrf_exempt
+@login_required
+def group_withdraw(request):
+	title = request.POST['title']
+
+	if (request.POST['private'] == "True"):
+		g = Private_Group.objects.get(title=title, user=request.user)
+		g.delete()
+	else:
+		g = Group.objects.get(title=title)
+		m = Membership.objects.get(group=g, user=request.user)
+		try:
+			ad = Admission.objects.get(group=g, user=request.user)
+			ad.delete()
+		
+		except ObjectDoesNotExist:
+			pass
+
+			
+		g.num_member -= 1
+
+		g.save()
+		m.delete()
+
+		if (g.num_member == 0):
+			g.delete()
+
+	return HttpResponse("")

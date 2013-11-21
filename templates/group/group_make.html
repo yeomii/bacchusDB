@@ -3,21 +3,25 @@
 		<script>
 		$(document).ready(function(){
 				$('#gp_name_check').click(function(e){
+					if ($('#group_name').val()[0] == " "){
+						alert('그룹 이름의 시작은 공백으로 할 수 없습니다.');
+						return false;
+					}
 					$.ajax({
 						type: "POST",
 						url: "/group_make",
 						data: {'name_check': '', 'group_name': $('#group_name').val()},
 						success: function(data){						
 							if ("fail" in data){
-								if (data.fail == "Empty"){
-									alert("Empty!");
+								if (data.fail == "Restriction"){
+									alert("공백만으로 이루어져 있습니다.");
 								}
 								else{
-									alert("Sorry! Someone has aleready made a group in that name");
+									alert("이미 사용중인 이름입니다.");
 								}
 							}
 							else {
-								alert("You can Use this name");
+								alert("사용하실 수 있습니다.");
 							}
 						},
 						error: function(xhr, ajaxOptions, errorThrown){
@@ -33,15 +37,15 @@
 						data: $('#gpmake').serialize(),
 						success: function(data){
 							if ("fail" in data){
-								if (data.fail == "Empty"){
-									alert("Empty Group Name");
+								if (data.fail == "Restriction"){
+									alert("그룹 이름이 공백만으로 이루어져 있습니다.");
 								}
 								else{
-									alert("Sorry! Someone has aleready made a group in that name");
+									alert("이미 사용중인 이름입니다.");
 								}
 							}	
 							else if ("success" in data){
-								alert("You Made a group");
+								alert("성공적으로 그룹을 만들었습니다.");
 								window.location = "/";
 							}
 						},
@@ -50,6 +54,16 @@
 					});
 					return false;
 				});
+				//double check visibility control	
+				$('#privategroup').change(function() {
+                        		if(this.checked) {
+                                		document.getElementById('gp_name_check').style.visibility = 'hidden';
+                        		} else {
+                                		document.getElementById('gp_name_check').style.visibility = 'visible';
+                        		}
+                		});
+				///////////////////////////////////
+
 		});
 		</script>
 {% endblock %}
@@ -62,12 +76,18 @@
                               	        		<label id = "gpnameletter" for = "gpname">Group name</label>
                                 			<input type = "text" name = "group_name" id = "group_name" class = "inputval">
 						</span>
-
+	
+						<span id = "privatecheck">
+                                                        <label id = "privategpletter" for = "privategroup">개인 그룹</label>
+                                                        <input id = "privategroup" type = "checkbox" name = "privategroup">
+                                                </span>
+						
 						<span id = "gpnamecheck">
-							<input id = "gp_name_check" type = "submit" value = "Double check" name = "check">
+							<input id = "gp_name_check" type = "submit" value = "중복확인" name = "check">
 						</span>
-                                	</div>
 
+                                	</div>
+					
 	                                <div>
         	                                <label id = "gpinfoletter" for = "gpinfo">Group info</label>
                 	                        <input type = "text" name = "group_info" id = "group_info" class = "inputval">

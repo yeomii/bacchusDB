@@ -7,10 +7,81 @@
 					return false;
 				}
 			});
+
+			$('.withdraw').click(function(e){
+				c=confirm("탈퇴 하시겠습니까?");
+				if (c == true){
+					title=$(this).parent().parent().children('td:nth-child(1)').children('a').html();
+					row=$(this).parent().parent();
+					$.ajax({
+						type: "POST",
+						url: document.URL + "group_withdraw",
+						data: {'private': 'False', 'title': title},
+						success: function(data){
+							alert("성공적으로 " + title + " 그룹에서 탈퇴했습니다.");
+							row.remove();
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+						}
+					});
+					return false;
+				}
+			});
+
+			$('.delete_group').click(function(e){
+				c=confirm("삭제 하시겠습니까?");
+				if (c == true){
+					title=$(this).parent().parent().children('td:nth-child(1)').children('a').html();
+					row=$(this).parent().parent();
+					$.ajax({
+						type: "POST",
+						url: document.URL + "group_withdraw",
+						data: {'private': 'True', 'title': title},
+						success: function(data){
+							alert("성공적으로 " + title + " 그룹을 삭제했습니다.");
+							row.remove();
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+						}
+					});
+					return false;
+				}
+			});
+
+
+			$('.withdraw').hide();
+			$('.delete_group').hide();
+
+			$('#withdraw_appear').click(function(e){
+				if ($(this).html() == "수정")
+					$(this).html('완료');
+				else
+					$(this).html('수정');
+				$('.withdraw').toggle();
+				$('.delete_group').toggle();
+			});
+
 		});
 	</script>
 {% endblock %}
 {% block wrapper %}
+
+	<div id="waiting">
+                <table border="1" id="waitingtable">
+                        <tr>
+                                <th>그룹 이름</th>
+                                <th>메세지</th>
+                        </tr>
+
+                        {% for a in admissions %}
+                        <tr>
+                                <td>{{ r.group.title }}</td>
+                                <td>{{ r.message }}</td>
+                        </tr>
+                        {% endfor %}
+                </table>
+        </div>
+
 	<div class="center">
 	<form class="form-inline" role="form" id = "groupsearch" action = "/group_search" method = "post">
 		<div class="form-group">
@@ -20,8 +91,9 @@
 		<button class="btn btn-default" id="searchbut" type="submit">그룹 검색</button>
 	</form>
 	</div>
+
 	<div id = "tablediv">
-	<table align="center" class="table table-hover table-striped"  id = "mygroup">
+	<table align="center" class="table table-hover table-striped" id = "mygroup">
 		<thead>
 		<tr>
 			<td style="width: 100px">그룹명</td>
@@ -41,8 +113,16 @@
 					일반
 				{% endif %}
 			</td>
-			<td><input type = "checkbox"></td>
+			<td><input type="button" class="withdraw" value="탈퇴"></td>
 		</tr>
+
+		{% for g in p_groups %}
+                <tr>
+                        <td><a href="/p_group/{{ g.title }}">{{ g.title }}</a></td>
+                        <td>개인용</td>
+                        <td><input type="button" class="delete_group" value="삭제"></td>
+                </tr>
+
 		{% endfor %}
 		</tbody>
 	</table>

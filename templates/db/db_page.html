@@ -2,22 +2,215 @@
 {% block script %}
 <script type="text/javascript">
 	$(document).ready(function(){
+		content="";
+		column="";
+		col_num={{ db.columnnum }};
+		row_num={{ db.rownum }};
+		selected_row = [];
+		selected_col = [];
+
+		$('#mydb').on('focusin', '.cell', function(e){
+			content=$(this).html();
+		});
 		
+		$('#mydb').on('focusout', '.cell', function(e){
+			if (content != $(this).html()){
+				id=$(this).attr('id').split("::");
+				row=id[0];
+				col=id[1];
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'cell': 'cell', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': $(this).html()},
+					success: function(data){
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			}
+		});
+
+		$('#mydb').on('focusin', '.column > div', function(e){
+			column=$(this).html();
+		});
+
+		$('#mydb').on('focusout', '.column > div', function(e){
+			if (column != $(this).html()){
+				id=$(this).attr('id').split('col');
+				num=id[1];
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'col': 'col', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'num': num, 'content': $(this).html()}, 
+					success: function(data){
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			}
+		});
+
+		$('#mydb').on('dblclick', '.column', function(e){
+			if (selected_row.length == 0){
+				var className = '.' + $(this).children('div').attr('id');
+				if (selected_col.length != 1 || selected_col[0] == className){
+					if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+						$(this).css('backgroundColor', 'rgb(127, 127, 127)');
+						$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+						selected_col.push(className);
+					}
+					else{
+						$(this).css('backgroundColor', 'rgb(255, 255, 255)');
+						$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+						selected_col.pop();
+					}
+				}
+				else if (selected_col.length == 1 && selected_col[0] != className){
+					c = selected_col.pop();
+					$('.column').css('backgroundColor', 'rgb(255, 255, 255)');
+					$(c).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+
+					$(this).css('backgroundColor', 'rgb(127, 127, 127)');
+					$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+									
+					selected_col.push(className);
+				}
+			}
+		});
+
+		$('#mydb').on('click', '.row', function(e){
+			if (selected_col.length == 0){
+				if($(this).parent().css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).parent().css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+					$(this).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+					$(this).parent().children('td').css('backgroundColor', 'rgb(127, 127, 127)');
+					selected_row.push(parseInt(($(this).children('div').attr('id').split("row")[1]-1)));
+				}
+				else{
+					$(this).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+					$(this).parent().children('td').css('backgroundColor', 'rgb(255, 255, 255)');
+					selected_row.splice(selected_row.indexOf($(this).children('div').attr('id')), 1);
+				}
+			}
+		});
+
+		$('#addrowbutton').click(function(e){
+			var add_num=parseInt(prompt('원하는 숫자를 입력해주세요'));
+			if (isNaN(add_num)){
+				alert('숫자를 입력해주세요');
+				return false;
+			}
+			var table=$('#mydb');
+			var row="";
+			for(var i=0; i<add_num; i++){
+				var new_row=row_num + i + 1;
+				row += '<tr><th class="row" width="30" height="30"><div id="row' + new_row + '">' + new_row +  '</div></th>';
+				for(var j=0; j<col_num; j++){
+					row += '<td><div id="' + (new_row-1) + '::' + j + '" class="cell" contenteditable="true"></div></td>';
+				}
+				row += '</tr>';
+			}
+			row_num += add_num;
+			table.append(row);
+
+			$.ajax({
+				type: "POST",
+				url: document.URL,
+				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_row': add_num},
+				success: function(data){
+				},
+				error: function(xhr, ajaxOptions, errorThrown){
+				}
+			});
+			return false;
+		});
+
+		$('.addrowbutton').click(function(e){
+			var direction = $(this).attr('class').split(" ")[1];
+			if (selected_row.length != 1){
+				alert("한줄만 선택해 주세요.");
+			}
+			else{
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_row_d': selected_row[0], 'direction': direction},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				selected_row = [];
+				return false;
+			}
+		});
+
+		$('#delrowbutton').click(function(e){
+			if(($('.row').length-selected_row.length) >= 1){
+				selected_row.sort(function(a,b){return a-b}).reverse();
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_row': selected_row},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				row_num -= (selected_row.length);
+				selected_row = [];
+				return false;
+			}
+			else{
+				alert("행이 최소한 1개는 존재해야 합니다.");
+			}
+		});
+
+		$('.addcolbutton').click(function(e){
+			direction = $(this).attr('class').split(" ")[1];
+			$.ajax({
+				type: "POST",
+				url: document.URL,
+				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_col': selected_col[0], 'direction': direction},
+				success: function(data){
+					$('#mydb').html(data);
+				},
+				error: function(xhr, ajaxOptions, errorThrown){
+				}
+			});
+			selected_col = [];
+			return false;
+		});
 	});	
 </script>
 {% endblock %}
 {% block wrapper %}
-		<div id = "dbnamefield">
-			<span id = "dbname">DB명: {{ db.name }}</span>
+		<div id="dbnamefield">
+			<span id="dbname">DB명: {{ db.name }}</span>
 		</div>
 
-		<div id = "dbfield">	
-			<table border = "1" id = "mydb">
+		<div id="dbfield">	
+			<table border="1" id="mydb">
+				<tr>
+				{% for col in preset %}
+					{% if not forloop.first %}
+						<th class="column"><div id="col{{ forloop.counter0|add:"-1" }}" height="30" contenteditable="true">{{ col }}</div></th>
+					{% else %}
+						<th height="30"></th>
+					{% endif %}
+				{% endfor %}
+				</tr>
 				{% for r in cells %}
 				<tr>
+					<th class="row" width="30" height="30">
+						<div id="row{{ forloop.counter }}">{{ forloop.counter }}</div>
+					</th>
 					{% for c in r %}
-					<td width="200" height="30">
-						<div id= "{{ c.rownum }}::{{ c.colnum }}" {% if c.editable == True %}contenteditable="true"{% endif %}>
+					<td width="100" height="30">
+						<div id="{{ c.rownum }}::{{ c.colnum }}" class="cell col{{ c.colnum }}" {% if c.editable == True %}contenteditable="true"{% endif %}>
 						{% if c.contents == NONE %}
 						{% else %} 
 						{{ c.contents }}
@@ -28,5 +221,15 @@
 				</tr>
 				{% endfor %}
 			</table>
+		</div>
+	
+		<div id="addrowsfield">
+			<button type="button" id="addrowbutton" name="addrowbutton">행 추가</button>
+			<button type="button" class="addrowbutton up" name="addrowbutton">위로 행 추가</button>
+			<button type="button" class="addrowbutton down" name="addrowbutton">아래로 행 추가</button>
+			<button type="button" id="delrowbutton" name="delrowbutton">행 삭제</button>
+			<button type="button" class="addcolbutton left" name="addcolbutton">좌측 열 추가</button>
+			<button type="button" class="addcolbutton right" name="addcolbutton">우측 열 추가</button>
+			<button type="button" id="delcolbutton" name="delcolbutton">열 삭제</button>
 		</div>
 {% endblock %} 

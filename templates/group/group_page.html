@@ -3,11 +3,11 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 			$('#db_add').click(function(e){
-				window.location.href = document.URL + "/db_make";
+				window.location.href=document.URL + "/db_make";
 			});
 
 			$('.approval').click(function(e){
-				row = $(this).parent().parent();	
+				row=$(this).parent().parent();	
 				$.ajax({
 					type: "GET",
 					url: document.URL + "/" + $(this).parent().parent().children('td:nth-child(2)').html() + "/s",
@@ -20,8 +20,41 @@
 				return false;
 			});
 
+			$('.delete').click(function(e){
+				c=confirm("삭제 하시겠습니까?");
+				if (c == true){
+					name=$(this).parent().parent().children('td:nth-child(1)').html();
+					row=$(this).parent().parent();
+					$.ajax({
+						type: "POST",
+						url: document.URL + "/db_delete",
+						data: {'name': name},
+						success: function(data){
+							alert("성공적으로 " + name + " DB를 삭제했습니다.");
+							row.remove();
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+						}
+					});
+					return false;
+				}
+			});
+			
+			$('.delete').hide();
+
+			$('#delete_appear').click(function(e){
+				if ($(this).html() == "수정")
+					$(this).html('완료');
+				else
+					$(this).html('수정');
+				$('.delete').toggle();
+				$('.delete_group').toggle();
+			});
+
+
+
 			$('.denial').click(function(e){
-				row = $(this).parent().parent();	
+				row=$(this).parent().parent();	
 				$.ajax({
 					type: "GET",
 					url: document.URL + "/" + $(this).parent().parent().children('td:nth-child(2)').html() + "/f",
@@ -35,12 +68,13 @@
 			});
 
 			$('.db_redirect').click(function(e){
-				window.location.href = document.URL + "/" + $(this).html();
+				window.location.href=document.URL + "/" + $(this).html();
 			});
 		});
 </script>
 {% endblock %}
 {% block wrapper %}
+<<<<<<< HEAD
 
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -114,7 +148,7 @@
 						<tr>
 							<td class="db_redirect">{{ d.name }}</td>
 							<td>{{ d.dbtype }}</td>
-							<td><input type="checkbox"></td>
+							<td><input type="button" class="delete" value="삭제"></td>
 						</tr>
 						{% endfor %}
 					</tbody>
@@ -124,6 +158,45 @@
 					<span id = "editdb"><button class="btn">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
 				</div>
 			</div>
+
+
+			{% if private == "false" %}
+                	<div id="memfield">
+                        <aside>
+                                <span id="gpmember">그룹 멤버:</span>
+                                <span id="numofmem">{{ g.num_member }} </span>
+                                <ol>
+                                        <li id="administrator" class = "memclass">
+                                                <strong>관리자</strong>
+                                                <ul>
+                                                        {% for member in admin %}
+                                                        <li>{{ member.user.first_name }}</li>   <!-- 임시적으로 id를 표시하도록 한다. -->
+                                                        {% endfor %}
+                                                        <!--
+                                                        <li>김진명</li>
+                                                        <li>안용주</li>
+                                                        <li>박성준</li>
+                                                        -->
+                                                </ul>
+                                        </li>
+                                        <li id="user" class = "memclass">
+                                                <strong>일반 사용자</strong>
+                                                <ul>
+                                                        {% for member in normal %}
+                                                        <li>{{ member.user.first_name }}</li>
+                                                        {% endfor %}
+                                                        <!--
+                                                        <li>이현민</li>
+                                                        <li>김도연</li>
+                                                        <li>최준혁</li>
+                                                        <li>이선호</li>
+                                                        -->
+                                                </ul>
+                                        </li>
+                                </ol>
+                        </aside>
+                	</div>
+                	{% endif %}
 		</div>
 	</div>
 </div>

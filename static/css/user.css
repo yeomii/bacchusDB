@@ -54,6 +54,12 @@ html, body {
     	text-decoration: none;
     	border-bottom: none;
 }
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #686868;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #686868;
+}
 #footer {
         position: relative;
 	margin-top: -20px;

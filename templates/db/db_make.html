@@ -3,6 +3,11 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 				$('#dbmake').submit(function(e){
+					if ($('#db_name').val()[0] == " "){
+						console.log("A");
+						alert('DB 이름은 공백으로 시작할 수 없습니다.');
+						return false;
+					}
 					url = document.URL.split("/");
 					new_url = "http:/";
 					for (var i=2; i<url.length-1; i++){
@@ -22,6 +27,33 @@
 					});
 					return false;
 				});
+				$('#db_type').change(function(){
+					if($("#db_type").val() === "사용자설정") {
+						$("#userdefine").css("display", "block");
+					} else {
+						$("#columnnameletter").css("display", "none");
+						$("#columnnum:text").val("");
+						$("#eachcolname").empty();
+						$("#userdefine").css("display", "none");
+					}
+				});	
+				$('#createcol').click(function(){
+					var num = $("#columnnum").val();
+					if(isNaN(num)) {
+						alert("숫자를 입력하세요(0~10)");
+					} else {
+						$("#eachcolname").empty();
+						$("#columnnameletter").css("display", "block");
+						num *= 1;
+						var labelpart, inputid, inputpart;	 
+						for(var j = 1; j <= num; j++) {
+							labelpart = '<label class="colnames" for="col' + j +'">Column' + j + '</label>';
+							inputpart = '<input type="text" id="col' + j + '" class="inputval eachcolumn" name="col">';
+							$('#eachcolname').append('<div>' + labelpart + inputpart + '</div>');	 
+						}
+					}
+				});
+					
 			});
 	</script>
 {% endblock %}
@@ -38,9 +70,32 @@
 				</div>
 				
 				<div>
-					<label id="dbtypeletter" for="dbtype">DB Type</label>
-					<input type="text" name="db_type" id="db_type" class="inputval">
+					<label id="dbtypeletter" for="db_type">DB Type</label>
+					<!--<input type="text" name="db_type" id="db_type" class="inputval">-->
+					<select id = "db_type" name = "db_type" class = "inputval">
+						<option value = "회계장부">회계장부</option>
+						<option value = "주소록">주소록</option>
+						<option value = "연락처">연락처</option>
+						<option value = "도서장부">도서장부</option>
+						<option value = "사용자설정">사용자 설정</option>
+					</select>
 				</div>
+			<!--userdefine field-->	
+				<div id = "userdefine">
+					<div id = "colnumfield">
+						<label id = "columnnumletter" for = "columnnum">Number of Column</label>
+						<input type = "text" id = "columnnum"  name = "columnnum">
+						<button type = "button" id = "createcol">OK</button>
+					</div>
+			
+					<div id = "colnamefield">
+						<span id = "columnnameletter">Name of Each Column</span>
+						<div id = "eachcolname">
+						<!-- 위에서 설정한 칼럼의 개수만큼 각 칼럼의 이름설정칸을 만들어준다-->
+						</div>
+					</div>
+				</div>
+			<!--///////////////////////////////////////////////////////////////////////////////-->
 
 				<div>
 					<label id="dbinfoletter" for="dbinfo">DB Info</label>

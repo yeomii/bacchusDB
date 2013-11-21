@@ -50,6 +50,7 @@ html, body {
 #main {
 	overflow: auto;
 	width: 100%;
+	margin: 0 auto;
 	padding-bottom:20px;
 }
 #dbnamefield {
