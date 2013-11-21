@@ -40,13 +40,11 @@
 		</script>
 {% endblock %}
 {% block wrapper %}
-                <form id = "myform" method = "post">
+
+                <form id = "myform" class="form-signin" method = "post">
                         <fieldset id = "myfield">
                                 <div id = "myaccount">
-					<div>
-					회원정보 수정
-					</div>
-
+					<h2 class="form-signin-heading">회원정보 수정</h2>
 			                <div>
 						<label id = "idletter" for "user" class = "inputletter">ID</label>
 						{{ u.username }}
@@ -78,7 +76,7 @@
 					</div>	
 
 	                		<div id = "submitbutton">
-        	        			<input id = "makebutton" type = "submit" value = "Submit">
+        	        			<input id = "makebutton" class="btn" type = "submit" value = "제출">
                     			</div>
 				</div>
                          </fieldset>

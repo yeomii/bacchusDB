@@ -1,38 +1,63 @@
 <!doctype html>
 <html>
 <head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
         <title>WEB DB</title>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
 	{% block script %} {% endblock %}
-	 <link rel = "stylesheet" type = "text/css" href = "{{ STATIC_URL }}css/{{ css }}.css">
+	<link rel = "stylesheet" type = "text/css" href = "{{ STATIC_URL }}css/{{ css }}.css">
         <meta charset = "UTF-8">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheer" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css">
+	<link href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet">
+	<link href="http://getbootstrap.com/examples/non-responsive/non-responsive.css" rel="stylesheet">
+	<link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 </head>
-<body>
+<body background = "https://lh3.googleusercontent.com/-nrasLywQh_E/UompqXe4jJI/AAAAAAAAAEw/pagvsxtrtRg/s709/%25ED%2583%2580%25EC%259D%25BC4.gif">
+
+<style>
+@font-face {font-family:century gothic;}
+body,td,select,input,div,form,textarea, link{font-size:16px; font-family:century gothic;}
+</style>
+
+
 	<div id="wrapper">
-
-                        {% if css != "login" and css != "join" and css != "findpw" %}
-                        <div id = "infobar">
-                                <div id = userwelcome>
-                                        <span id = "userid">{{ u.username }}</span>
-                                        <span id = "welcome">님, 환영합니다!</span>
-                                </div>
-                                <div id = myinfo>
-                                        <span id = "logout"><button onClick = "window.location.href='/logout'">Logout</button></span>
-                                        <span id = "mypage"><a href = "/my_info">My page</a></span>
-                                </div>
-                        </div>
-                        <ul id = "navbar">
-                        {% if css == "db" or  css == "group" or  css == "user"%}
-                                <li id = "home"><a href = "/">HOME</a></li>
-                        {% endif %}
-                        {% if css == "db" or  css == "group" %}
-                                <li id = "group"><a href = "/group/{{ g.title}}">{{ g.title }}</a></li>
-                        {% endif %}
-                        {% if css == "db" %}
-                                <li id = "db"><a href = "www.snucse.org">DB</a></li>
-                        {% endif %}
-                        </ul>
-
+			{% if css != "login" and css != "join" and css != "findpw" %}
+			<div id = "infobar" class = "navbar navbar-default navbar-fixed-top" role = "navigation">
+				<div class = "navbar-inner">
+						<div id = "userwelcome">
+							<p style="font-weight:bold;font-family:century gothic;font-size:16px;" class="navbar-text pull-left">
+                                                        {{ u.username }} 님, 환영합니다!
+                                                        </p>
+						</div>
+						<ul class="nav navbar-nav navbar-left">
+							{% if css == "db_page" or  css == "group" or  css == "user"%}
+							<li><a href = "/" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">HOME&nbsp;&raquo;</a></li>
+							{% endif %}
+							{% if css == "db_page" or  css == "group" %}
+							<li id = "group"><a href = "/group/{{ g.title}}" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">GROUP&nbsp;&raquo;</a></li>
+							{% endif %}
+							{% if css == "user" %}
+                                                        <li id = "group"><a href = "/group/{{ g.title}}" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn disabled">GROUP&nbsp;&raquo;</a></li>
+                                                        {% endif %}
+							{% if css == "db_page" %}
+							<li id = "db"><a href = "www.snucse.org" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">DB&nbsp;&raquo;</a></li>
+							{% endif %}
+							{% if css == "group" or css == "user" %}
+                                                        <li id = "db"><a href = "www.snucse.org" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn disabled">DB&nbsp;&raquo;</a></li>
+                                                        {% endif %}
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<li><a href = "/my_info" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">My Page</a></li>
+							<li><a href = "/logout" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">Logout</a></li>
+						</ul>
+				</div>
+			</div>
                         {% endif %}
 
 		<div id="main">
@@ -41,15 +66,20 @@
 		</div>
 	</div>	
 	<div id="footer">
+		<p>&copy; Bacchus &nbsp;&nbsp;<i class = "glyphicon glyphicon-envelope"></i> bacchuswebdb@gmail.com</p>
+<!--
 	 	<span id = "madeby">
-                        Made by Bacchus
+                        &copy;Bacchus
                 </span>
                 <span id = "contact">
-                        Contact: bacchusDB@bacchus.snucse.org
+			<i class = "icon-envelope"></i>
+                        Contact&raquo; bacchusDB@bacchus.snucse.org
                 </span>
+-->
         </div>
-
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
-
 

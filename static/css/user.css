@@ -23,6 +23,7 @@ html, body {
 }
 #userwelcome {
 	float: left;
+	color: white;
 }
 #logout {
 	margin-right: 10px;
@@ -61,5 +62,24 @@ html, body {
         width: 100%;
         text-align: center;
 }
-
-
+#tablediv{
+	padding: 0 0 50px 0;
+	width: 500px;
+	margin: 0 auto;
+}
+#mygroup{
+	text-align: center;
+	margin: 0 auto;
+}
+#buttons{
+	text-align: center;
+}
+#groupsearch{
+	text-align: center;
+	display: inline-block;
+	padding: 50px 0 50px 0;
+	margin: 0 auto;
+}
+.center{
+	text-align: center;
+}
