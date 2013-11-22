@@ -146,13 +146,16 @@ class DataBase(models.Model):
 		self.preset = json.dumps(preset)
 		self.save()
 		return self
-	def colSort(self, num):
+	def colSort(self, num, direction):
 		col = Column.objects.get(coldb=self, colnum=num)
 		cells = Cell.objects.filter(cellcol=col).exclude(contents='').order_by('contents')
 		nums = []
 		for c in cells:
 			nums.append(c.rownum)
-		nums.sort()
+		nums.sort(reverse=direction)
+		numcell = filter(lambda x: x.ctype==True, cells)
+		if numcell == [] :
+			cells = sorted(cells,key= lambda x: x.intContents())
 		for i in range(len(nums)):
 			row = cells[i].cellrow
 			row.changeNum(nums[i])
@@ -232,7 +235,8 @@ class Cell(models.Model):
                 else:
                         self.ctype = True
 		self.save()
-
+	def intContents(self):
+		return float(self.contents)
 
 
 

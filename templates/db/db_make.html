@@ -3,6 +3,11 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 				$('#dbmake').submit(function(e){
+					if ($('#db_name').val()[0] == " "){
+						console.log("A");
+						alert('DB 이름은 공백으로 시작할 수 없습니다.');
+						return false;
+					}
 					url = document.URL.split("/");
 					new_url = "http:/";
 					for (var i=2; i<url.length-1; i++){

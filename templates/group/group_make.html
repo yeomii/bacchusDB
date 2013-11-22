@@ -3,6 +3,10 @@
 		<script>
 		$(document).ready(function(){
 				$('#gp_name_check').click(function(e){
+					if ($('#group_name').val()[0] == " "){
+						alert('그룹 이름의 시작은 공백으로 할 수 없습니다.');
+						return false;
+					}
 					$.ajax({
 						type: "POST",
 						url: "/group_make",

@@ -129,7 +129,10 @@ def db_page(request, g_title, dbname):
 		g = Group.objects.get(title=request.POST['group'])
                 db = DataBase.objects.get(group=g, name=request.POST['db_name'])
 		col = request.POST['sort_col']
-		db.colSort(int(col.split("col")[1]))
+		if (request.POST['direction'] == 'A-Z'):
+			db.colSort(int(col.split("col")[1]),False)
+		else:
+			db.colSort(int(col.split("col")[1]),True)
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
                 preset = json.loads(db.preset)
                 cells = []
@@ -170,10 +173,11 @@ def db_page(request, g_title, dbname):
 		if url[1] == 'p_group':
 			g = Private_Group.objects.get(title=g_title, user=request.user)
 			db = DataBase.objects.get(p_group=g, name=dbname)
+			stat = 0 
 		else:
 			g = Group.objects.get(title=g_title)
 			db = DataBase.objects.get(group=g, name=dbname)
-
+			stat = Membership.objects.get(user=request.user, group=g).status
 		dbrow = db.rownum
 		dbcolumn = db.columnnum
 		user = request.user
@@ -184,4 +188,4 @@ def db_page(request, g_title, dbname):
 		for i in range(dbrow):
 			cell = Cell.objects.filter(cellrow=rows[i])
 			cells.append(cell.order_by('colnum'))
-		return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'preset': preset, 'col_num': range(0, dbcolumn+1), 'css':'db_page', 'db':db, 'cells':cells}))
+		return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'preset': preset, 'col_num': range(0, dbcolumn+1), 'css':'db_page', 'db':db, 'cells':cells, 'stat':stat}))

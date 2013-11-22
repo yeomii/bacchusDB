@@ -12,8 +12,10 @@ from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
-from group.models import Group, Private_Group, Membership
+from group.models import Group, Private_Group, Membership, Admission
+import hashlib
 import json
+import random
 import re
 
 def home(request):
@@ -22,7 +24,8 @@ def home(request):
 	else:
 		groups = Membership.objects.filter(user=request.user)
 		p_groups = Private_Group.objects.filter(user=request.user)
-		var = RequestContext(request, {'u': request.user, 'groups': groups, 'p_groups': p_groups, 'css':'user'})
+		admissions = Admission.objects.filter(user=request.user, status=0)
+		var = RequestContext(request, {'u': request.user, 'groups': groups, 'p_groups': p_groups, 'admissions': admissions, 'css':'user'})
 		return render_to_response('user/user_page.html', var)
 
 @csrf_exempt
@@ -124,14 +127,24 @@ def join_page(request):
 
 @csrf_exempt
 def find_password(request):
-	if request.method == "POST":
+	if request.method == "POST" and request.is_ajax():
+		data = {}
 		try: 
 			username = request.POST['id']
 			email = request.POST['email']
-			user = User.objects.get(username=username, email=email)
-			return redirect (password_reset(request))
+			name = request.POST['uname']
+			user = User.objects.get(username=username, email=email, first_name=name)
+			new_password = hashlib.sha512((username+email+str(random.randint(1, 100))).encode('utf-8')).hexdigest()
+			user.set_password(new_password)
+			user.save()
+			send_mail('<주의>새 비밀번호를 안내해드립니다', '새 비밀번호입니다. 바로 로그인해서 변경해주세요 ' + new_password, 'bacchuswebdb@gmail.com', [email], fail_silently=False)
+			data['success'] = "success"
+
 		except ObjectDoesNotExist:
-			return HttpResponse("No User in that id or email")
+			data['fail'] = "fail"
+		
+		return HttpResponse(json.dumps(data), content_type="application/json")
+
 	else:
 	  	return render(request, 'user/find_password.html', {'css':'findpw'})
 

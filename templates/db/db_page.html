@@ -53,39 +53,45 @@
 		});
 
 		$('#mydb').on('dblclick', '.column', function(e){
-			var className = '.' + $(this).children('div').attr('id');
-			if (selected_col.length != 1 || selected_col[0] == className){
-				if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+			if (selected_row.length == 0){
+				var className = '.' + $(this).children('div').attr('id');
+				if (selected_col.length != 1 || selected_col[0] == className){
+					if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+						$(this).css('backgroundColor', 'rgb(127, 127, 127)');
+						$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+						selected_col.push(className);
+					}
+					else{
+						$(this).css('backgroundColor', 'rgb(255, 255, 255)');
+						$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+						selected_col.pop();
+					}
+				}
+				else if (selected_col.length == 1 && selected_col[0] != className){
+					c = selected_col.pop();
+					$('.column').css('backgroundColor', 'rgb(255, 255, 255)');
+					$(c).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+
 					$(this).css('backgroundColor', 'rgb(127, 127, 127)');
 					$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+									
 					selected_col.push(className);
 				}
-				else{
-					$(this).css('backgroundColor', 'rgb(255, 255, 255)');
-					$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
-					selected_col.pop();
-				}
-			}
-			else if (selected_col.length == 1 && selected_col[0] != className){
-				c = selected_col.pop();
-				$('.column').css('backgroundColor', 'rgb(255, 255, 255)');
-				$(c).parent().css('backgroundColor', 'rgb(255, 255, 255)');
-
-				$(this).css('backgroundColor', 'rgb(127, 127, 127)');
-				$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
-								
-				selected_col.push(className);
 			}
 		});
 
 		$('#mydb').on('click', '.row', function(e){
-			if($(this).parent().css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).parent().css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
-				$(this).parent().css('backgroundColor', 'rgb(127, 127, 127)');
-				selected_row.push(parseInt(($(this).children('div').attr('id').split("row")[1]-1)));
-			}
-			else{
-				$(this).parent().css('backgroundColor', 'rgb(255, 255, 255)');
-				selected_row.splice(selected_row.indexOf($(this).children('div').attr('id')), 1);
+			if (selected_col.length == 0){
+				if($(this).parent().css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).parent().css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+					$(this).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+					$(this).parent().children('td').css('backgroundColor', 'rgb(127, 127, 127)');
+					selected_row.push(parseInt(($(this).children('div').attr('id').split("row")[1]-1)));
+				}
+				else{
+					$(this).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+					$(this).parent().children('td').css('backgroundColor', 'rgb(255, 255, 255)');
+					selected_row.splice(selected_row.indexOf($(this).children('div').attr('id')), 1);
+				}
 			}
 		});
 
@@ -146,6 +152,7 @@
                         if (selected_row.length == 0){
                                 alert ("행을 선택해주세요");
                         } else{
+			if(($('.row').length-selected_row.length) >= 1){
 				selected_row.sort(function(a,b){return a-b}).reverse();
 				$.ajax({
 					type: "POST",
@@ -161,12 +168,16 @@
 				selected_row = [];
 				return false;
 			}
+			else{
+				alert("행이 최소한 1개는 존재해야 합니다.");
+			}}
 		});
 
 		$('#delcolbutton').click(function(e){
 			if (selected_col.length != 1){
 				alert ("열을 선택해주세요");
 			} else{
+			if((col_num-selected_col.length) >= 1){
                         	selected_col.sort(function(a,b){return a-b}).reverse();
                         	$.ajax({
                         	        type: "POST",
@@ -182,15 +193,19 @@
                         	selected_col = [];
                         	return false;
 			}
+			else{
+				alert("열이 최소한 1개는 존재해야 합니다.");
+			}}
                 });
-		$('#sortcolbutton').click(function(e){
+		$('.sortcolbutton').click(function(e){
+			direction = $(this).attr('class').split(" ")[1];
                         if (selected_col.length != 1){
                                 alert ("열을 하나만 선택해주세요");
                         } else{
                                 $.ajax({
                                         type: "POST",
                                         url: document.URL,
-					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'sort_col': selected_col[0]},
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'sort_col': selected_col[0], 'direction':direction},
 					success: function(data){
                                                 $('#mydb').html(data);
                                         },
@@ -231,7 +246,7 @@
 				<tr>
 				{% for col in preset %}
 					{% if not forloop.first %}
-						<th class="column"><div id="col{{ forloop.counter0|add:"-1" }}" height="30" contenteditable="true">{{ col }}</div></th>
+						<th class="column"><div id="col{{ forloop.counter0|add:"-1" }}" height="30" {% if stat == 0 %}contenteditable="true"{% endif %}>{{ col }}</div></th>
 					{% else %}
 						<th height="30"></th>
 					{% endif %}
@@ -244,7 +259,7 @@
 					</th>
 					{% for c in r %}
 					<td width="100" height="30">
-						<div id="{{ c.rownum }}::{{ c.colnum }}" class="cell col{{ c.colnum }}" {% if c.editable == True %}contenteditable="true"{% endif %}>
+						<div id="{{ c.rownum }}::{{ c.colnum }}" class="cell col{{ c.colnum }}" {% if c.editable == True and stat == 0 %}contenteditable="true"{% endif %}>
 						{% if c.contents == NONE %}
 						{% else %} 
 						{{ c.contents }}
@@ -256,7 +271,7 @@
 				{% endfor %}
 			</table>
 		</div>
-	
+		{% if stat == 0 %}	
 		<div id="addrowsfield">
 			<button type="button" id="addrowbutton" name="addrowbutton">행 추가</button>
 			<button type="button" class="addrowbutton up" name="addrowbutton">위로 행 추가</button>
@@ -265,6 +280,8 @@
 			<button type="button" class="addcolbutton left" name="addcolbutton">좌측 열 추가</button>
 			<button type="button" class="addcolbutton right" name="addcolbutton">우측 열 추가</button>
 			<button type="button" id="delcolbutton" name="delcolbutton">열 삭제</button>
-			<button type="button" id="sortcolbutton" name="sortcolbutton">열 정렬</button>
+			<button type="button" class="sortcolbutton A-Z" name="sortcolbutton">오름차순 열 정렬</button>
+			<button type="button" class="sortcolbutton Z-A" name="sortcolbutton">내림차순 열 정렬</button>
 		</div>
+		{% endif %}
 {% endblock %} 

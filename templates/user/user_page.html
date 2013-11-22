@@ -60,11 +60,27 @@
 				$('.withdraw').toggle();
 				$('.delete_group').toggle();
 			});
-
+			
 		});
 	</script>
 {% endblock %}
 {% block wrapper %} 	
+	<div id="waiting">
+		<table border="1" id="waitingtable">
+			<tr>
+				<th>그룹 이름</th>
+				<th>메세지</th>
+			</tr>
+
+			{% for a in admissions %}
+			<tr>
+				<td>{{ r.group.title }}</td>
+				<td>{{ r.message }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+	
 	<form id=groupsearch action="/group_search" method = "post">
 		<div>
 			<input type="text" placeholder="그룹을 검색하세요" id = "keyword" name ="group_name">
@@ -114,5 +130,4 @@
 
 	<span id="addgroup"><button onclick="window.location.href='/group_make'">새 그룹 추가</button></span>
 	<span id="editgroup"><button id="withdraw_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
-
 {% endblock %}	

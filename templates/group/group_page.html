@@ -51,8 +51,6 @@
 				$('.delete_group').toggle();
 			});
 
-
-
 			$('.denial').click(function(e){
 				row=$(this).parent().parent();	
 				$.ajax({
@@ -135,8 +133,10 @@
 				-->
 			</table>
 	
+			{% if m.status == 0 or private == "true" %}
 			<span id="adddb"><button id="db_add">새 DB 추가</button></span>
-			<span id="editdb"><button id="delete_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
+			<span id="editdb"><button id="delete_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜--> 
+			{% endif %}
 		</div>
 	
 		{% if private == "false" %}	

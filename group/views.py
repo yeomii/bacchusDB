@@ -72,7 +72,7 @@ def group_make(request):
 @csrf_exempt
 @login_required
 def group_page(request, title):
-	if request.method == "POST" and request.is_ajax():
+	if request.method == "POST" and request.is_ajax() and 'name' in request.POST:
 		try:
 			g = Group.objects.get(title=title)
 			db = DataBase.objects.get(group=g, name=request.POST['name'])
@@ -95,7 +95,6 @@ def group_page(request, title):
 		admin = Membership.objects.filter(group=g, status=0)
 		normal = Membership.objects.filter(group=g, status=1)
 		db = DataBase.objects.filter(group=g)
-
 		if (m.status == 1):
 			var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
 		else:
@@ -117,7 +116,7 @@ def private_group_page(request, title):
 def group_search(request):
 	group_name = request.POST['group_name']
 
-	g = Group.objects.filter(title__contains=group_name)
+	g = Group.objects.filter(title=group_name)
 	return render_to_response('group/group_search.html', RequestContext(request, {'u':request.user, 'groups': g, 'css':'searchr'}))
 
 @csrf_exempt
