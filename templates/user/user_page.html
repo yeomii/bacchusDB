@@ -64,70 +64,72 @@
 		});
 	</script>
 {% endblock %}
-{% block wrapper %} 	
-	<div id="waiting">
-		<table border="1" id="waitingtable">
-			<tr>
-				<th>그룹 이름</th>
-				<th>메세지</th>
-			</tr>
+{% block wrapper %}
 
-			{% for a in admissions %}
-			<tr>
-				<td>{{ r.group.title }}</td>
-				<td>{{ r.message }}</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-	
-	<form id=groupsearch action="/group_search" method = "post">
-		<div>
-			<input type="text" placeholder="그룹을 검색하세요" id = "keyword" name ="group_name">
-			<input type="submit" value="search" id = "searchbut">
+	<div id="waiting">
+                <table border="1" id="waitingtable">
+                        <tr>
+                                <th>그룹 이름</th>
+                                <th>메세지</th>
+                        </tr>
+
+                        {% for a in admissions %}
+                        <tr>
+                                <td>{{ r.group.title }}</td>
+                                <td>{{ r.message }}</td>
+                        </tr>
+                        {% endfor %}
+                </table>
+        </div>
+
+	<div class="center">
+	<form class="form-inline" role="form" id = "groupsearch" action = "/group_search" method = "post">
+		<div class="form-group">
+				<label class="sr-only" for="keyword">Group</label>
+				<input class="form-control" style="width: 400px;" type="text" id="keyword" name="group_name">
 		</div>
+		<button class="btn btn-default" id="searchbut" type="submit">그룹 검색</button>
 	</form>
-	
-	<table border="1" id="mygroup">
+	</div>
+
+	<div id = "tablediv">
+	<table align="center" class="table table-hover table-striped" id = "mygroup">
+		<thead>
 		<tr>
-			<td>그룹명</th>
-			<td>권한</th>
-			<td>선택</th>
+			<td style="width: 100px">그룹명</td>
+			<td style="width: 100px">권한</td>
+			<td style="width: 100px">선택</td>
 		</tr>
+		</thead>
+		<tbody>
 
 		{% for g in groups %}
 		<tr>
-			<td><a href="/group/{{ g.group.title }}">{{ g.group.title }}</a></th>
+			<td><a href="/group/{{ g.group.title }}">{{ g.group.title }}</a></td>
 			<td>
 				{% if g.status == 0 %}
 					관리자
 				{% else %}
 					일반
 				{% endif %}
-			</th>
+			</td>
 			<td><input type="button" class="withdraw" value="탈퇴"></td>
 		</tr>
 		{% endfor %}
-
-		<!--
-		<tr>
-			<td>bacchus</td>
-			<td>관리자</td>
-			<td>
-				<input type="checkbox">
-			</td>
-		</tr
-		-->
-
 		{% for g in p_groups %}
-		<tr>
-			<td><a href="/p_group/{{ g.title }}">{{ g.title }}</a></td>
-			<td>개인용</td>
-			<td><input type="button" class="delete_group" value="삭제"></td>
-		</tr>
+                <tr>
+                        <td><a href="/p_group/{{ g.title }}">{{ g.title }}</a></td>
+                        <td>개인용</td>
+                        <td><input type="button" class="delete_group" value="삭제"></td>
+                </tr>
+
 		{% endfor %}
+		</tbody>
 	</table>
 
-	<span id="addgroup"><button onclick="window.location.href='/group_make'">새 그룹 추가</button></span>
-	<span id="editgroup"><button id="withdraw_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
-{% endblock %}	
+	</div>
+	<div id ="buttons">
+		<span id = "addgroup"><button class="btn" onclick = "window.location.href='/group_make'">새 그룹 추가</button></span>
+		<span id = "editgroup"><button class="btn">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
+	</div>
+{% endblock %}		
