@@ -74,11 +74,10 @@
 </script>
 {% endblock %}
 {% block wrapper %}
-<<<<<<< HEAD
 
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="span2">
+		<div class="span2" id="leftbar">
 			<div id="memfield" class="well sidebar-nav">
 				<ul class="nav nav-list">
 					<li class="nav-header">그룹 구성원:&nbsp;{{ g.num_member }}명</li><br>
@@ -98,12 +97,16 @@
                                                         {% endfor %}
                                                 </ul>
                                         </li>
-				</ul>
+				</ul><br>
 			</div>
+			{% if m.status == 0 %}
+			<button id="addad" type="button" class="btn btn-block btn-success">관리자 추가</button>
+			{% endif %}
 		</div>
 		<div class="span10">
 			{% if m.status == 0 %}
 			<div id = "permission">
+				<h2 class="form-signin-heading">승인 요청 명단</h2>
 				<table id = "permitdb" align="center" class="table table-hover table-striped">
 					<thead>
 						<tr>
@@ -134,7 +137,8 @@
 			</div>
 			{% endif %}
 
-			<div id = "dbfield">	
+			<div id = "dbfield">
+				<h2 class="form-signin-heading">그룹 DB</h2>	
 				<table id = "mydb" align="center" class="table table-hover table-striped">
 					<thead>
 						<tr>
@@ -158,45 +162,6 @@
 					<span id = "editdb"><button class="btn">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
 				</div>
 			</div>
-
-
-			{% if private == "false" %}
-                	<div id="memfield">
-                        <aside>
-                                <span id="gpmember">그룹 멤버:</span>
-                                <span id="numofmem">{{ g.num_member }} </span>
-                                <ol>
-                                        <li id="administrator" class = "memclass">
-                                                <strong>관리자</strong>
-                                                <ul>
-                                                        {% for member in admin %}
-                                                        <li>{{ member.user.first_name }}</li>   <!-- 임시적으로 id를 표시하도록 한다. -->
-                                                        {% endfor %}
-                                                        <!--
-                                                        <li>김진명</li>
-                                                        <li>안용주</li>
-                                                        <li>박성준</li>
-                                                        -->
-                                                </ul>
-                                        </li>
-                                        <li id="user" class = "memclass">
-                                                <strong>일반 사용자</strong>
-                                                <ul>
-                                                        {% for member in normal %}
-                                                        <li>{{ member.user.first_name }}</li>
-                                                        {% endfor %}
-                                                        <!--
-                                                        <li>이현민</li>
-                                                        <li>김도연</li>
-                                                        <li>최준혁</li>
-                                                        <li>이선호</li>
-                                                        -->
-                                                </ul>
-                                        </li>
-                                </ol>
-                        </aside>
-                	</div>
-                	{% endif %}
 		</div>
 	</div>
 </div>
