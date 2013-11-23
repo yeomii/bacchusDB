@@ -51,6 +51,10 @@
 				$('.delete_group').toggle();
 			});
 
+			$('#addad').click(function(e){
+				window.location.href="/group_admin/" + "{{ g.title }}";
+			});
+
 			$('.denial').click(function(e){
 				row=$(this).parent().parent();	
 				$.ajax({
@@ -75,8 +79,7 @@
 
 <div class="container-fluid">
 	<div class="row-fluid">
-		{% if private == "false" %}
-		<div class="span2">
+		<div class="span2" id="leftbar">
 			<div id="memfield" class="well sidebar-nav">
 				<ul class="nav nav-list">
 					<li class="nav-header">그룹 구성원:&nbsp;{{ g.num_member }}명</li><br>
@@ -96,13 +99,16 @@
                                                         {% endfor %}
                                                 </ul>
                                         </li>
-				</ul>
+				</ul><br>
 			</div>
+			{% if m.status == 0 %}
+			<button id="addad" type="button" class="btn btn-block btn-success"  onclick = "window.location.href='/group_admin/' + {{ g.title }}">관리자 추가</button>
+			{% endif %}
 		</div>
-		{% endif %}
 		<div class="span10">
 			{% if m.status == 0 %}
 			<div id = "permission">
+				<h2 class="form-signin-heading">승인 요청 명단</h2>
 				<table id = "permitdb" align="center" class="table table-hover table-striped">
 					<thead>
 						<tr>
@@ -133,7 +139,8 @@
 			</div>
 			{% endif %}
 
-			<div id = "dbfield">	
+			<div id = "dbfield">
+				<h2 class="form-signin-heading">그룹 DB</h2>	
 				<table id = "mydb" align="center" class="table table-hover table-striped">
 					<thead>
 						<tr>
@@ -152,14 +159,11 @@
 						{% endfor %}
 					</tbody>
 				</table>
-				{% if m.status == 0 or private == "true" %}
 				<div id="buttons">	
 					<span id = "adddb"><button id="db_add" class="btn">새 DB 추가</button></span>
 					<span id = "editdb"><button class="btn">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
 				</div>
-				{% endif %}
 			</div>
-
 		</div>
 	</div>
 </div>

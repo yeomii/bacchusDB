@@ -203,3 +203,21 @@ def group_withdraw(request):
 			g.delete()
 
 	return HttpResponse("")
+@csrf_exempt
+@login_required
+def group_admin(request, title):
+	if request.method == "POST" and request.is_ajax():
+		g = Group.objects.get(title=title)
+		user = User.objects.get(username = request.POST['user'])
+		mem = Membership.objects.get(group=g, user=user) 
+		mem.status = 0
+		mem.save()
+		return HttpResponse("")
+		normal = Membership.objects.filter(group=g, status=1)
+		var = RequestContext(request, {'u':request.user, 'g':g, 'normal':normal, 'css':'group'})
+		return render_to_response('group/add_admin.html', var)
+	else:		
+		g = Group.objects.get(title=title)
+		normal = Membership.objects.filter(group=g, status=1)
+		var = RequestContext(request, {'u':request.user, 'g':g, 'normal':normal, 'css':'group'})
+		return render_to_response('group/add_admin.html', var)

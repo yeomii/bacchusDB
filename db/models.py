@@ -142,7 +142,7 @@ class DataBase(models.Model):
 		col.delete()
 		self.columnnum -= 1
 		preset = json.loads(self.preset)
-		del preset[num]
+		del preset[num+1]
 		self.preset = json.dumps(preset)
 		self.save()
 		return self
