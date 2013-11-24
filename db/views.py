@@ -19,15 +19,15 @@ def db_make(request, group_title):
 		title = request.POST['db_name']
 		dbtype = request.POST['db_type']
 		info = request.POST['db_info']
-
+		col = request.POST.getlist('col')
 		url = request.path.split("/")
 		if url[1] == "group":
 			group = Group.objects.get(title=group_title)
-			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info)
+			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=False, col_preset=col)
 
 		elif url[1] == "p_group":
 			group = Private_Group.objects.get(title=group_title, user=request.user)
-			db = DataBase.objects.create_pdatabase(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info)
+			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=True, col_preset=col)
 
 	
 		db.save()
@@ -129,7 +129,10 @@ def db_page(request, g_title, dbname):
 		g = Group.objects.get(title=request.POST['group'])
                 db = DataBase.objects.get(group=g, name=request.POST['db_name'])
 		col = request.POST['sort_col']
-		db.colSort(int(col.split("col")[1]))
+		if (request.POST['direction'] == 'A-Z'):
+			db.colSort(int(col.split("col")[1]),False)
+		else:
+			db.colSort(int(col.split("col")[1]),True)
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
                 preset = json.loads(db.preset)
                 cells = []
@@ -140,17 +143,49 @@ def db_page(request, g_title, dbname):
                 c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
 
                 return HttpResponse(t.render(c))	
+
+	elif request.method == "POST" and request.is_ajax() and 'add_row_d' in request.POST:
+		g = Group.objects.get(title=request.POST['group'])
+		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
+		if (request.POST['direction'] == 'up'):
+			row = request.POST['add_row_d']
+			db.addRow(int(row))
+		else:
+			row = request.POST['add_row_d']
+			db.addRow(int(row)+1)
+
+		rows = Row.objects.filter(rowdb=db).order_by('rownum')
+
+		preset = json.loads(db.preset)	
+		cells = [] 
+
+		for i in range(db.rownum):
+			cell = Cell.objects.filter(cellrow=rows[i])
+			cells.append(cell.order_by('colnum'))
+	
+		t = loader.get_template('db/table.html')
+		c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
+		return HttpResponse(t.render(c))
+
+
 	else:
-		g = Group.objects.get(title=g_title)
-		db = DataBase.objects.get(group=g, name=dbname)
+		url = request.path.split("/")
+		if url[1] == 'p_group':
+			g = Private_Group.objects.get(title=g_title, user=request.user)
+			db = DataBase.objects.get(p_group=g, name=dbname)
+			stat = 0 
+		else:
+			g = Group.objects.get(title=g_title)
+			db = DataBase.objects.get(group=g, name=dbname)
+			stat = Membership.objects.get(user=request.user, group=g).status
 		dbrow = db.rownum
 		dbcolumn = db.columnnum
 		user = request.user
-		group = db.group
+		group = g
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
 		preset = json.loads(db.preset)
 		cells = []
 		for i in range(dbrow):
 			cell = Cell.objects.filter(cellrow=rows[i])
 			cells.append(cell.order_by('colnum'))
-		return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'preset': preset, 'col_num': range(0, dbcolumn+1), 'css':'db_page', 'db':db, 'cells':cells}))
+		return render_to_response('db/db_page.html', RequestContext(request, {'u':user, 'g':group, 'preset': preset, 'col_num': range(0, dbcolumn+1), 'css':'db_page', 'db':db, 'cells':cells, 'stat':stat}))

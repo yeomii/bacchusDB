@@ -50,7 +50,7 @@ html, body {
 #wrapper {
 	min-height: 100%;
 	width: 100%;
-	margin: 0px auto;
+	margin: 0 auto;
 }
 #main {
 	overflow: auto;
@@ -58,14 +58,22 @@ html, body {
 	padding-bottom: 20px;
 }
 #permission {
-	padding: 10px;
+	padding: 50px 0px 50px 0;
+	width: 500px;
+	margin: 0 auto;
+}
+#permitdb{
+	text-align: center;
+	margin: 0 auto;
 }
 #dbfield {
-	padding-left: 10px;
-	float: left;
+	padding: 0 0px 50px 0;
+	width: 500px;
+	margin: 0 auto;
 }
-#memfield {
-	float: right;
+#mydb{
+	text-align: center;
+	margin: 0 auto;
 }
 aside {
 	border: 1px solid black;
@@ -79,3 +87,13 @@ aside {
         text-align: center;
 }
 
+#buttons{
+	text-align: center;
+	padding: 50px 0 0 0;
+}
+.sidebar-nav{
+	padding: 10px 0 0 0;
+}
+#memfield{
+	text-align: center;
+}

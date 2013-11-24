@@ -1,14 +1,31 @@
+#-*- coding: utf-8 -*-
 from django.db import models
 from group.models import Group, Private_Group, Membership
 import json
 
 # Create your models here.
 class DataBaseManager(models.Manager):
-	def create_database(self, dbname, dbgroup, dbtype, dbinfo):
-		preset = []
-		for i in range(11):
-			preset.append('')
-		db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
+	def create_database(self, dbname, dbgroup, dbtype, dbinfo, private, col_preset):
+		print dbtype
+		if dbtype == "회계장부".decode('utf-8'):
+			preset = ['', '지출/수입', '날짜', '금액', '', '', '', '', '', '', '']
+		elif dbtype == "주소록".decode('utf-8'):
+			preset = ['', '이름', '주소', '기록 날짜', '', '', '', '', '', '', '']
+		elif dbtype == "도서장부".decode('utf-8'):
+			preset = ['', '도서명', '저자', '대여자', '반납 날짜', '', '', '', '', '', '']
+		elif dbtype == "연락처".decode('utf-8'):
+			preset = ['', '이름', '집전화', '휴대전화', '기록 날짜', '', '', '', '', '', '']
+		else:
+			preset = ['']
+			for c in col_preset:
+				preset.append(c)	
+			for i in range(11-len(preset)):
+				preset.append('')
+
+		if not private:
+			db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
+		else:
+			db = self.create(name=dbname, p_group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
 		rows = []
 		cols = []
 		for i in range(db.rownum):
@@ -58,6 +75,24 @@ class DataBase(models.Model):
                 self.columnnum += num
                 self.save()
                 return self
+	def addRow(self, num):
+		rows = Row.objects.filter(rowdb=self, rownum__gte=num)
+		for row in rows:
+			cells = Cell.objects.filter(cellrow=row)
+			for cell in cells:
+				cell.rownum += 1
+				cell.save()
+			row.rownum += 1
+			row.save()
+
+		r = Row.objects.create_row(rownum=num, db=self)
+		for col in Column.objects.filter(coldb=self):
+			Cell.objects.create_cell(col=col, row=r)
+
+		self.rownum += 1
+		self.save()
+		return self
+		
 	def addColumn(self, num):
 		cols = Column.objects.filter(coldb=self, colnum__gte=num)
 		for col in cols:
@@ -107,17 +142,20 @@ class DataBase(models.Model):
 		col.delete()
 		self.columnnum -= 1
 		preset = json.loads(self.preset)
-		del preset[num]
+		del preset[num+1]
 		self.preset = json.dumps(preset)
 		self.save()
 		return self
-	def colSort(self, num):
+	def colSort(self, num, direction):
 		col = Column.objects.get(coldb=self, colnum=num)
 		cells = Cell.objects.filter(cellcol=col).exclude(contents='').order_by('contents')
 		nums = []
 		for c in cells:
 			nums.append(c.rownum)
-		nums.sort()
+		nums.sort(reverse=direction)
+		numcell = filter(lambda x: x.ctype==True, cells)
+		if numcell == [] :
+			cells = sorted(cells,key= lambda x: x.intContents())
 		for i in range(len(nums)):
 			row = cells[i].cellrow
 			row.changeNum(nums[i])
@@ -197,7 +235,8 @@ class Cell(models.Model):
                 else:
                         self.ctype = True
 		self.save()
-
+	def intContents(self):
+		return float(self.contents)
 
 
 

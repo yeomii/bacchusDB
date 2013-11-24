@@ -60,59 +60,80 @@
 				$('.withdraw').toggle();
 				$('.delete_group').toggle();
 			});
-
+			
 		});
 	</script>
 {% endblock %}
-{% block wrapper %} 	
-	<form id=groupsearch action="/group_search" method = "post">
-		<div>
-			<input type="text" placeholder="그룹을 검색하세요" id = "keyword" name ="group_name">
-			<input type="submit" value="search" id = "searchbut">
+
+{% block wrapper %}
+<div class="container-fluid">
+        <div class="row-fluid">
+                <div class="span2">
+                        <div id="waiting" class="well sidebar-nav">
+                                <ul class="nav nav-list">
+                                        <li class="nav-header">가입 신청 그룹</li><br>
+                                        <li id = "waitinggroup" class = "memclass">
+                                                <strong>그룹 이름</strong>
+                                                <ul class="nav nav-list">
+                                                        {% for a in admissions %}
+                                                        <li>{{ a.group.title }}</li>   <!-- 임시적으로 id를 표시하도록 한다. -->
+                                                        {% endfor %}
+                                                </ul>
+                                        </li>
+                                </ul>
+                        </div>
+                </div>
+                <div class="span10">
+			<div class="center">
+				<form class="form-inline" role="form" id = "groupsearch" action = "/group_search" method = "post">
+					<div class="form-group">
+						<label class="sr-only" for="keyword">Group</label>
+						<input class="form-control" style="width: 400px;" type="text" id="keyword" name="group_name">
+					</div>
+					<button class="btn btn-default" id="searchbut" type="submit">그룹 검색</button>
+				</form>
+			</div>
+
+			<div id = "tablediv">
+				<h2 class="form-signin-heading">나의 그룹</h2>
+				<table align="center" class="table table-hover table-striped" id = "mygroup">
+					<thead>
+						<tr>
+							<td style="width: 100px">그룹명</td>
+							<td style="width: 100px">권한</td>
+							<td style="width: 100px">선택</td>
+						</tr>
+					</thead>
+					<tbody>
+						{% for g in groups %}
+						<tr>
+							<td><a href="/group/{{ g.group.title }}">{{ g.group.title }}</a></td>
+							<td>
+								{% if g.status == 0 %}
+								관리자
+								{% else %}
+								일반
+								{% endif %}
+							</td>
+							<td><input type="button" class="withdraw" value="탈퇴"></td>
+						</tr>
+						{% endfor %}
+
+						{% for g in p_groups %}
+   				     		<tr>
+                        				<td><a href="/p_group/{{ g.title }}">{{ g.title }}</a></td>
+                        				<td>개인용</td>
+                        				<td><input type="button" class="delete_group" value="삭제"></td>
+                				</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<div id ="buttons">
+				<span id = "addgroup"><button class="btn" onclick = "window.location.href='/group_make'">새 그룹 추가</button></span>
+				<span id = "editgroup"><button class="btn">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
+			</div>
 		</div>
-	</form>
-	
-	<table border="1" id="mygroup">
-		<tr>
-			<td>그룹명</th>
-			<td>권한</th>
-			<td>선택</th>
-		</tr>
-
-		{% for g in groups %}
-		<tr>
-			<td><a href="/group/{{ g.group.title }}">{{ g.group.title }}</a></th>
-			<td>
-				{% if g.status == 0 %}
-					관리자
-				{% else %}
-					일반
-				{% endif %}
-			</th>
-			<td><input type="button" class="withdraw" value="탈퇴"></td>
-		</tr>
-		{% endfor %}
-
-		<!--
-		<tr>
-			<td>bacchus</td>
-			<td>관리자</td>
-			<td>
-				<input type="checkbox">
-			</td>
-		</tr
-		-->
-
-		{% for g in p_groups %}
-		<tr>
-			<td><a href="/p_group/{{ g.title }}">{{ g.title }}</a></td>
-			<td>개인용</td>
-			<td><input type="button" class="delete_group" value="삭제"></td>
-		</tr>
-		{% endfor %}
-	</table>
-
-	<span id="addgroup"><button onclick="window.location.href='/group_make'">새 그룹 추가</button></span>
-	<span id="editgroup"><button id="withdraw_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
-
-{% endblock %}	
+	</div>
+</div>
+{% endblock %}		

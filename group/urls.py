@@ -22,4 +22,5 @@ urlpatterns = patterns('',
 	url(r'^group/([\w, \s]+)/([\w, \s]+)/([s,f])$', 'group.views.group_join_request_process'),
 	url(r'^p_group/([\w, \s]+)$', 'group.views.private_group_page'),
 	url(r'^group/([\w, \s]+)$', 'group.views.group_page'),
+	url(r'^group_admin/([\w, \s]+)$', 'group.views.group_admin'),
 	)

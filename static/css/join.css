@@ -71,9 +71,9 @@ html, body {
 #joinbutton {
 	float: right;
 }
-#button {
+.button {
 	display: block;
-	width: 50px;
+	width: 80px;
 	height: 50px;
 }
 #madeby {
