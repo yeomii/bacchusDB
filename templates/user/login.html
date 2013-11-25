@@ -33,7 +33,7 @@ login
 		</div>
 		<div id = "login">
 			<form class="form-horizontal" role="form" id = "loginbigform" method = "post" action = "/login">
-			<!--	<fieldset id = "logonsmallform">-->
+				<fieldset style="background:white">
 					<div id = "loginfield">
 						<div id = "account">
 							<div>
@@ -42,13 +42,13 @@ login
 							</div>
 
 							<div>
-						        	<label id = "pwletter" for = "pw">PW</label>
+						        	<label id = "pwletter" for = "pw">Password</label>
 						        	<input class="inputval" type = "password" id = "pw" name = "pw">
 							</div>
 						</div>
 
 						<div id = "loginbutton">
-							<input class="btn" id = "button" type = "submit" value = "로그인">
+							<input class="btn btn-default" id = "button" type = "submit" value = "로그인">
 						</div>
 					</div>
 						<div id = "join">
@@ -60,7 +60,7 @@ login
 								<a href ="/find_password">비밀번호 찾기</a>
 							</span>
 						</div>
-				<!--</fieldset>-->
+				</fieldset>
 			</form>
 		</div>
 {% endblock %}

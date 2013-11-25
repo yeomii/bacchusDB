@@ -45,6 +45,7 @@ html, body {
 }
 #searchresult {
 	margin: 0 auto;
+	text-align: center;
 }
 #searchresult td{
 	padding: 3px;

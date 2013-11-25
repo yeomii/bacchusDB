@@ -86,14 +86,14 @@ join
 
                 <div id="join">
                         <form id="joinbigform" method = "post" action = "/join">
-                                <fieldset id="joinsmallform">
+                                <fieldset style="background:white" id="joinsmallform">
                                         <div id="joinfield">
                                                 <div id="account">
                                                 	
                                                         <div>
                                                                 <label id = "idletter" for = "id">ID</label>
                                                                 <input type = "text" id = "id" class = "inputval" name = "id">
-								<input class="btn" type = "submit" id = "id_check" name = "id_check" value = "ID 확인"> <!-- class ? -->
+								<input class="btn btn-default" type = "submit" id = "id_check" name = "id_check" value = "중복 확인"> <!-- class ? -->
                                                         </div>
 				
 							<div id="idcondition">
@@ -101,7 +101,7 @@ join
 							</div>
 
                                                         <div>
-                                                                <label id="pwletter" for = "pw">PW</label>
+                                                                <label id="pwletter" for = "pw">Password</label>
                                                                 <input type="password" id = "pw" class = "inputval" name = "pw">
                                                         </div>
 
@@ -115,7 +115,7 @@ join
                                                         </div>
                                                         
                                                         <div>
-								<label id="unameletter" for = "uname">Name</label>
+								<label id="unameletter" for = "uname">이름</label>
 		                                                <input type="text" id = "uname" class = "inputval" name = "uname">
 	                                                </div>
 
@@ -126,7 +126,7 @@ join
                                                 </div>
 
                                                 <div id = "joinbutton">
-                                                        <input class="btn button" id = "join_button" type = "submit" value = "가입">
+                                                        <input class="btn btn-default button" id = "join_button" type = "submit" value = "가입">
                                                 </div>
                                         </div>
                                 </fieldset>
