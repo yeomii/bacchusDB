@@ -74,8 +74,10 @@
 				$('#memfield').html('<div class="nav-header">개인용 그룹입니다</li>');
 			}
 
-			name = $('.db_redirect').children('a').html();
-			$('.db_redirect').children('a').attr('href', document.URL + "/" + name);
+			$('.db_redirect').each(function(){
+				var name = $(this).children('a').html();
+				$(this).children('a').attr('href', document.URL + "/" + name);
+			});
 	});
 </script>
 {% endblock %}
