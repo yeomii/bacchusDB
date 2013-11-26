@@ -24,8 +24,12 @@ def group_name_check(name):
 
 
 def group_name_validation(title):
-	return not bool(re.search('\S+', title))
-
+	if not bool(re.search('\S+', title)):
+		return True
+	else:
+		title = re.sub(" ", "", title)
+		title = title.encode('utf-8')
+		return bool(re.search('[^\wㄱ-ㅎㅏ-ㅣ가-힣]+', title))
 
 @login_required
 @csrf_exempt

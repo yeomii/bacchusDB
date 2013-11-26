@@ -11,6 +11,16 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from group.models import Group, Private_Group, Membership
 from db.models import DataBase, Row, Column, Cell
 import json
+import re
+
+def db_name_validation(name):
+	if not bool(re.search('\S+', name)):
+		return True
+	else:
+		name = re.sub(" ", "", name)
+		name = name.encode('utf-8')
+		return bool(re.search('[^\Wㄱ-ㅎㅏ-ㅣ가-힣]+', name))
+
 
 @csrf_exempt
 @login_required
@@ -22,7 +32,11 @@ def db_make(request, group_title):
 		info = request.POST['db_info']
 		col = request.POST.getlist('col')
 		url = request.path.split("/")
-		if url[1] == "group":
+
+		if (db_name_validation(title)):
+			data['error'] = "Restriction"
+
+		elif url[1] == "group":
 			try: 
 				group = Group.objects.get(title=group_title)
 				db = DataBase.objects.get(name=title, group=group)
