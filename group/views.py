@@ -79,8 +79,8 @@ def group_page(request, title):
 			db.delete()
 
 		except ObjectDoesNotExist:
-			pg = Private_Group.objects.get(title=request.POST['title'], user=request.user)
-			db = DataBase.objects.get(p_group=g, name=request.POST['name'])
+			pg = Private_Group.objects.get(title=title, user=request.user)
+			db = DataBase.objects.get(p_group=pg, name=request.POST['name'])
 			db.delete()
 
 		return HttpResponse()
