@@ -19,7 +19,7 @@ def db_name_validation(name):
 	else:
 		name = re.sub(" ", "", name)
 		name = name.encode('utf-8')
-		return bool(re.search('[^\Wㄱ-ㅎㅏ-ㅣ가-힣]+', name))
+		return bool(re.search('[^\wㄱ-ㅎㅏ-ㅣ가-힣]+', name))
 
 
 @csrf_exempt
