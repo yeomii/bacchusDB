@@ -98,7 +98,7 @@ def group_page(request, title):
 		g = Group.objects.get(title=title)
 		admin = Membership.objects.filter(group=g, status=0)
 		normal = Membership.objects.filter(group=g, status=1)
-		db = DataBase.objects.filter(group=g)
+		db = DataBase.objects.filter(group=g).order_by('name')
 		if (m.status == 1):
 			var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
 		else:

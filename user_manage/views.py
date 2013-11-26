@@ -22,8 +22,8 @@ def home(request):
 	if not request.user.is_authenticated():
 		return redirect('user_manage.views.login_page')
 	else:
-		groups = Membership.objects.filter(user=request.user)
-		p_groups = Private_Group.objects.filter(user=request.user)
+		groups = Membership.objects.filter(user=request.user).order_by('group__title')
+		p_groups = Private_Group.objects.filter(user=request.user).order_by('title')
 		admissions = Admission.objects.filter(user=request.user, status=0)
 		var = RequestContext(request, {'u': request.user, 'groups': groups, 'p_groups': p_groups, 'admissions': admissions, 'css':'user'})
 		return render_to_response('user/user_page.html', var)
