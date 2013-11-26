@@ -72,6 +72,11 @@
 			$('.db_redirect').click(function(e){
 				window.location.href=document.URL + "/" + $(this).html();
 			});
+
+			url = document.URL.split("/");
+			if (url[url.length-2] == "p_group"){
+				$('#memfield').html('<div class="nav-header">개인용 그룹입니다</li>');
+			}
 		});
 </script>
 {% endblock %}
