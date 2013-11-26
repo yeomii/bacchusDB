@@ -102,67 +102,70 @@
 				</ul><br>
 			</div>
 			{% if m.status == 0 %}
-			<button id="addad" type="button" class="btn btn-block btn-success"  onclick = "window.location.href='/group_admin/' + {{ g.title }}">관리자 추가</button>
+			<button id="addad" type="button" class="btn btn-block btn-default">관리자 추가</button>
 			{% endif %}
 		</div>
 		<div class="span10">
 			{% if m.status == 0 %}
 			<div id = "permission">
-				<h2 class="form-signin-heading">승인 요청 명단</h2>
-				<table id = "permitdb" align="center" class="table table-hover table-striped">
-					<thead>
-						<tr>
-							<td style="width: 100px">이름</td>
-							<td style="width: 100px">ID</td>
-							<td style="width: 100px">메세지</td>
-							<td style="width: 100px">승인</td>
-							<td style="width: 100px">거부</td>
-						</tr>
-					</thead>
-					<tbody>
-					{% for r in join_req %}
-						<tr>
-							<td>{{ r.user.first_name }}</td>
-							<td>{{ r.user.username }}</td>
-							<td>{{ r.message }}</td>
-							<td>
-								<button class="approval">승인</button>
-							</td>
-							<td>
-								<button class="denial">거부</button>
-							</td>
-						</tr>
-					{% endfor %}
-					</tbody>
-				</table>
-
+				<fieldset style="background:white">
+	                                <h3>승인 요청 명단</h3><br>
+					<table id = "permitdb" align="center" class="table table-hover table-striped">
+						<thead>
+							<tr>
+								<td style="width: 100px">이름</td>
+								<td style="width: 100px">ID</td>
+								<td style="width: 100px">메세지</td>
+								<td style="width: 100px">승인</td>
+								<td style="width: 100px">거부</td>
+							</tr>
+						</thead>
+						<tbody>
+						{% for r in join_req %}
+							<tr>
+								<td>{{ r.user.first_name }}</td>
+								<td>{{ r.user.username }}</td>
+								<td>{{ r.message }}</td>
+								<td>
+									<button class="approval btn btn-default">승인</button>
+								</td>
+								<td>
+									<button class="denial btn btn-default">거부</button>
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</fieldset>
 			</div>
 			{% endif %}
 
 			<div id = "dbfield">
-				<h2 class="form-signin-heading">그룹 DB</h2>	
-				<table id = "mydb" align="center" class="table table-hover table-striped">
-					<thead>
-						<tr>
-							<td style="width: 100px">DB명</td>
-							<td style="width: 100px">DB유형</td>
-							<td style="width: 100px">선택</td>
-						</tr>
-					</thead>
-					<tbody>
-						{% for d in db %}
-						<tr>
-							<td class="db_redirect">{{ d.name }}</td>
-							<td>{{ d.dbtype }}</td>
-							<td><input type="button" class="delete" value="삭제"></td>
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-				<div id="buttons">	
-					<span id = "adddb"><button id="db_add" class="btn">새 DB 추가</button></span>
-					<span id = "editdb"><button class="btn">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
-				</div>
+				<fieldset style="background:white">
+					<h3>그룹 DB</h3><br>	
+					<table id = "mydb" align="center" class="table table-hover table-striped">
+						<thead>
+							<tr>
+								<td style="width: 100px">DB 이름</td>
+								<td style="width: 100px">DB 유형</td>
+								<td style="width: 100px">삭제</td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for d in db %}
+							<tr>
+								<td class="db_redirect">{{ d.name }}</td>
+								<td>{{ d.dbtype }}</td>
+								<td><input type="button" class="delete button btn btn-default btn-xs" value="삭제"></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<div id="buttons">	
+						<span id = "adddb"><button id="db_add" class="btn btn-default">DB 추가</button></span>
+						<span id = "editdb"><button class="btn btn-default" id="delete_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
+					</div>
+				</fieldset>
 			</div>
 		</div>
 	</div>
