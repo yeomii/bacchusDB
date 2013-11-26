@@ -18,8 +18,13 @@
 						url: document.URL,
 						data: $(this).serialize(),
 						success: function(data){
-							alert("You made a DB");
-							window.location = new_url;
+							if ("error" in data){
+								alert("이미 그 이름의 DB가 존재합니다.");
+							}
+							else{
+								alert("성공적으로 DB를 만들었습니다.");
+								window.location = new_url;
+							}
 						},
 						error: function(xhr, ajaxOptions, errorThrown){
 							alert("You have DB in that name already");

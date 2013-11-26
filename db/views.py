@@ -16,23 +16,35 @@ import json
 @login_required
 def db_make(request, group_title):
 	if request.method=="POST":
+		data = {}
 		title = request.POST['db_name']
 		dbtype = request.POST['db_type']
 		info = request.POST['db_info']
 		col = request.POST.getlist('col')
 		url = request.path.split("/")
 		if url[1] == "group":
-			group = Group.objects.get(title=group_title)
-			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=False, col_preset=col)
+			try: 
+				group = Group.objects.get(title=group_title)
+				db = DataBase.objects.get(name=title, group=group)
+				data['error'] = "Exist"
+
+			except ObjectDoesNotExist:
+				db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=False, col_preset=col)
+				db.save()
+				data['success'] = "Success"
 
 		elif url[1] == "p_group":
-			group = Private_Group.objects.get(title=group_title, user=request.user)
-			db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=True, col_preset=col)
+			try:
+				group = Private_Group.objects.get(title=group_title, user=request.user)
+				db = DataBase.objects.get(name=title, p_group=group)
+				data['error'] = "Exist"
+				
+			except ObjectDoesNotExist:			
+				db = DataBase.objects.create_database(dbname=title, dbgroup=group, dbtype=dbtype, dbinfo = info, private=True, col_preset=col)
+				db.save()
+				data['success'] = "Success"
 
-	
-		db.save()
-
-		return HttpResponse("success")
+		return HttpResponse(json.dumps(data), content_type="application/json")
 	else:
 		return render_to_response('db/db_make.html', RequestContext(request, {'u': request.user, 'css': 'db_make'}))
 
