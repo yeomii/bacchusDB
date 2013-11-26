@@ -171,7 +171,9 @@ def info_page(request):
 			if request.user.check_password(new_password):
 				data['password'] = "same"
 
-			if (pw_validation(new_password)):
+			if new_password == "" and pw_confirm == "":
+				pass
+			elif (pw_validation(new_password)):
 				raise ValidationError('error')
 			elif (new_password != pw_confirm):
 				data['npassword'] = "not same"
