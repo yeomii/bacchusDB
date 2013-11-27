@@ -36,19 +36,19 @@
                                                         </p>
 						</div>
 						<ul class="nav navbar-nav navbar-left">
-							{% if css == "db_page" or  css == "group" or  css == "user"%}
+							{% if css == "db_page" or  css == "group" or  css == "user" or css == "mypage" or css == "searchr" %}
 							<li><a href = "/" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">HOME&nbsp;&raquo;</a></li>
 							{% endif %}
 							{% if css == "db_page" or  css == "group" %}
 							<li id = "group"><a href = "/group/{{ g.title}}" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">GROUP&nbsp;&raquo;</a></li>
 							{% endif %}
-							{% if css == "user" %}
+							{% if css == "user" or css == "mypage" or css == "searchr" %}
                                                         <li id = "group"><a href = "/group/{{ g.title}}" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn disabled">GROUP&nbsp;&raquo;</a></li>
                                                         {% endif %}
 							{% if css == "db_page" %}
-							<li id = "db"><a href = "www.snucse.org" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">DB&nbsp;&raquo;</a></li>
+							<li id = "db"><a href = "/group/{{ g.title }}/{{ db.name }}" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">DB&nbsp;&raquo;</a></li>
 							{% endif %}
-							{% if css == "group" or css == "user" %}
+							{% if css == "group" or css == "user" or css == "mypage" or css == "searchr" %}
                                                         <li id = "db"><a href = "www.snucse.org" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn disabled">DB&nbsp;&raquo;</a></li>
                                                         {% endif %}
 						</ul>

@@ -69,11 +69,12 @@
 {% endblock %}
 {% block wrapper %}
 		<form id = "gpmake" method = "post">
-			<fieldset id = "gpfield">
+			<fieldset style="background: white" id = "gpfield">
+				<h3>그룹 추가</h3><br>
                 		<div id = "gpaccount">
                         	      	<div>
 						<span id = "gpnametry">
-                              	        		<label id = "gpnameletter" for = "gpname">Group name</label>
+                              	        		<label id = "gpnameletter" for = "gpname">그룹 이름</label>
                                 			<input type = "text" name = "group_name" id = "group_name" class = "inputval">
 						</span>
 	
@@ -83,19 +84,19 @@
                                                 </span>
 						
 						<span id = "gpnamecheck">
-							<input id = "gp_name_check" type = "submit" value = "중복확인" name = "check">
+							<input id = "gp_name_check" class="btn btn-default" type = "submit" value = "중복 확인" name = "check">
 						</span>
 
                                 	</div>
 					
 	                                <div>
-        	                                <label id = "gpinfoletter" for = "gpinfo">Group info</label>
+        	                                <label id = "gpinfoletter" for = "gpinfo">그룹 정보</label>
                 	                        <input type = "text" name = "group_info" id = "group_info" class = "inputval">
                         	        </div>
-                        	 </div>
+                        	 </div><br>
 
                      		 <div id = "gpmakebutton">
-                                	<input id = "makebutton" type = "submit" value = "Submit">
+                                	<input id = "makebutton" class="btn btn-default" type = "submit" value = "만들기">
                         	 </div>
                 	 </fieldset>
 		</form>
