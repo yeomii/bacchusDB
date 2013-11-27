@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+{% block script %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		content="";
+		column="";
+		col_num={{ db.columnnum }};
+		row_num={{ db.rownum }};
+		selected_row = [];
+		selected_col = [];
+		selected_cell = "";
+		dbtype = ( "{{db.dbtype}}" == "회계장부" );
+
+		$('#mydb').on('focusin', '.cell', function(e){
+			content=$(this).html();
+			selected_cell = $(this).attr('id');
+		});
+		
+		$('#mydb').on('focusout', '.cell', function(e){
+			if (content != $(this).html() && !dbtype){
+				id=$(this).attr('id').split("::");
+				row=id[0];
+				col=id[1];
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'cell': 'cell', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': $(this).html().trim()},
+					success: function(data){
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+			}
+			if (content != $(this).html() && dbtype){
+				id=$(this).attr('id').split("::");
+				row=id[0];
+				col=id[1];
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'total': 'total', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': $(this).html()},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error:function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+			}	
+			return false;
+		});
+
+		$('#mydb').on('focusin', '.column > div', function(e){
+			column=$(this).html();
+		});
+
+		$('#mydb').on('focusout', '.column > div', function(e){
+			if (column != $(this).html){
+				id=$(this).attr('id').split('col');
+				num=id[1];
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'col': 'col', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'num': num, 'content': $(this).html()}, 
+					success: function(data){
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			}
+		});
+
+		$('#mydb').on('dblclick', '.column', function(e){
+			if (selected_row.length == 0){
+				var className = '.' + $(this).children('div').attr('id');
+				if (selected_col.length != 1 || selected_col[0] == className){
+					if($(this).css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+						$(this).css('backgroundColor', 'rgb(127, 127, 127)');
+						$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+						selected_col.push(className);
+					}
+					else{
+						$(this).css('backgroundColor', 'rgb(255, 255, 255)');
+						$(className).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+						selected_col.pop();
+					}
+				}
+				else if (selected_col.length == 1 && selected_col[0] != className){
+					c = selected_col.pop();
+					$('.column').css('backgroundColor', 'rgb(255, 255, 255)');
+					$(c).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+
+					$(this).css('backgroundColor', 'rgb(127, 127, 127)');
+					$(className).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+									
+					selected_col.push(className);
+				}
+			}
+		});
+
+		$('#mydb').on('click', '.row', function(e){
+			if (selected_col.length == 0){
+				if($(this).parent().css('backgroundColor') == 'rgb(255, 255, 255)' || $(this).parent().css('backgroundColor') == 'rgba(0, 0, 0, 0)'){
+					$(this).parent().css('backgroundColor', 'rgb(127, 127, 127)');
+					$(this).parent().children('td').css('backgroundColor', 'rgb(127, 127, 127)');
+					selected_row.push(parseInt(($(this).children('div').attr('id').split("row")[1]-1)));
+				}
+				else{
+					$(this).parent().css('backgroundColor', 'rgb(255, 255, 255)');
+					$(this).parent().children('td').css('backgroundColor', 'rgb(255, 255, 255)');
+					selected_row.splice(selected_row.indexOf($(this).children('div').attr('id')), 1);
+				}
+			}
+		});
+
+		/*$('#mydb').dataTable({
+                        "sScrollX": "100%",
+                        "sScrollY": 600
+                });*/
+
+		$('#addrowbutton').click(function(e){
+			var add_num=parseInt(prompt('원하는 숫자를 입력해주세요'));
+			if (isNaN(add_num)){
+				alert('숫자를 입력해주세요');
+				return false;
+			}
+			var table=$('#mydb');
+			var row="";
+			for(var i=0; i<add_num; i++){
+				var new_row=row_num + i + 1;
+				row += '<tr><th class="row" width="30" height="30"><div id="row' + new_row + '">' + new_row +  '</div></th>';
+				for(var j=0; j<col_num; j++){
+					row += '<td><div id="' + (new_row-1) + '::' + j + '" class="cell" contenteditable="true"></div></td>';
+				}
+				row += '</tr>';
+			}
+			row_num += add_num;
+			table.append(row);
+
+			$.ajax({
+				type: "POST",
+				url: document.URL,
+				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_row': add_num},
+				success: function(data){
+					$('#mydb').html(data);
+				},
+				error: function(xhr, ajaxOptions, errorThrown){
+				}
+			});
+			return false;
+		});
+
+		$('.addrowbutton').click(function(e){
+			var direction = $(this).attr('class').split(" ")[1];
+			if (selected_row.length != 1){
+				alert("한줄만 선택해 주세요.");
+			}
+			else{
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_row_d': selected_row[0], 'direction': direction},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				selected_row = [];
+				return false;
+			}
+		});
+
+		$('#delrowbutton').click(function(e){
+                        if (selected_row.length == 0){
+                                alert ("행을 선택해주세요");
+                        } else{
+			if(($('.row').length-selected_row.length) >= 1){
+				selected_row.sort(function(a,b){return a-b}).reverse();
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_row': selected_row},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				row_num -= (selected_row.length);
+				selected_row = [];
+				return false;
+			}
+			else{
+				alert("행이 최소한 1개는 존재해야 합니다.");
+			}}
+		});
+
+		$('#delcolbutton').click(function(e){
+			if (selected_col.length != 1){
+				alert ("열을 선택해주세요");
+			} else{
+			if((col_num-selected_col.length) >= 1){
+                        	selected_col.sort(function(a,b){return a-b}).reverse();
+                        	$.ajax({
+                        	        type: "POST",
+                        	        url: document.URL,
+                        	        data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'del_col': selected_col},
+                        	        success: function(data){
+                        	                $('#mydb').html(data);
+                        	        },
+                        	        error: function(xhr, ajaxOptions, errorThrown){
+                        	        }
+                        	});
+                        	col_num -= (selected_col.length);
+                        	selected_col = [];
+                        	return false;
+			}
+			else{
+				alert("열이 최소한 1개는 존재해야 합니다.");
+			}}
+                });
+		$('.sortcolbutton').click(function(e){
+			direction = $(this).attr('class').split(" ")[1];
+                        if (selected_col.length != 1){
+                                alert ("열을 하나만 선택해주세요");
+                        } else{
+                                $.ajax({
+                                        type: "POST",
+                                        url: document.URL,
+					data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'sort_col': selected_col[0], 'direction':direction},
+					success: function(data){
+                                                $('#mydb').html(data);
+                                        },
+                                        error: function(xhr, ajaxOptions, errorThrown){
+                                        }
+                                });
+				selected_col = [];
+                                return false;
+                        }
+                });
+
+
+		$('.addcolbutton').click(function(e){
+			direction = $(this).attr('class').split(" ")[1];
+			$.ajax({
+				type: "POST",
+				url: document.URL,
+				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_col': selected_col[0], 'direction': direction},
+				success: function(data){
+					$('#mydb').html(data);
+				},
+				error: function(xhr, ajaxOptions, errorThrown){
+				}
+			});
+			selected_col = [];
+			return false;
+		});
+
+		$('.todaybutton').click(function(e){
+			if (selected_cell != ""){
+				var today = new Date();
+				var dd = today.getDate();
+				var mm = today.getMonth()+1;
+				var yyyy = today.getFullYear();	
+				if(dd<10)
+					{dd='0'+dd} 
+				if(mm<10)
+					{mm='0'+mm}
+				today = mm+'/'+dd+'/'+yyyy;
+				id = selected_cell.split("::");
+				row=id[0];
+				col=id[1];
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'cell': 'cell', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': today},
+					success: function(data){
+						document.getElementById(selected_cell).innerText = today;
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			}
+		});
+	});	
+</script>
+{% endblock %}
+{% block wrapper %}
+<div id="container">
+	<!--<div id="inner-container">-->
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span12">
+				<div id="toolbox" class="well well-sm">	
+					<div id="dbnamefield">
+						<span id="dbname"><strong>DB명: {{ db.name }}</strong></span>
+					</div>
+				
+					{% if stat == 0 %}
+					<div class="btn-toolbar" role="toolbar">
+		                		<div id="addrowsfield">
+							<div class="btn-group btn-group-sm">
+                		        <!--<div class="editbuttonfield">-->
+                        					<button type="button" id="addrowbutton" name="addrowbutton" class="editbutton btn btn-default">맨 아래 행 추가</button>
+							</div>
+							<div class="btn-group btn-group-sm">
+                        		<!--</div>
+		                        <div class="editbuttonfield">-->
+                			        		<button type="button" class="addrowbutton up editbutton btn btn-default" name="addrowbutton">선택한 행 상단에 행 추가</button>
+                        		<!--</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" class="addrowbutton down editbutton btn btn-default" name="addrowbutton">선택한 행 하단에 행 추가</button>
+                        		<!--<</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" id="delrowbutton" name="delrowbutton" class="editbutton btn btn-default">선택한 행 삭제</button>
+                        		<!--<</div>-->
+							</div>
+							<div class="btn-group btn-group-sm">
+                        		<!--<div class="editbuttonfield">-->
+                        					<button type="button" class="addcolbutton left editbutton btn btn-default" name="addcolbutton">선택한 열 좌측에 열 추가</button>
+                        		<!--</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" class="addcolbutton right editbutton btn btn-default" name="addcolbutton">선택한 열 우측에 열 추가</button>
+                        		<!--<</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" id="delcolbutton" name="delcolbutton" class="editbutton btn btn-default">선택한 열 삭제</button>
+							</div>
+							<div class="btn-group btn-group-sm">
+                        		<!--</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" class="sortcolbutton A-Z editbutton btn btn-default" name="sortcolbutton">오름차순 열 정렬</button>
+                        		<!--</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" class="sortcolbutton Z-A editbutton btn btn-default" name="sortcolbutton">내림차순 열 정렬</button>
+											<button type="button" class="todaybutton btn btn-default" name="todaybutton">오늘 날짜</button>
+							</div>
+                        		<!--<</div>-->
+                				</div>
+					</div>
+                			{% endif %}
+				</div>
+			</div>
+			<div class="row-container">
+				<div class="span12">
+					<div id="dbfield">	
+						<table class="table table-bordered table-fixed-header" id="mydb" style="background:white">
+							<thead class="header">
+							<tr>
+							{% for col, size in preset %}
+								{% if not forloop.first %}
+									<th id="num" class="column"><div id="col{{ forloop.counter0|add:"-1" }}" height="30" {% if stat == 0 %}contenteditable="true"{% endif %}>{{ col }}</div></th>
+								{% else %}
+									<th style="height: 40px; width: 50px;"></th>
+								{% endif %}
+							{% endfor %}
+							</tr>
+							</thead>
+							<tbody>
+							{% for r in cells %}
+							<tr>
+								<th class="row" width="30" height="30">
+									<div id="row{{ forloop.counter }}">{{ forloop.counter }}</div>
+								</th>
+								{% for c in r %}
+								<td width="100" height="30">
+									<div id="{{ c.rownum }}::{{ c.colnum }}" class="cell col{{ c.colnum }}" {% if c.editable == True and stat == 0 %}contenteditable="true"{% endif %}>
+									{% if c.contents == NONE %}
+									{% else %} 
+									{{ c.contents }}
+									{% endif %}
+								{% endfor %}
+							</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--</div>-->
+{% endblock %} 

@@ -3,11 +3,11 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 			$('#db_add').click(function(e){
-				window.location.href = document.URL + "/db_make";
+				window.location.href=document.URL + "/db_make";
 			});
 
 			$('.approval').click(function(e){
-				row = $(this).parent().parent();	
+				row=$(this).parent().parent();	
 				$.ajax({
 					type: "GET",
 					url: document.URL + "/" + $(this).parent().parent().children('td:nth-child(2)').html() + "/s",
@@ -20,8 +20,43 @@
 				return false;
 			});
 
+			$('.delete').click(function(e){
+				c=confirm("삭제 하시겠습니까?");
+				if (c == true){
+					name=$(this).parent().parent().children('td:nth-child(1)').children('a').html();
+					row=$(this).parent().parent();
+					$.ajax({
+						type: "POST",
+						url: document.URL + "/db_delete",
+						data: {'name': name},
+						success: function(data){
+							alert("성공적으로 " + name + " DB를 삭제했습니다.");
+							row.remove();
+						},
+						error: function(xhr, ajaxOptions, errorThrown){
+						}
+					});
+					return false;
+				}
+			});
+			
+			$('.delete').hide();
+
+			$('#delete_appear').click(function(e){
+				if ($(this).html() == "수정")
+					$(this).html('완료');
+				else
+					$(this).html('수정');
+				$('.delete').toggle();
+				$('.delete_group').toggle();
+			});
+
+			$('#addad').click(function(e){
+				window.location.href="/group_admin/" + "{{ g.title }}";
+			});
+
 			$('.denial').click(function(e){
-				row = $(this).parent().parent();	
+				row=$(this).parent().parent();	
 				$.ajax({
 					type: "GET",
 					url: document.URL + "/" + $(this).parent().parent().children('td:nth-child(2)').html() + "/f",
@@ -34,111 +69,115 @@
 				return false;
 			});
 
-		});
+			url = document.URL.split("/");
+			if (url[url.length-2] == "p_group"){
+				$('#memfield').html('<div class="nav-header">개인용 그룹입니다</li>');
+			}
+
+			$('.db_redirect').each(function(){
+				var name = $(this).children('a').html();
+				$(this).children('a').attr('href', document.URL + "/" + name);
+			});
+	});
 </script>
 {% endblock %}
 {% block wrapper %}
-		{% if m.status == 0 %}
-		<div id = "permission">
-			<table border = "1" id = "permitdb">
-				<tr>
-					<th>이름</th>
-					<th>ID</th>
-					<th>메세지</th>
-					<th>승인</th>
-					<th>거부</th>
-				</tr>
-				{% for r in join_req %}
-				<tr>
-					<td>{{ r.user.first_name }}</td>
-					<td>{{ r.user.username }}</td>
-					<td>{{ r.message }}</td>
-					<td>
-						<button class="approval">승인</button>
-					</td>
-					<td>
-						<button class="denial">거부</button>
-					</td>
-				</tr>
-				{% endfor %}
-				<!--
-				<tr>
-					<td>김도연</td>
-					<td>mkim</td>
-					<td>가입시켜주세요</td>
-					<td>
-						<button>승인</buton>
-					</td>
-				</tr>
-				-->
-			</table>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span2" id="leftbar">
+			<div id="memfield" class="well sidebar-nav">
+				<ul class="nav nav-list">
+					<li class="nav-header">그룹 구성원:&nbsp;{{ g.num_member }}명</li><br>
+                                        <li id = "administrator" class = "memclass">
+                                                <strong>관리자</strong>
+                                                <ul class="nav nav-list">
+                                                        {% for member in admin %}
+                                                        <li>{{ member.user.first_name }}</li>   <!-- 임시적으로 id를 표시하도록 한다. -->
+                                                        {% endfor %}
+                                                </ul>
+                                        </li><br>
+                                        <li id = "user" class = "memclass">
+                                                <strong>일반 사용자</strong>
+                                                <ul class="nav nav-list">
+                                                        {% for member in normal %}
+                                                        <li>{{ member.user.first_name }}</li>
+                                                        {% endfor %}
+                                                </ul>
+                                        </li>
+				</ul><br>
+			</div>
+			{% if m.status == 0 %}
+			<button id="addad" type="button" class="btn btn-block btn-default"  onclick = "window.location.href='/group_admin/' + {{ g.title }}">관리자 추가</button>
+			{% endif %}
 		</div>
-		{% endif %}
-		<div id = "dbfield">	
-			<table border = "1" id = "mydb">
-				<tr>
-					<th>DB명</th>
-					<th>DB유형</th>
-					<th>선택</th>
-				</tr>
-				{% for d in db %}
-				<tr>
-					<td>{{ d.title }}</td>
-					<td>{{ d.type }}</td>
-					<td><input type="checkbox"></td>
-				</tr>
-				{% endfor %}
-				<!--
-				<tr>
-					<td>비상연락망</td>
-					<td>주소록</td>
-					<td>
-						<input type = "checkbox">
-					</td>
-				</tr>
-				-->
-			</table>
-	
-			<span id = "adddb"><button id="db_add">새 DB 추가</button></span>
-			<span id = "editdb"><button>수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
-		</div>
-	
-	
-		<div id = "memfield">
-			<aside>
-				<span id = "gpmember">그룹 멤버:</span>
-				<span id = "numofmem">{{ g.num_member }} </span>
-				<ol>
-					<li id = "administrator" class = "memclass">
-						<strong>관리자</strong>
-						<ul>
-							{% for member in admin %}
-							<li>{{ member.user.first_name }}</li>	<!-- 임시적으로 id를 표시하도록 한다. -->
+		<div class="span10">
+			{% if m.status == 0 %}
+			<div id = "permission">
+				<fieldset style="background:white">
+	                                <h3>승인 요청 명단</h3><br>
+					<table id = "permitdb" align="center" class="table table-hover table-striped">
+						<thead>
+							<tr>
+								<td style="width: 100px">이름</td>
+								<td style="width: 100px">ID</td>
+								<td style="width: 100px">메세지</td>
+								<td style="width: 100px">승인</td>
+								<td style="width: 100px">거부</td>
+							</tr>
+						</thead>
+						<tbody>
+						{% for r in join_req %}
+							<tr>
+								<td>{{ r.user.first_name }}</td>
+								<td>{{ r.user.username }}</td>
+								<td>{{ r.message }}</td>
+								<td>
+									<button class="approval btn btn-default">승인</button>
+								</td>
+								<td>
+									<button class="denial btn btn-default">거부</button>
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</fieldset>
+			</div>
+			{% endif %}
+
+			<div id = "dbfield">
+				<fieldset style="background:white">
+					<h3>그룹 DB</h3><br>	
+					<table id = "mydb" align="center" class="table table-hover table-striped">
+						<thead>
+							<tr>
+								<td style="width: 100px">DB 이름</td>
+								<td style="width: 100px">DB 유형</td>
+								<td style="width: 100px">삭제</td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for d in db %}
+							<tr>
+								<td class="db_redirect"><a href= >{{ d.name }}</a></td>
+								<td>{{ d.dbtype }}</td>
+								<td><input type="button" class="delete button btn btn-default btn-xs" value="삭제"></td>
+							</tr>
 							{% endfor %}
-							<!--
-							<li>김진명</li>
-							<li>안용주</li>
-							<li>박성준</li>
-							-->
-						</ul>	
-					</li>
-					<li id = "user" class = "memclass">
-						<strong>일반 사용자</strong>
-						<ul>
-							{% for member in normal %}
-							<li>{{ member.user.first_name }}</li>
-							{% endfor %}
-							<!--
-							<li>이현민</li>
-							<li>김도연</li>
-							<li>최준혁</li>
-							<li>이선호</li>
-							-->
-						</ul>
-					</li>
-				</ol>
-			</aside>
+						</tbody>
+					</table>
+					{% if m.status == 0 or private == 'true' %}
+					<div id="buttons">	
+						<span id = "adddb"><button id="db_add" class="btn btn-default">DB 추가</button></span>
+						<span id = "editdb"><button class="btn btn-default" id="delete_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
+					</div>
+					{% endif %}
+				</fieldset>
+			</div>
 		</div>
+	</div>
+</div>
 {% endblock %}
 
 

@@ -4,73 +4,65 @@
 		$(document).ready(function(){
 				$('.joinrequest').click(function(){
 					num = $(this).attr('name');
-					title = $(this).parent().parent().children('td:nth-child(2)').html();
-					$.ajax({
-						type: "POST",
-						url: document.URL + "/" + title,
-						success: function(data){
-							if ("success" in data){
-								alert("You made an reqeust to that Group: " + title);
+					title = $(this).parent().parent().children('td:nth-child(1)').html();
+
+					box = prompt("Your message will be delivered to Group Admin");
+					if (box != null){
+						$.ajax({
+							type: "POST",
+							url: document.URL + "/" + title,
+							data: {'message': box},
+							success: function(data){
+								if ("success" in data){
+									alert("You made an reqeust to that Group: " + title);
+								}
+								else if (data.error == "Already"){
+									alert("You have made an request Already and waiting for response");
+								}
+								else if (data.error == "Member"){
+									alert("You are already Member of that Group");
+								}
+								else if (data.error == "Denied"){
+									alert("You have been denied from that Group");
+								}
+							},
+							error: function(xhr, ajaxOptions, errorThrown){
 							}
-							else if (data.error == "Already"){
-								alert("You have made an request Already and waiting for response");
-							}
-							else if (data.error == "Member"){
-								alert("You are already Member of that Group");
-							}
-							else if (data.error == "Denied"){
-								alert("You have been denied from that Group");
-							}
-						},
-						error: function(xhr, ajaxOptions, errorThrown){
-						}
-					});
-					return false;
+						});
+						return false;
+					}
 				});
 			});
 	</script>
 {% endblock %}
 {% block wrapper %}
-	<div id = "rletterfield">
-		<span id = "resultletter">그룹 검색 결과</span>
-	</div>
-
+<div>
 	<div id = "resultfield">
-		<table border = "1" id = "searchresult">
-			<tr>
-				<th>번호</th>
-				<th>그룹명</th>
-				<th>가입신청</th>
-			</tr>
-			<!--
-			<tr>
-				<td>1</td>
-				<td>BACCHUS</td>
-				<td><button class = "joinreqest">가입신청</button></td>
-			</tr>
-					
-			<tr>
-					
-				<td>2</td>
-				<td>GUARDIAN</td>
-				<td><button class = "joinreqest">가입신청</button></td>
-			</tr>
-					
-			<tr>
-				<td>3</td>
-				<td>HIS</td>
-				<td><button class = "joinreqest">가입신청</button></td>
-			</tr>
-			-->
-			{% for g in groups %}
-				<tr>
-					<td>{{ forloop.counter }}</td>
-					<td>{{ g.title }}</td>
-					<td><button name = "{{ forloop.counter }}" class = "joinrequest">가입신청</button></td>
-				</tr>
-			{% endfor %}
-		</table>
+		<fieldset style="background:white">
+			<h3>그룹 검색 결과</h3><br>
+			<table id = "searchresult" align="center" class="table table-hover table-striped">
+				<thead>
+					<tr>
+						<td style="width: 100px">그룹 이름</td>
+						<td style="width: 100px">그룹 정보</td>
+						<td style="width: 100px">가입 신청</td>
+					</tr>
+				</thead>
+				<tbody>
+					{% for g in groups %}
+					<tr>
+						<td>{{ g.title }}</td>
+						<td>{{ g.info }}</td>
+						<td><button name = "{{ forloop.counter }}" class = "btn btn-default joinrequest">가입신청</button></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</fieldset>
+	</div><br>
+	<div id = "button">
+		<span id = "complete"><button class="btn btn-default" onclick = "window.location.href='/'">돌아가기</button></span>
 	</div>
-	<span id = "complete"><button onclick = "window.location.href='/'">완료</button></span>
+</div>
 {% endblock %}
 

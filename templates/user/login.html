@@ -29,35 +29,35 @@ login
 {% endblock %}
 {% block wrapper %}
 		<div id = "logoimage">
-			<img id = "logo" src = "http://img.cgv.co.kr/Movie/Thumbnail/StillCut/000077/77113/77113106976_727.jpg" alt = "logo">
+			<img id = "logo" src = "https://lh3.googleusercontent.com/--wpLtuQy7Rk/UonLwOahO1I/AAAAAAAAAFU/_5GcMmr5rcU/s500/%25EA%25B3%25A0%25EB%2594%2595.gif" alt = "logo" border = 1 class="img-rounded">
 		</div>
 		<div id = "login">
-			<form id = "loginbigform" method = "post" action = "/login">
-				<fieldset id = "logonsmallform">
+			<form class="form-horizontal" role="form" id = "loginbigform" method = "post" action = "/login">
+				<fieldset style="background:white">
 					<div id = "loginfield">
 						<div id = "account">
 							<div>
 								<label id = "idletter" for = "id">ID</label>
-								<input type = "text" id = "id" class = "inputval" name = "id">
+								<input class="inputval" type = "text" id = "id" name = "id">
 							</div>
 
 							<div>
-						        	<label id = "pwletter" for = "pw">PW</label>
-						        	<input type = "password" id = "pw" class = "inputval" name = "pw">
+						        	<label id = "pwletter" for = "pw">Password</label>
+						        	<input class="inputval" type = "password" id = "pw" name = "pw">
 							</div>
 						</div>
 
 						<div id = "loginbutton">
-							<input id = "button" type = "submit" value = "login">
+							<input class="btn btn-default" id = "button" type = "submit" value = "로그인">
 						</div>
 					</div>
 						<div id = "join">
 							<span id = "joinin">
-								<a href ="/join">Join in</a>
+								<a href ="/join">가입</a>
 							</span>
-
+							<span>/&nbsp;</span>
 							<span id = "findidpw">
-								<a href ="/find_password">Find PW</a>
+								<a href ="/find_password">비밀번호 찾기</a>
 							</span>
 						</div>
 				</fieldset>

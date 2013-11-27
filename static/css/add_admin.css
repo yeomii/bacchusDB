@@ -3,17 +3,6 @@ html, body {
 	margin: 0;
 	padding: 0;
 }
-#wrapper {
-	min-height: 100%;
-	margin: 0 auto;
-}
-#main {
-	overflow: auto;
-	width: 100%;
-	margin: 0 auto;
-	padding-bottom: 20px;
-}
-	
 #infobar {
 	width: 100%;
 	overflow: auto;
@@ -23,7 +12,6 @@ html, body {
 }
 #userwelcome {
 	float: left;
-	color: white;
 }
 #logout {
 	margin-right: 10px;
@@ -54,11 +42,42 @@ html, body {
     	text-decoration: none;
     	border-bottom: none;
 }
-::-webkit-input-placeholder { /* WebKit browsers */
-    color: #686868;
+.db_redirect {
+	color: #0000FF;
+	text-decoration: underline;
+	cursor: pointer;
 }
-:-ms-input-placeholder { /* Internet Explorer 10+ */
-    color: #686868;
+#wrapper {
+	min-height: 100%;
+	width: 100%;
+	margin: 0 auto;
+}
+#main {
+	overflow: auto;
+	width: 100%;
+	padding-bottom: 20px;
+}
+#userdiv {
+	padding: 50px 0px 50px 0;
+	width: 500px;
+	margin: 0 auto;
+}
+#usertable{
+	text-align: center;
+	margin: 0 auto;
+	background: white;
+}
+#dbfield {
+	padding: 0 0px 50px 0;
+	width: 500px;
+	margin: 0 auto;
+}
+#mydb{
+	text-align: center;
+	margin: 0 auto;
+}
+aside {
+	border: 1px solid black;
 }
 #footer {
         position: relative;
@@ -68,27 +87,14 @@ html, body {
         width: 100%;
         text-align: center;
 }
-#tablediv{
-	padding: 0 0 50px 0;
-	width: 500px;
-	margin: 0 auto;
-}
-#mygroup{
-	text-align: center;
-	margin: 0 auto;
-}
+
 #buttons{
 	text-align: center;
+	padding: 50px 0 0 0;
 }
-#groupsearch{
+.sidebar-nav{
+	padding: 10px 0 0 0;
+}
+#memfield{
 	text-align: center;
-	display: inline-block;
-	padding: 50px 0 50px 0;
-	margin: 0 auto;
-}
-.center{
-	text-align: center;
-}
-#waiting{
-        text-align: center;
 }

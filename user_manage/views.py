@@ -12,15 +12,20 @@ from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
-from group.models import Group, Membership
+from group.models import Group, Private_Group, Membership, Admission
+import hashlib
 import json
+import random
+import re
 
 def home(request):
 	if not request.user.is_authenticated():
 		return redirect('user_manage.views.login_page')
 	else:
-		groups = Membership.objects.filter(user=request.user)
-		var = RequestContext(request, {'u': request.user, 'groups': groups, 'css':'user'})
+		groups = Membership.objects.filter(user=request.user).order_by('group__title')
+		p_groups = Private_Group.objects.filter(user=request.user).order_by('title')
+		admissions = Admission.objects.filter(user=request.user, status=0)
+		var = RequestContext(request, {'u': request.user, 'groups': groups, 'p_groups': p_groups, 'admissions': admissions, 'css':'user'})
 		return render_to_response('user/user_page.html', var)
 
 @csrf_exempt
@@ -61,6 +66,9 @@ def pw_validation(password):		#비밀번호 제한 체크하는 함수 제한에
 	 	return False
 
 
+def	id_validation(username):		#아이디에 문제가 없으면 True를 반환
+	return not bool(re.search('\W+', username))
+
 @csrf_exempt
 def join_page(request):
 	if request.user.is_authenticated():
@@ -70,12 +78,15 @@ def join_page(request):
 			data = {}
 
 			username = request.POST['id']
-			
-			try: 
-				user = User.objects.get(username=username)
-							
-			except ObjectDoesNotExist:
-				data['success'] = "success"
+		
+			if id_validation(username):
+				try: 
+					user = User.objects.get(username=username)
+								
+				except ObjectDoesNotExist:
+					data['success'] = "success"
+			else:
+				data['fail'] = "restriction"
 				
 			return HttpResponse(json.dumps(data), content_type="application/json")
 
@@ -89,8 +100,11 @@ def join_page(request):
 				name = request.POST['uname']
 				email = request.POST['email']
 
+				if not id_validation(username):
+					raise ValidationError("Id")
+
 				if (pw_validation(password)):
-					raise ValidationError("Too Short")
+					raise ValidationError("Password")
 
 				if (password != password_confirm):
 					data['error'] = "password_failure"
@@ -103,7 +117,7 @@ def join_page(request):
 				data['error'] = e.messages[0]
 
 			except ValidationError as e:
-				data['error'] = "validation"
+				data['error'] = e.messages[0]
 
 			return HttpResponse(json.dumps(data), content_type="application/json")
 
@@ -113,14 +127,24 @@ def join_page(request):
 
 @csrf_exempt
 def find_password(request):
-	if request.method == "POST":
+	if request.method == "POST" and request.is_ajax():
+		data = {}
 		try: 
 			username = request.POST['id']
 			email = request.POST['email']
-			user = User.objects.get(username=username, email=email)
-			return redirect (password_reset(request))
+			name = request.POST['uname']
+			user = User.objects.get(username=username, email=email, first_name=name)
+			new_password = hashlib.sha512((username+email+str(random.randint(1, 100))).encode('utf-8')).hexdigest()
+			user.set_password(new_password)
+			user.save()
+			send_mail('<주의>새 비밀번호를 안내해드립니다', '새 비밀번호입니다. 바로 로그인해서 변경해주세요 ' + new_password, 'bacchuswebdb@gmail.com', [email], fail_silently=False)
+			data['success'] = "success"
+
 		except ObjectDoesNotExist:
-			return HttpResponse("No User in that id or email")
+			data['fail'] = "fail"
+		
+		return HttpResponse(json.dumps(data), content_type="application/json")
+
 	else:
 	  	return render(request, 'user/find_password.html', {'css':'findpw'})
 
@@ -147,7 +171,9 @@ def info_page(request):
 			if request.user.check_password(new_password):
 				data['password'] = "same"
 
-			if (pw_validation(new_password)):
+			if new_password == "" and pw_confirm == "":
+				pass
+			elif (pw_validation(new_password)):
 				raise ValidationError('error')
 			elif (new_password != pw_confirm):
 				data['npassword'] = "not same"

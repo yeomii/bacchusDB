@@ -1,3 +1,8 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
 #infobar {
         width: 100%;
         overflow: auto;
@@ -18,12 +23,22 @@
         float: right;
 }
 #wrapper {
+	min-height: 100%;
         margin: 0 auto;
-        width: 800px;
+        width: 100%;
+}
+#main {
+	width: 800px;
+	margin: 0 auto;
+	overflow: auto;
+	padding-bottom: 20px;
 }
 #myform {
-        margin: 300px 0px 0px 0px;
+        margin: 200px 0px 0px 0px;
         width: 800px;
+}
+#pwconfirminput {
+	margin-left: 30px;
 }
 .inputletter {
 	display: inline-block;
@@ -32,9 +47,15 @@
 .inputval {
 	width: 200px;
 }
+#submitbutton {
+	text-align: center;
+	padding-top: 10px;
+}
 #footer {
-        position: absolute;
-        bottom: 10px;
+        position: relative;
+	margin-top: -20px;
+	height: 20px;
+	clear: both;
         width: 100%;
         text-align: center;
 }

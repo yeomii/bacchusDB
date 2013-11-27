@@ -40,14 +40,12 @@
 		</script>
 {% endblock %}
 {% block wrapper %}
-                <form id = "myform" method = "post">
-                        <fieldset id = "myfield">
-                                <div id = "myaccount">
-					<div>
-					회원정보 수정
-					</div>
 
-                    <div>
+                <form id = "myform" class="form-signin" method = "post">
+			<fieldset style="background:white">
+				<h3>회원정보 수정</h3><br>
+                                <div id = "myaccount">
+			                <div>
 						<label id = "idletter" for "user" class = "inputletter">ID</label>
 						{{ u.username }}
 					</div>
@@ -57,7 +55,7 @@
 						{{ u.first_name }}
 					<div>
 						<label id = "emailletter" for = "email" class = "inputletter">Email</label>
-                        <input type = "text" name = "email" id = "email" value = "{{ u.email }}" class = "inputval">
+                       		 		<input type = "text" name = "email" id = "email" value = "{{ u.email }}" class = "inputval">
 					</div>
 
 					<div>
@@ -68,20 +66,20 @@
 					<div>
 						<span id = "pwinput">
 							<label id = "pwletter" for = "newpw" class = "inputletter">New Password</label>
-                            <input type = "password" name = "new_pw" id = "newpw" class = "inputval">
+                            				<input type = "password" name = "new_pw" id = "newpw" class = "inputval">
 						</span>
 
 						<span id = "pwconfirminput">
-							<label id = "pwletter" for = "pwconfirm" class = "inputletter">Password Confirm</label>
-                            <input type = "password" name = "pw_confirm" id = "pwconfirm" class = "inputval">
+							<label id = "pwletter" for = "pwconfirm" class = "inputletter">PW Confirm</label>
+                            				<input type = "password" name = "pw_confirm" id = "pwconfirm" class = "inputval">
 						</span>
-					</div>	
+					</div><br>	
 
-	                <div id = "submitbutton">
-        	        	<input id = "makebutton" type = "submit" value = "Submit">
-                    </div>
+	                		<div id = "submitbutton">
+        	        			<input id = "makebutton" class="btn btn-default" type = "submit" value = "수정 완료">
+                    			</div>
 				</div>
                          </fieldset>
-                </form>
+		</form>
 {% endblock %}
 

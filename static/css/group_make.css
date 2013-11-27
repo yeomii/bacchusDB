@@ -1,6 +1,17 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
 #wrapper {
-	width: 500px;
+	min-height: 100%;
 	margin: 0 auto;
+}
+#main {
+	overflow: auto;
+	width: 550px;
+	margin: 0 auto;
+	padding-bottom: 20px;
 }
 #infobar {
 	width: 100%;
@@ -43,14 +54,11 @@
 }
 #gpmake {
 	margin: 300px 0px 0px 0px;
-        width: 500px;
+        width: 550px;
 }
-#gpfield {
-        /*overflow: hidden;
-        zoom: 1;*/
-}
-#gpaccount {
-        /*float: left;*/
+#privatecheck {
+	padding: 0px 10px;
+	font-size: 12px;
 }
 #gpnameletter {
         display: inline-block;
@@ -65,7 +73,8 @@
 }
 #checkbutton {
 	display: inline-block;
-	width: 100px;
+	width: 80px;
+	height: 30px;
 }
 #gpmakebutton {
 	text-align: center;
@@ -75,10 +84,11 @@
         height: 30px;
 }
 #footer {
-        position: absolute;
-        bottom: 10px;
+        position: relative;
+	margin-top: -20px;
+	height: 20px;
+	clear: both;
         width: 100%;
         text-align: center;
 }
-
 

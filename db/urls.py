@@ -1,18 +1,10 @@
 from django.conf.urls import patterns, include, url
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
-
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'bacchusdb.views.home', name='home'),
-    # url(r'^bacchusdb/', include('bacchusdb.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
-	url(r'^group/(\D+)/db_make$', 'db.views.db_make'),
+	url(r'^group/([\w, \s]+)/db_delete$', 'group.views.group_page'),
+	url(r'^p_group/([\w, \s]+)/db_delete$', 'group.views.group_page'),
+	url(r'^group/([\w, \s]+)/db_make$', 'db.views.db_make'),
+	url(r'^p_group/([\w, \s]+)/db_make$', 'db.views.db_make'),
+	url(r'^group/([\w, \s]+)/([\w, \s]+)$', 'db.views.db_page'),
+	url(r'^p_group/([\w, \s]+)/([\w, \s]+)$', 'db.views.db_page'),
 )
