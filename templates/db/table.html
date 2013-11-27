@@ -2,7 +2,7 @@
 				<tr>
 				{% for col, size in preset %}
 					{% if not forloop.first %}
-						<th class="column" style="height: 30px; width: {{ size }}px;"><div id="col{{ forloop.counter0|add:"-1" }}" height="30px" {% if stat == 0 %}contenteditable="true"{% endif %}>{{ col }}</div></th>
+						<th class="column" style="height: 30px; width: {{ size }}px;"><div id="col{{ forloop.counter0|add:"-1" }}" height="30px" contenteditable="true">{{ col }}</div></th>
 					{% else %}
 						<th height="30"></th>
 					{% endif %}
@@ -15,7 +15,7 @@
 					</th>
 					{% for c in r %}
 					<td width="100" height="30">
-						<div id="{{ c.rownum }}::{{ c.colnum }}" class="cell col{{ c.colnum }}" {% if c.editable == True and stat == 0 %}contenteditable="true"{% endif %}>
+						<div id="{{ c.rownum }}::{{ c.colnum }}" class="cell col{{ c.colnum }}" {% if c.editable == True %}contenteditable="true"{% endif %}>
 						{% if c.contents == NONE %}
 						{% else %} 
 						{{ c.contents }}

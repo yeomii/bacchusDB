@@ -10,8 +10,11 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			url = document.URL.split("/");
-
-			if (url.length == 5){
+			if (url.length == 5 && url[3]=="group_admin"){
+				group_url = "/" + "group" + "/" + url[4];
+				$('#group').children('a').attr('href', group_url);
+			}
+			else if (url.length == 5){
 				group_url = "/" + url[3] + "/" + url[4];
 				$('#group').children('a').attr('href', group_url);
 			}
@@ -52,19 +55,19 @@
                                                         </p>
 						</div>
 						<ul class="nav navbar-nav navbar-left">
-							{% if css == "db_page" or  css == "group" or  css == "user" or css == "mypage" or css == "searchr" %}
+							{% if css == "db_page" or  css == "group" or  css == "user" or css == "mypage" or css == "searchr" or css == "group_make" %}
 							<li><a href = "/" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">HOME&nbsp;&raquo;</a></li>
 							{% endif %}
 							{% if css == "db_page" or  css == "group" %}
 							<li id = "group"><a href = "/group/{{ g.title}}" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">GROUP&nbsp;&raquo;</a></li>
 							{% endif %}
-							{% if css == "user" or css == "mypage" or css == "searchr" %}
+							{% if css == "user" or css == "mypage" or css == "searchr" or css == "group_make" %}
                                                         <li id = "group"><a href = "/group/{{ g.title}}" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn disabled">GROUP&nbsp;&raquo;</a></li>
                                                         {% endif %}
 							{% if css == "db_page" %}
 							<li id = "db"><a href = "/group/{{ g.title }}/{{ db.name }}" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn">DB&nbsp;&raquo;</a></li>
 							{% endif %}
-							{% if css == "group" or css == "user" or css == "mypage" or css == "searchr" %}
+							{% if css == "group" or css == "user" or css == "mypage" or css == "searchr" or  css == "group_make"%}
                                                         <li id = "db"><a href = "www.snucse.org" style="font-weight:bold;font-family:century gothic;font-size:16px;" class="btn disabled">DB&nbsp;&raquo;</a></li>
                                                         {% endif %}
 						</ul>
