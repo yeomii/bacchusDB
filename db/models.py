@@ -6,7 +6,6 @@ import json
 # Create your models here.
 class DataBaseManager(models.Manager):
 	def create_database(self, dbname, dbgroup, dbtype, dbinfo, private, col_preset):
-		print dbtype
 		if dbtype == "회계장부".decode('utf-8'):
 			preset = ['', '지출/수입', '날짜', '금액', '', '', '', '', '', '', '']
 		elif dbtype == "주소록".decode('utf-8'):
@@ -22,10 +21,15 @@ class DataBaseManager(models.Manager):
 			for i in range(11-len(preset)):
 				preset.append('')
 
+		size = ['']
+		for i in range(10):
+			size.append(100)
+
+
 		if not private:
-			db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
+			db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset), col_size=json.dumps(size))
 		else:
-			db = self.create(name=dbname, p_group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
+			db = self.create(name=dbname, p_group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset), col_size=json.dumps(size))
 		rows = []
 		cols = []
 		for i in range(db.rownum):
@@ -47,6 +51,7 @@ class DataBase(models.Model):
 	rownum = models.IntegerField()
 	columnnum = models.IntegerField()
 	preset = models.TextField()
+	col_size = models.TextField()
 	objects = DataBaseManager()
 
 	class Meta:
@@ -109,7 +114,10 @@ class DataBase(models.Model):
 
 		preset = json.loads(self.preset)
 		preset.insert(num+1, '')
+		size = json.loads(self.col_size)
+		size.insert(num+1, 120)
 		self.preset = json.dumps(preset)
+		self.col_size = json.dumps(size)
 		self.columnnum += 1
 		self.save()
 		return self

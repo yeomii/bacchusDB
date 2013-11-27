@@ -89,7 +89,20 @@ def db_page(request, g_title, dbname):
 		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
 		db.rowExpand(int(request.POST['add_row']))
 	
-		return HttpResponse()
+		rows = Row.objects.filter(rowdb=db).order_by('rownum')
+
+		preset = json.loads(db.preset)	
+		size = json.loads(db.col_size)
+		preset = zip(preset, size)
+		cells = [] 
+
+		for i in range(db.rownum):
+			cell = Cell.objects.filter(cellrow=rows[i])
+			cells.append(cell.order_by('colnum'))
+		
+		t = loader.get_template('db/table.html')
+		c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
+		return HttpResponse(t.render(c))
 
 	elif request.method == "POST" and request.is_ajax() and 'del_row[]' in request.POST:
 		g = Group.objects.get(title=request.POST['group'])
@@ -100,6 +113,8 @@ def db_page(request, g_title, dbname):
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
 
 		preset = json.loads(db.preset)	
+		size = json.loads(db.col_size)
+		preset = zip(preset, size)
 		cells = [] 
 
 		for i in range(db.rownum):
@@ -117,13 +132,15 @@ def db_page(request, g_title, dbname):
 			db.colDelete(int(col.split("col")[1]))
 		cols = Column.objects.filter(coldb=db).order_by('colnum')
 		preset = json.loads(db.preset)
+		size = json.loads(db.col_size)
+		preset = zip(preset, size)
 		cells = []
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
 		for i in range(db.rownum):
-                        cell = Cell.objects.filter(cellrow=rows[i])
-                        cells.append(cell.order_by('colnum'))
+			cell = Cell.objects.filter(cellrow=rows[i])
+			cells.append(cell.order_by('colnum'))
 
-                t = loader.get_template('db/table.html')
+		t = loader.get_template('db/table.html')
 		c = RequestContext(request, {'preset' : preset, 'col_num' : range(0, db.columnnum+1), 'db': db, 'cells': cells})
 		return HttpResponse(t.render(c))
 
@@ -139,7 +156,9 @@ def db_page(request, g_title, dbname):
 
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
 
-		preset = json.loads(db.preset)	
+		preset = json.loads(db.preset)
+		size = json.loads(db.col_size)
+		preset = zip(preset, size)
 		cells = [] 
 
 		for i in range(db.rownum):
@@ -153,22 +172,24 @@ def db_page(request, g_title, dbname):
 	
 	elif request.method == "POST" and request.is_ajax() and 'sort_col' in request.POST:
 		g = Group.objects.get(title=request.POST['group'])
-                db = DataBase.objects.get(group=g, name=request.POST['db_name'])
+		db = DataBase.objects.get(group=g, name=request.POST['db_name'])
 		col = request.POST['sort_col']
 		if (request.POST['direction'] == 'A-Z'):
 			db.colSort(int(col.split("col")[1]),False)
 		else:
 			db.colSort(int(col.split("col")[1]),True)
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
-                preset = json.loads(db.preset)
-                cells = []
-                for i in range(db.rownum):
-                        cell = Cell.objects.filter(cellrow=rows[i])
-                        cells.append(cell.order_by('colnum'))
+		preset = json.loads(db.preset)
+		size = json.loads(db.col_size)
+		preset = zip(preset, size)
+		cells = []
+		for i in range(db.rownum):
+			cell = Cell.objects.filter(cellrow=rows[i])
+			cells.append(cell.order_by('colnum'))
 		t = loader.get_template('db/table.html')
-                c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
+		c = RequestContext(request, {'preset': preset, 'col_num': range(0, db.columnnum+1), 'db': db, 'cells': cells})
 
-                return HttpResponse(t.render(c))	
+		return HttpResponse(t.render(c))	
 
 	elif request.method == "POST" and request.is_ajax() and 'add_row_d' in request.POST:
 		g = Group.objects.get(title=request.POST['group'])
@@ -183,6 +204,8 @@ def db_page(request, g_title, dbname):
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
 
 		preset = json.loads(db.preset)	
+		size = json.loads(db.col_size)
+		preset = zip(preset, size)
 		cells = [] 
 
 		for i in range(db.rownum):
@@ -210,6 +233,8 @@ def db_page(request, g_title, dbname):
 		group = g
 		rows = Row.objects.filter(rowdb=db).order_by('rownum')
 		preset = json.loads(db.preset)
+		col_size = json.loads(db.col_size)
+		preset = zip(preset, col_size)
 		cells = []
 		for i in range(dbrow):
 			cell = Cell.objects.filter(cellrow=rows[i])

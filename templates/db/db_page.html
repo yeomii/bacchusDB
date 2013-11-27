@@ -120,6 +120,7 @@
 				url: document.URL,
 				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_row': add_num},
 				success: function(data){
+					$('#mydb').html(data);
 				},
 				error: function(xhr, ajaxOptions, errorThrown){
 				}
@@ -244,9 +245,9 @@
 		<div id="dbfield">	
 			<table border="1" id="mydb">
 				<tr>
-				{% for col in preset %}
+				{% for col, size in preset %}
 					{% if not forloop.first %}
-						<th class="column"><div id="col{{ forloop.counter0|add:"-1" }}" height="30" {% if stat == 0 %}contenteditable="true"{% endif %}>{{ col }}</div></th>
+						<th class="column" style="height: 30px; width: {{ size }}px;"><div id="col{{ forloop.counter0|add:"-1" }}" height="30px" {% if stat == 0 %}contenteditable="true"{% endif %}>{{ col }}</div></th>
 					{% else %}
 						<th height="30"></th>
 					{% endif %}
