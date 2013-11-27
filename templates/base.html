@@ -7,9 +7,26 @@
 
         <title>WEB DB</title>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			url = document.URL.split("/");
+			console.log(url);
+
+			if (url.length == 5){
+				group_url = "/" + url[3] + "/" + url[4];
+				$('#group').children('a').attr('href', group_url);
+			}
+			else if (url.length == 6 && url[5] != 'db_make'){
+				group_url = "/" + url[3] + "/" + url[4];
+				db_url = "/" + url[3] + "/" + url[4] + "/" + url[5];
+				$('#group').children('a').attr('href', group_url);
+				$('#db').children('a').attr('href', db_url);
+			}
+		});
+	</script>
 	{% block script %} {% endblock %}
 	<link rel = "stylesheet" type = "text/css" href = "{{ STATIC_URL }}css/{{ css }}.css">
-        <meta charset = "UTF-8">
+    <meta charset = "UTF-8">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheer" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css">
 	<link href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet">

@@ -4,7 +4,6 @@
 		$(document).ready(function(){
 				$('#dbmake').submit(function(e){
 					if ($('#db_name').val()[0] == " "){
-						console.log("A");
 						alert('DB 이름은 공백으로 시작할 수 없습니다.');
 						return false;
 					}
@@ -18,8 +17,18 @@
 						url: document.URL,
 						data: $(this).serialize(),
 						success: function(data){
-							alert("You made a DB");
-							window.location = new_url;
+							if ("error" in data){
+								if(data['error'] == 'Exist'){
+									alert("이미 그 이름의 DB가 존재합니다.");
+								}
+								else{
+									alert("제한된 문자가 포함되어있습니다.");
+								}
+							}
+							else{
+								alert("성공적으로 DB를 만들었습니다.");
+								window.location = new_url;
+							}
 						},
 						error: function(xhr, ajaxOptions, errorThrown){
 							alert("You have DB in that name already");

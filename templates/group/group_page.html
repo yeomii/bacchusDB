@@ -69,10 +69,16 @@
 				return false;
 			});
 
-			$('.db_redirect').click(function(e){
-				window.location.href=document.URL + "/" + $(this).html();
+			url = document.URL.split("/");
+			if (url[url.length-2] == "p_group"){
+				$('#memfield').html('<div class="nav-header">개인용 그룹입니다</li>');
+			}
+
+			$('.db_redirect').each(function(){
+				var name = $(this).children('a').html();
+				$(this).children('a').attr('href', document.URL + "/" + name);
 			});
-		});
+	});
 </script>
 {% endblock %}
 {% block wrapper %}
@@ -154,7 +160,7 @@
 						<tbody>
 							{% for d in db %}
 							<tr>
-								<td class="db_redirect">{{ d.name }}</td>
+								<td class="db_redirect"><a href= >{{ d.name }}</a></td>
 								<td>{{ d.dbtype }}</td>
 								<td><input type="button" class="delete button btn btn-default btn-xs" value="삭제"></td>
 							</tr>

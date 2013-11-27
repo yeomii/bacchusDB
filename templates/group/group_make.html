@@ -14,7 +14,7 @@
 						success: function(data){						
 							if ("fail" in data){
 								if (data.fail == "Restriction"){
-									alert("공백만으로 이루어져 있습니다.");
+									alert("제한된 문자가 포함되어 있습니다.");
 								}
 								else{
 									alert("이미 사용중인 이름입니다.");
@@ -38,7 +38,7 @@
 						success: function(data){
 							if ("fail" in data){
 								if (data.fail == "Restriction"){
-									alert("그룹 이름이 공백만으로 이루어져 있습니다.");
+									alert("제한된 문자가 포함되어 있습니다.");
 								}
 								else{
 									alert("이미 사용중인 이름입니다.");
