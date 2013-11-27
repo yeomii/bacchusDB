@@ -42,9 +42,9 @@
 {% block wrapper %}
 
                 <form id = "myform" class="form-signin" method = "post">
-                        <fieldset id = "myfield">
+			<fieldset style="background:white">
+				<h3>회원정보 수정</h3><br>
                                 <div id = "myaccount">
-					<h2 class="form-signin-heading">회원정보 수정</h2>
 			                <div>
 						<label id = "idletter" for "user" class = "inputletter">ID</label>
 						{{ u.username }}
@@ -70,13 +70,13 @@
 						</span>
 
 						<span id = "pwconfirminput">
-							<label id = "pwletter" for = "pwconfirm" class = "inputletter">Password Confirm</label>
+							<label id = "pwletter" for = "pwconfirm" class = "inputletter">PW Confirm</label>
                             				<input type = "password" name = "pw_confirm" id = "pwconfirm" class = "inputval">
 						</span>
-					</div>	
+					</div><br>	
 
 	                		<div id = "submitbutton">
-        	        			<input id = "makebutton" class="btn" type = "submit" value = "제출">
+        	        			<input id = "makebutton" class="btn btn-default" type = "submit" value = "수정 완료">
                     			</div>
 				</div>
                          </fieldset>

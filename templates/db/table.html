@@ -1,8 +1,8 @@
 <table border="1" id="mydb">
 				<tr>
-				{% for col in preset %}
+				{% for col, size in preset %}
 					{% if not forloop.first %}
-						<th class="column"><div id="col{{ forloop.counter0|add:"-1" }}" height="30" contenteditable="true">{{ col }}</div></th>
+						<th class="column" style="height: 30px; width: {{ size }}px;"><div id="col{{ forloop.counter0|add:"-1" }}" height="30px" contenteditable="true">{{ col }}</div></th>
 					{% else %}
 						<th height="30"></th>
 					{% endif %}

@@ -2,17 +2,17 @@
 from django.db import models
 from group.models import Group, Private_Group, Membership
 import json
+from datetime import datetime
 
 # Create your models here.
 class DataBaseManager(models.Manager):
 	def create_database(self, dbname, dbgroup, dbtype, dbinfo, private, col_preset):
-		print dbtype
 		if dbtype == "회계장부".decode('utf-8'):
-			preset = ['', '지출/수입', '날짜', '금액', '', '', '', '', '', '', '']
+			preset = ['', '지출/수입', '날짜', '금액', '누계', '', '', '', '', '', '']
 		elif dbtype == "주소록".decode('utf-8'):
 			preset = ['', '이름', '주소', '기록 날짜', '', '', '', '', '', '', '']
 		elif dbtype == "도서장부".decode('utf-8'):
-			preset = ['', '도서명', '저자', '대여자', '반납 날짜', '', '', '', '', '', '']
+			preset = ['', '도서명', '저자', '대여자', '대출 날짜', '반납 날짜', '', '', '', '', '']
 		elif dbtype == "연락처".decode('utf-8'):
 			preset = ['', '이름', '집전화', '휴대전화', '기록 날짜', '', '', '', '', '', '']
 		else:
@@ -21,11 +21,15 @@ class DataBaseManager(models.Manager):
 				preset.append(c)	
 			for i in range(11-len(preset)):
 				preset.append('')
+		size = [30]
+		for i in range(10):
+			size.append(100)
+
 
 		if not private:
-			db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
+			db = self.create(name=dbname, group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset), col_size=json.dumps(size))
 		else:
-			db = self.create(name=dbname, p_group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset))
+			db = self.create(name=dbname, p_group=dbgroup, rownum=10, columnnum=10, info=dbinfo, dbtype=dbtype, preset=json.dumps(preset), col_size=json.dumps(size))
 		rows = []
 		cols = []
 		for i in range(db.rownum):
@@ -47,6 +51,7 @@ class DataBase(models.Model):
 	rownum = models.IntegerField()
 	columnnum = models.IntegerField()
 	preset = models.TextField()
+	col_size = models.TextField()
 	objects = DataBaseManager()
 
 	class Meta:
@@ -88,7 +93,6 @@ class DataBase(models.Model):
 		r = Row.objects.create_row(rownum=num, db=self)
 		for col in Column.objects.filter(coldb=self):
 			Cell.objects.create_cell(col=col, row=r)
-
 		self.rownum += 1
 		self.save()
 		return self
@@ -106,10 +110,13 @@ class DataBase(models.Model):
 		c = Column.objects.create_col(colnum=num, db=self)
 		for row in Row.objects.filter(rowdb=self):
 			Cell.objects.create_cell(col=c, row=row)
-
+		
 		preset = json.loads(self.preset)
 		preset.insert(num+1, '')
+		size = json.loads(self.col_size)
+		size.insert(num+1, 120)
 		self.preset = json.dumps(preset)
+		self.col_size = json.dumps(size)
 		self.columnnum += 1
 		self.save()
 		return self
@@ -123,7 +130,6 @@ class DataBase(models.Model):
 				c.rownum -= 1
 				c.save()
 			r.save()
-	
 		row.delete()
 		self.rownum -= 1
 		self.save()
@@ -141,6 +147,9 @@ class DataBase(models.Model):
 			cl.save()
 		col.delete()
 		self.columnnum -= 1
+		col_size = json.loads(self.col_size)
+		del col_size[num+1]
+		self.col_size = json.dumps(col_size)
 		preset = json.loads(self.preset)
 		del preset[num+1]
 		self.preset = json.dumps(preset)
@@ -236,7 +245,8 @@ class Cell(models.Model):
                         self.ctype = True
 		self.save()
 	def intContents(self):
-		return float(self.contents)
-
-
+		if self.contents == '':
+			return float('0')
+		else: 
+			return float(self.contents)
 

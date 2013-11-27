@@ -24,8 +24,12 @@ def group_name_check(name):
 
 
 def group_name_validation(title):
-	return not bool(re.search('\S+', title))
-
+	if not bool(re.search('\S+', title)):
+		return True
+	else:
+		title = re.sub(" ", "", title)
+		title = title.encode('utf-8')
+		return bool(re.search('[^\wㄱ-ㅎㅏ-ㅣ가-힣]+', title))
 
 @login_required
 @csrf_exempt
@@ -79,8 +83,8 @@ def group_page(request, title):
 			db.delete()
 
 		except ObjectDoesNotExist:
-			pg = Private_Group.objects.get(title=request.POST['title'], user=request.user)
-			db = DataBase.objects.get(p_group=g, name=request.POST['name'])
+			pg = Private_Group.objects.get(title=title, user=request.user)
+			db = DataBase.objects.get(p_group=pg, name=request.POST['name'])
 			db.delete()
 
 		return HttpResponse()
@@ -94,7 +98,7 @@ def group_page(request, title):
 		g = Group.objects.get(title=title)
 		admin = Membership.objects.filter(group=g, status=0)
 		normal = Membership.objects.filter(group=g, status=1)
-		db = DataBase.objects.filter(group=g)
+		db = DataBase.objects.filter(group=g).order_by('name')
 		if (m.status == 1):
 			var = RequestContext(request, {'u': request.user, 'm': m, 'g': g, 'db': db, 'admin': admin, 'normal': normal, 'css':'group'})
 		else:

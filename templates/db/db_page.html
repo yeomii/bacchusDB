@@ -8,19 +8,16 @@
 		row_num={{ db.rownum }};
 		selected_row = [];
 		selected_col = [];
-		
-		/*$('#mydb').dataTable({
-			"sScrollX": "100%",
-			"sScrollY": 600
-		});*/	
-
+		selected_cell = "";
+		dbtype = ( "{{db.dbtype}}" == "회계장부" );
 
 		$('#mydb').on('focusin', '.cell', function(e){
 			content=$(this).html();
+			selected_cell = $(this).attr('id');
 		});
 		
 		$('#mydb').on('focusout', '.cell', function(e){
-			if (content != $(this).html()){
+			if (content != $(this).html() && !dbtype){
 				id=$(this).attr('id').split("::");
 				row=id[0];
 				col=id[1];
@@ -33,8 +30,23 @@
 					error: function(xhr, ajaxOptions, errorThrown){
 					}
 				});
-				return false;
 			}
+			if (content != $(this).html() && dbtype){
+				id=$(this).attr('id').split("::");
+				row=id[0];
+				col=id[1];
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'total': 'total', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': $(this).html()},
+					success: function(data){
+						$('#mydb').html(data);
+					},
+					error:function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+			}	
+			return false;
 		});
 
 		$('#mydb').on('focusin', '.column > div', function(e){
@@ -42,7 +54,7 @@
 		});
 
 		$('#mydb').on('focusout', '.column > div', function(e){
-			if (column != $(this).html()){
+			if (column != $(this).html){
 				id=$(this).attr('id').split('col');
 				num=id[1];
 				$.ajax({
@@ -130,6 +142,7 @@
 				url: document.URL,
 				data: {'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'add_row': add_num},
 				success: function(data){
+					$('#mydb').html(data);
 				},
 				error: function(xhr, ajaxOptions, errorThrown){
 				}
@@ -243,6 +256,34 @@
 			selected_col = [];
 			return false;
 		});
+
+		$('.todaybutton').click(function(e){
+			if (selected_cell != ""){
+				var today = new Date();
+				var dd = today.getDate();
+				var mm = today.getMonth()+1;
+				var yyyy = today.getFullYear();	
+				if(dd<10)
+					{dd='0'+dd} 
+				if(mm<10)
+					{mm='0'+mm}
+				today = mm+'/'+dd+'/'+yyyy;
+				id = selected_cell.split("::");
+				row=id[0];
+				col=id[1];
+				$.ajax({
+					type: "POST",
+					url: document.URL,
+					data: {'cell': 'cell', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': today},
+					success: function(data){
+						document.getElementById(selected_cell).innerText = today;
+					},
+					error: function(xhr, ajaxOptions, errorThrown){
+					}
+				});
+				return false;
+			}
+		});
 	});	
 </script>
 {% endblock %}
@@ -306,7 +347,7 @@
 						<table class="table table-bordered table-fixed-header" id="mydb" style="background:white">
 							<thead class="header">
 							<tr>
-							{% for col in preset %}
+							{% for col, size in preset %}
 								{% if not forloop.first %}
 									<th id="num" class="column"><div id="col{{ forloop.counter0|add:"-1" }}" height="30" {% if stat == 0 %}contenteditable="true"{% endif %}>{{ col }}</div></th>
 								{% else %}
