@@ -1,29 +1,31 @@
-<table border="1" id="mydb">
-				<tr>
-				{% for col, size in preset %}
-					{% if not forloop.first %}
-						<th class="column" style="height: 30px; width: {{ size }}px;"><div id="col{{ forloop.counter0|add:"-1" }}" height="30px" contenteditable="true">{{ col }}</div></th>
-					{% else %}
-						<th height="30"></th>
-					{% endif %}
-				{% endfor %}
-				</tr>
-				{% for r in cells %}
-				<tr>
-					<th class="row" width="30" height="30">
-						<div id="row{{ forloop.counter }}">{{ forloop.counter }}</div>
-					</th>
-					{% for c in r %}
-					<td width="100" height="30">
-						<div id="{{ c.rownum }}::{{ c.colnum }}" class="cell col{{ c.colnum }}" {% if c.editable == True %}contenteditable="true"{% endif %}>
-						{% if c.contents == NONE %}
-						{% else %} 
-						{{ c.contents }}
-						{% endif %}
-						</div>
-					</td>
-					{% endfor %}
-				</tr>
-				{% endfor %}
-			</table>
+<table class="table table-bordered table-fixed-header" id="mydb" style="background:white">
+							<thead class="header">
+							<tr>
+							{% for col, size in preset %}
+								{% if not forloop.first %}
+									<th id="num" class="column"><div id="col{{ forloop.counter0|add:"-1" }}" height="30" {% if stat == 0 %}contenteditable="true"{% endif %}>{{ col }}</div></th>
+								{% else %}
+									<th style="height: 40px; width: 50px;"></th>
+								{% endif %}
+							{% endfor %}
+							</tr>
+							</thead>
+							<tbody>
+							{% for r in cells %}
+							<tr>
+								<th class="row" width="30" height="30">
+									<div id="row{{ forloop.counter }}">{{ forloop.counter }}</div>
+								</th>
+								{% for c in r %}
+								<td width="100" height="30">
+									<div id="{{ c.rownum }}::{{ c.colnum }}" class="cell col{{ c.colnum }}" {% if c.editable == True and stat == 0 %}contenteditable="true"{% endif %}>
+									{% if c.contents == NONE %}
+									{% else %} 
+									{{ c.contents }}
+									{% endif %}
+								{% endfor %}
+							</tr>
+							{% endfor %}
+							</tbody>
+						</table>
 

@@ -218,10 +218,10 @@ def group_admin(request, title):
 		mem.save()
 		return HttpResponse("")
 		normal = Membership.objects.filter(group=g, status=1)
-		var = RequestContext(request, {'u':request.user, 'g':g, 'normal':normal, 'css':'group'})
+		var = RequestContext(request, {'u':request.user, 'g':g, 'normal':normal, 'css':'add_admin'})
 		return render_to_response('group/add_admin.html', var)
 	else:		
 		g = Group.objects.get(title=title)
 		normal = Membership.objects.filter(group=g, status=1)
-		var = RequestContext(request, {'u':request.user, 'g':g, 'normal':normal, 'css':'group'})
+		var = RequestContext(request, {'u':request.user, 'g':g, 'normal':normal, 'css':'add_admin'})
 		return render_to_response('group/add_admin.html', var)
