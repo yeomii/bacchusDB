@@ -24,7 +24,7 @@
 				$.ajax({
 					type: "POST",
 					url: document.URL,
-					data: {'cell': 'cell', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': $(this).html()},
+					data: {'cell': 'cell', 'group': '{{ g.title }}', 'db_name': '{{ db.name }}', 'row': row, 'col': col, 'content': $(this).html().trim()},
 					success: function(data){
 					},
 					error: function(xhr, ajaxOptions, errorThrown){
@@ -334,6 +334,7 @@
                         		<!--</div>
                         		<div class="editbuttonfield">-->
                         					<button type="button" class="sortcolbutton Z-A editbutton btn btn-default" name="sortcolbutton">내림차순 열 정렬</button>
+											<button type="button" class="todaybutton btn btn-default" name="todaybutton">오늘 날짜</button>
 							</div>
                         		<!--<</div>-->
                 				</div>

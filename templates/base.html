@@ -10,7 +10,6 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			url = document.URL.split("/");
-			console.log(url);
 			if (url.length == 5 && url[3]=="group_admin"){
 				group_url = "/" + "group" + "/" + url[4];
 				$('#group').children('a').attr('href', group_url);

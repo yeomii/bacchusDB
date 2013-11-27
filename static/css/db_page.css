@@ -37,6 +37,9 @@
         text-decoration: none;
         border-bottom: none;
 }
+#mydb {
+	word-break: break-all;
+}
 html, body {
 	height: 100%;
 	margin: 0 auto;/* originally margin: 0;*/
@@ -75,8 +78,6 @@ html, body {
 :not(th .row), td {
 	min-width: 100px;
 	max-width: 100px;
-}
-#mydb {
 }
 #dbfield {
 	width: 100%;

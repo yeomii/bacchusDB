@@ -231,18 +231,18 @@ class Cell(models.Model):
 	objects = CellManager()
 	def __unicode__(self):
 		return str(self.rownum) +'-'+str(self.colnum)
-        def modify_cell(self, content):
+	def modify_cell(self, content):
 		def isNumber(s):
-               	 	try:
-                 	       	float(s)
-                 	       	return True
-                	except ValueError:
-                        	return False
-                self.contents = content
-                if isNumber(content):
-                        self.ctype = False
-                else:
-                        self.ctype = True
+			try:
+				float(s)
+				return True
+			except ValueError:
+				return False
+		self.contents = content
+		if isNumber(content):
+			self.ctype = False
+		else:
+			self.ctype = True
 		self.save()
 	def intContents(self):
 		if self.contents == '':
