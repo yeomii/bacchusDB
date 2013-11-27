@@ -1,0 +1,100 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+#infobar {
+	width: 100%;
+	overflow: auto;
+}
+#userid {
+	margin-left: 10px;
+}
+#userwelcome {
+	float: left;
+}
+#logout {
+	margin-right: 10px;
+}	
+#mypage {
+	margin-right: 20px;
+}
+#myinfo {
+	float: right;
+}
+#navbar {
+    	float: left;
+ 	width: 100%;
+ 	margin: 0;
+ 	padding: 10px 0 0 0;
+	list-style: none;
+}
+#navbar li {
+    	float: left;
+    	margin: 0 1px 0 0;
+    	padding: 0;
+}
+#navbar a {
+    	float: left;
+    	display: block;
+    	margin: 0;
+    	padding: 4px 8px;
+    	text-decoration: none;
+    	border-bottom: none;
+}
+.db_redirect {
+	color: #0000FF;
+	text-decoration: underline;
+	cursor: pointer;
+}
+#wrapper {
+	min-height: 100%;
+	width: 100%;
+	margin: 0 auto;
+}
+#main {
+	overflow: auto;
+	width: 100%;
+	padding-bottom: 20px;
+}
+#userdiv {
+	padding: 50px 0px 50px 0;
+	width: 500px;
+	margin: 0 auto;
+}
+#usertable{
+	text-align: center;
+	margin: 0 auto;
+	background: white;
+}
+#dbfield {
+	padding: 0 0px 50px 0;
+	width: 500px;
+	margin: 0 auto;
+}
+#mydb{
+	text-align: center;
+	margin: 0 auto;
+}
+aside {
+	border: 1px solid black;
+}
+#footer {
+        position: relative;
+	margin-top: -20px;
+	height: 20px;
+	clear: both;
+        width: 100%;
+        text-align: center;
+}
+
+#buttons{
+	text-align: center;
+	padding: 50px 0 0 0;
+}
+.sidebar-nav{
+	padding: 10px 0 0 0;
+}
+#memfield{
+	text-align: center;
+}
