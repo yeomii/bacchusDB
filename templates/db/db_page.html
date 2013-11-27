@@ -8,6 +8,12 @@
 		row_num={{ db.rownum }};
 		selected_row = [];
 		selected_col = [];
+		
+		/*$('#mydb').dataTable({
+			"sScrollX": "100%",
+			"sScrollY": 600
+		});*/	
+
 
 		$('#mydb').on('focusin', '.cell', function(e){
 			content=$(this).html();
@@ -95,6 +101,10 @@
 			}
 		});
 
+		/*$('#mydb').dataTable({
+                        "sScrollX": "100%",
+                        "sScrollY": 600
+                });*/
 
 		$('#addrowbutton').click(function(e){
 			var add_num=parseInt(prompt('원하는 숫자를 입력해주세요'));
@@ -237,61 +247,77 @@
 </script>
 {% endblock %}
 {% block wrapper %}
-<div class="container-fluid">
+<div id="container">
+	<!--<div id="inner-container">-->
+<!--<div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span2"> 
-			<div id="sidebar" class="sidebar-nav">		
-				<div id="dbnamefield">
-					<span id="dbname">DB명: {{ db.name }}</span>
-				</div>
+			<div id="sidebar-wrapper">-->
+				<div id="toolbox" class="well well-sm">	
+					<div id="dbnamefield">
+						<span id="dbname"><strong>DB명: {{ db.name }}</strong></span>
+					</div>
 				
-				{% if stat == 0 %}
-		                <div id="addrowsfield">
-                		        <div class="editbuttonfield">
-                        			<button type="button" id="addrowbutton" name="addrowbutton" class="editbutton">최하단 행 추가</button>
-                        		</div>
-		                        <div class="editbuttonfield">
-                			        <button type="button" class="addrowbutton up editbutton" name="addrowbutton">위로 행 추가</button>
-                        		</div>
-                        		<div class="editbuttonfield">
-                        			<button type="button" class="addrowbutton down editbutton" name="addrowbutton">아래로 행 추가</button>
-                        		</div>
-                        		<div class="editbuttonfield">
-                        			<button type="button" id="delrowbutton" name="delrowbutton" class="editbutton">선택한 행 삭제</button>
-                        		</div>
-                        		<div class="editbuttonfield">
-                        			<button type="button" class="addcolbutton left editbutton" name="addcolbutton">좌측에 열 추가</button>
-                        		</div>
-                        		<div class="editbuttonfield">
-                        			<button type="button" class="addcolbutton right editbutton" name="addcolbutton">우측에 열 추가</button>
-                        		</div>
-                        		<div class="editbuttonfield">
-                        			<button type="button" id="delcolbutton" name="delcolbutton" class="editbutton">선택한 열 삭제</button>
-                        		</div>
-                        		<div class="editbuttonfield">
-                        			<button type="button" class="sortcolbutton A-Z editbutton" name="sortcolbutton">오름차순 열 정렬</button>
-                        		</div>
-                        		<div class="editbuttonfield">
-                        			<button type="button" class="sortcolbutton Z-A editbutton" name="sortcolbutton">내림차순 열 정렬</button>
-                        		</div>
-                		</div>
-                		{% endif %}
+					{% if stat == 0 %}
+					<div class="btn-toolbar" role="toolbar">
+		                		<div id="addrowsfield">
+							<div class="btn-group btn-group-sm">
+                		        <!--<div class="editbuttonfield">-->
+                        					<button type="button" id="addrowbutton" name="addrowbutton" class="editbutton btn btn-default">맨 아래 행 추가</button>
+							</div>
+							<div class="btn-group btn-group-sm">
+                        		<!--</div>
+		                        <div class="editbuttonfield">-->
+                			        		<button type="button" class="addrowbutton up editbutton btn btn-default" name="addrowbutton">선택한 행 상단에 행 추가</button>
+                        		<!--</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" class="addrowbutton down editbutton btn btn-default" name="addrowbutton">선택한 행 하단에 행 추가</button>
+                        		<!--<</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" id="delrowbutton" name="delrowbutton" class="editbutton btn btn-default">선택한 행 삭제</button>
+                        		<!--<</div>-->
+							</div>
+							<div class="btn-group btn-group-sm">
+                        		<!--<div class="editbuttonfield">-->
+                        					<button type="button" class="addcolbutton left editbutton btn btn-default" name="addcolbutton">선택한 열 좌측에 열 추가</button>
+                        		<!--</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" class="addcolbutton right editbutton btn btn-default" name="addcolbutton">선택한 열 우측에 열 추가</button>
+                        		<!--<</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" id="delcolbutton" name="delcolbutton" class="editbutton btn btn-default">선택한 열 삭제</button>
+							</div>
+							<div class="btn-group btn-group-sm">
+                        		<!--</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" class="sortcolbutton A-Z editbutton btn btn-default" name="sortcolbutton">오름차순 열 정렬</button>
+                        		<!--</div>
+                        		<div class="editbuttonfield">-->
+                        					<button type="button" class="sortcolbutton Z-A editbutton btn btn-default" name="sortcolbutton">내림차순 열 정렬</button>
+							</div>
+                        		<!--<</div>-->
+                				</div>
+					</div>
+                			{% endif %}
+				</div>
+			<!--</div>
+		</div>-->
 
-			</div>
-		</div>
-
-		<div id = "span10">
+		<!--<div class="span10">-->
 			<div id="dbfield">	
-				<table border="1" id="mydb">
+				<table class="table table-bordered table-fixed-header" id="mydb" style="background:white">
+					<thead class="header">
 					<tr>
 					{% for col in preset %}
 						{% if not forloop.first %}
 							<th class="column"><div id="col{{ forloop.counter0|add:"-1" }}" height="30" {% if stat == 0 %}contenteditable="true"{% endif %}>{{ col }}</div></th>
 						{% else %}
-							<th height="30"></th>
+							<th style="height: 40px; width: 50px;"></th>
 						{% endif %}
 					{% endfor %}
 					</tr>
+					</thead>
+					<tbody>
 					{% for r in cells %}
 					<tr>
 						<th class="row" width="30" height="30">
@@ -307,9 +333,12 @@
 						{% endfor %}
 					</tr>
 					{% endfor %}
+					</tbody>
 				</table>
 			</div>
-		</div>
+		<!--</div>-->
 	</div>
-</div>
+	<!--</div>
+</div>-->
+<!--</div>-->
 {% endblock %} 

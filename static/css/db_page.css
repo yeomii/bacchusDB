@@ -56,20 +56,35 @@ html, body {
 #dbnamefield {
     margin-bottom: 10px;
 }
-#dbfield {
-	max-width: 90%;
-	overflow-x: scroll;
-	overflow-y: auto;
+#container {
+	margin-left: 5px;
+	margin-right: 5px;
+	overflow: auto;
 }
+/*@media (max-width: 797px) {
+
+    body{ 
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}*/
+
+
 th, td {
-	min-width: 50px;
+	min-width: 200px;
+	max-width: 200px;
 }
 #mydb {
 }
-#sidebar {
-	position:fixed;
-	padding: 0px 10px;
-
+#dbfield {
+	/*padding-top: 100px;*/
+}
+#toolbox {
+/*	position:fixed;
+	top: 70px;*/
+}
+#addrowsfield div {
+	padding: 0px 2px;
 }
 #footer {
         position: relative;
