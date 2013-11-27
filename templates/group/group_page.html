@@ -167,7 +167,7 @@
 							{% endfor %}
 						</tbody>
 					</table>
-					{% if m.status == 0 %}
+					{% if m.status == 0 or private == 'true' %}
 					<div id="buttons">	
 						<span id = "adddb"><button id="db_add" class="btn btn-default">DB 추가</button></span>
 						<span id = "editdb"><button class="btn btn-default" id="delete_appear">수정</button></span>  <!--수정을 클릭하면 완료로 글자 바뀜-->
